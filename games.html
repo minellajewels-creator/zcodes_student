@@ -10,599 +10,200 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/babel-standalone/7.23.2/babel.min.js"></script>
 <style>
 :root {
-  --bg: #f5f6f8;
-  --surface: #ffffff;
-  --surface2: #f0f2f5;
-  --border: #e2e6ec;
-  --border2: #cdd3db;
-  --green: #3ac14a;
-  --green-dk: #2da03c;
-  --green-lt: #e8f9eb;
-  --green-mid: #b8edbf;
-  --charcoal: #1a1d23;
-  --text: #2c3038;
-  --text2: #5a6270;
-  --muted: #8a93a2;
-  --danger: #e53e3e;
-  --danger-lt: #fff0f0;
-  --warn: #d97706;
-  --warn-lt: #fffbeb;
-  --info: #2563eb;
-  --info-lt: #eff6ff;
-  --success: #16a34a;
-  --success-lt: #f0fdf4;
-  --sidebar-w: 220px;
-  --topbar-h: 52px;
-  --radius-sm: 6px;
-  --radius: 10px;
-  --radius-lg: 14px;
-  --radius-xl: 20px;
-  --shadow-sm: 0 1px 3px rgba(0,0,0,0.06), 0 1px 2px rgba(0,0,0,0.04);
-  --shadow: 0 4px 12px rgba(0,0,0,0.08), 0 1px 3px rgba(0,0,0,0.05);
-  --shadow-lg: 0 12px 32px rgba(0,0,0,0.10), 0 4px 10px rgba(0,0,0,0.06);
-  --shadow-green: 0 4px 16px rgba(58,193,74,0.25);
-  --font: 'Plus Jakarta Sans', sans-serif;
-  --mono: 'JetBrains Mono', monospace;
+  --bg:#f5f6f8;--surface:#fff;--surface2:#f0f2f5;--border:#e2e6ec;--border2:#cdd3db;
+  --green:#3ac14a;--green-dk:#2da03c;--green-lt:#e8f9eb;--green-mid:#b8edbf;
+  --charcoal:#1a1d23;--text:#2c3038;--text2:#5a6270;--muted:#8a93a2;
+  --danger:#e53e3e;--danger-lt:#fff0f0;--warn:#d97706;--warn-lt:#fffbeb;
+  --info:#2563eb;--info-lt:#eff6ff;--success:#16a34a;--success-lt:#f0fdf4;
+  --sidebar-w:220px;--topbar-h:52px;
+  --radius-sm:6px;--radius:10px;--radius-lg:14px;--radius-xl:20px;
+  --shadow-sm:0 1px 3px rgba(0,0,0,0.06),0 1px 2px rgba(0,0,0,0.04);
+  --shadow:0 4px 12px rgba(0,0,0,0.08),0 1px 3px rgba(0,0,0,0.05);
+  --shadow-lg:0 12px 32px rgba(0,0,0,0.10),0 4px 10px rgba(0,0,0,0.06);
+  --shadow-green:0 4px 16px rgba(58,193,74,0.25);
+  --font:'Plus Jakarta Sans',sans-serif;--mono:'JetBrains Mono',monospace;
 }
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+html{font-size:14px;}
+body{font-family:var(--font);background:var(--bg);color:var(--text);min-height:100vh;display:flex;flex-direction:column;-webkit-font-smoothing:antialiased;overflow-x:hidden;}
+#root{flex:1;display:flex;flex-direction:column;}
+::-webkit-scrollbar{width:5px;height:5px;}
+::-webkit-scrollbar-track{background:transparent;}
+::-webkit-scrollbar-thumb{background:var(--border2);border-radius:8px;}
+a{text-decoration:none;color:inherit;}
 
-*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-html { font-size: 14px; }
-body {
-  font-family: var(--font);
-  background: var(--bg);
-  color: var(--text);
-  min-height: 100vh;
-  display: flex;
-  flex-direction: column;
-  -webkit-font-smoothing: antialiased;
-  overflow-x: hidden;
-}
-#root { flex: 1; display: flex; flex-direction: column; }
-::-webkit-scrollbar { width: 5px; height: 5px; }
-::-webkit-scrollbar-track { background: transparent; }
-::-webkit-scrollbar-thumb { background: var(--border2); border-radius: 8px; }
-a { text-decoration: none; color: inherit; }
+.topbar{height:var(--topbar-h);background:var(--charcoal);display:flex;align-items:center;padding:0 24px;gap:12px;border-bottom:1px solid rgba(255,255,255,0.07);flex-shrink:0;position:sticky;top:0;z-index:100;box-shadow:0 2px 12px rgba(0,0,0,0.2);}
+.topbar-logo{font-size:16px;font-weight:800;color:#fff;letter-spacing:-0.3px;}
+.topbar-logo span{color:var(--green);}
+.topbar-sep{font-size:10px;color:rgba(255,255,255,0.2);font-family:var(--mono);}
+.topbar-page{font-size:11px;color:rgba(255,255,255,0.4);font-family:var(--mono);letter-spacing:0.15em;text-transform:uppercase;}
+.topbar-right{margin-left:auto;display:flex;align-items:center;gap:8px;}
+.topbar-user{font-size:11px;color:rgba(255,255,255,0.3);font-family:var(--mono);}
+.topbar-btn{padding:5px 14px;border-radius:var(--radius-sm);font-size:12px;font-weight:600;font-family:var(--font);cursor:pointer;border:1px solid rgba(255,255,255,0.12);background:rgba(255,255,255,0.06);color:rgba(255,255,255,0.5);transition:all 0.18s;display:inline-flex;align-items:center;gap:5px;}
+.topbar-btn:hover{background:rgba(255,255,255,0.1);color:#fff;}
+.topbar-btn.danger{border-color:rgba(229,62,62,0.3);color:rgba(229,62,62,0.7);}
+.topbar-btn.danger:hover{background:var(--danger-lt);color:var(--danger);border-color:var(--danger);}
 
-/* ── TOPBAR ── */
-.topbar {
-  height: var(--topbar-h);
-  background: var(--charcoal);
-  display: flex;
-  align-items: center;
-  padding: 0 24px;
-  gap: 12px;
-  border-bottom: 1px solid rgba(255,255,255,0.07);
-  flex-shrink: 0;
-  position: sticky;
-  top: 0;
-  z-index: 100;
-  box-shadow: 0 2px 12px rgba(0,0,0,0.2);
-}
-.topbar-logo { font-size: 16px; font-weight: 800; color: #fff; letter-spacing: -0.3px; }
-.topbar-logo span { color: var(--green); }
-.topbar-sep { font-size: 10px; color: rgba(255,255,255,0.2); font-family: var(--mono); }
-.topbar-page { font-size: 11px; color: rgba(255,255,255,0.4); font-family: var(--mono); letter-spacing: 0.15em; text-transform: uppercase; }
-.topbar-right { margin-left: auto; display: flex; align-items: center; gap: 8px; }
-.topbar-user { font-size: 11px; color: rgba(255,255,255,0.3); font-family: var(--mono); }
-.topbar-btn {
-  padding: 5px 14px;
-  border-radius: var(--radius-sm);
-  font-size: 12px;
-  font-weight: 600;
-  font-family: var(--font);
-  cursor: pointer;
-  border: 1px solid rgba(255,255,255,0.12);
-  background: rgba(255,255,255,0.06);
-  color: rgba(255,255,255,0.5);
-  text-decoration: none;
-  transition: all 0.18s;
-  display: inline-flex;
-  align-items: center;
-  gap: 5px;
-}
-.topbar-btn:hover { background: rgba(255,255,255,0.1); color: #fff; }
-.topbar-btn.danger { border-color: rgba(229,62,62,0.3); color: rgba(229,62,62,0.7); }
-.topbar-btn.danger:hover { background: var(--danger-lt); color: var(--danger); border-color: var(--danger); }
+.main-body{flex:1;display:flex;flex-direction:column;overflow-y:auto;}
 
-/* ── MAIN BODY ── */
-.main-body {
-  flex: 1;
-  display: flex;
-  flex-direction: column;
-  overflow-y: auto;
-}
+/* Loading */
+.loading-screen{display:flex;flex-direction:column;align-items:center;justify-content:center;flex:1;gap:16px;}
+.spinner{width:36px;height:36px;border:3px solid var(--border);border-top-color:var(--green);border-radius:50%;animation:spin 0.7s linear infinite;}
+@keyframes spin{to{transform:rotate(360deg);}}
+.loading-text{font-size:13px;color:var(--muted);font-family:var(--mono);}
 
-/* ── HUB PAGE ── */
-.hub-hero {
-  background: var(--charcoal);
-  padding: 48px 32px 56px;
-  text-align: center;
-  position: relative;
-  overflow: hidden;
-}
-.hub-hero::before {
-  content: '';
-  position: absolute; inset: 0;
-  background-image:
-    linear-gradient(rgba(58,193,74,0.04) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(58,193,74,0.04) 1px, transparent 1px);
-  background-size: 36px 36px;
-  pointer-events: none;
-}
-.hub-hero::after {
-  content: '';
-  position: absolute; bottom: -1px; left: 0; right: 0;
-  height: 48px;
-  background: var(--bg);
-  clip-path: ellipse(55% 100% at 50% 100%);
-}
-.hub-badge {
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
-  background: rgba(58,193,74,0.12);
-  border: 1px solid rgba(58,193,74,0.25);
-  color: var(--green);
-  font-size: 11px;
-  font-weight: 700;
-  letter-spacing: 0.12em;
-  text-transform: uppercase;
-  padding: 5px 14px;
-  border-radius: 20px;
-  margin-bottom: 20px;
-  position: relative;
-  z-index: 1;
-}
-.hub-hero h1 {
-  font-size: clamp(1.8rem, 4vw, 2.6rem);
-  font-weight: 800;
-  color: #fff;
-  margin-bottom: 12px;
-  letter-spacing: -0.4px;
-  position: relative;
-  z-index: 1;
-}
-.hub-hero h1 span { color: var(--green); }
-.hub-hero p {
-  font-size: 14px;
-  color: rgba(255,255,255,0.45);
-  max-width: 480px;
-  margin: 0 auto;
-  line-height: 1.7;
-  position: relative;
-  z-index: 1;
-}
+/* Hub */
+.hub-hero{background:var(--charcoal);padding:48px 32px 56px;text-align:center;position:relative;overflow:hidden;}
+.hub-hero::before{content:'';position:absolute;inset:0;background-image:linear-gradient(rgba(58,193,74,0.04) 1px,transparent 1px),linear-gradient(90deg,rgba(58,193,74,0.04) 1px,transparent 1px);background-size:36px 36px;pointer-events:none;}
+.hub-hero::after{content:'';position:absolute;bottom:-1px;left:0;right:0;height:48px;background:var(--bg);clip-path:ellipse(55% 100% at 50% 100%);}
+.hub-badge{display:inline-flex;align-items:center;gap:6px;background:rgba(58,193,74,0.12);border:1px solid rgba(58,193,74,0.25);color:var(--green);font-size:11px;font-weight:700;letter-spacing:0.12em;text-transform:uppercase;padding:5px 14px;border-radius:20px;margin-bottom:20px;position:relative;z-index:1;}
+.hub-hero h1{font-size:clamp(1.8rem,4vw,2.6rem);font-weight:800;color:#fff;margin-bottom:12px;letter-spacing:-0.4px;position:relative;z-index:1;}
+.hub-hero h1 span{color:var(--green);}
+.hub-hero p{font-size:14px;color:rgba(255,255,255,0.45);max-width:480px;margin:0 auto;line-height:1.7;position:relative;z-index:1;}
+.hub-stats{display:flex;justify-content:center;gap:32px;padding:20px 32px 0;flex-wrap:wrap;}
+.hub-stat{text-align:center;}
+.hub-stat-val{font-size:22px;font-weight:800;color:var(--green-dk);font-family:var(--mono);line-height:1;}
+.hub-stat-lbl{font-size:10px;color:var(--muted);text-transform:uppercase;letter-spacing:0.1em;margin-top:3px;font-weight:600;}
+.hub-grid{max-width:1000px;margin:40px auto 60px;padding:0 24px;display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:18px;}
+.game-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-xl);padding:24px;cursor:pointer;transition:all 0.2s;box-shadow:var(--shadow-sm);position:relative;overflow:hidden;}
+.game-card::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;border-radius:3px 3px 0 0;background:var(--card-color,var(--green));opacity:0;transition:opacity 0.2s;}
+.game-card:hover{transform:translateY(-4px);box-shadow:var(--shadow-lg);border-color:transparent;}
+.game-card:hover::before{opacity:1;}
+.game-card-icon{font-size:32px;margin-bottom:14px;display:block;}
+.game-card-title{font-size:16px;font-weight:800;color:var(--charcoal);margin-bottom:6px;letter-spacing:-0.2px;}
+.game-card-desc{font-size:12px;color:var(--muted);line-height:1.6;margin-bottom:16px;}
+.game-card-footer{display:flex;align-items:center;justify-content:space-between;}
+.game-card-tag{font-size:10px;font-weight:700;letter-spacing:0.08em;text-transform:uppercase;padding:3px 9px;border-radius:20px;background:var(--green-lt);color:var(--green-dk);border:1px solid var(--green-mid);}
+.game-card-play{font-size:12px;font-weight:700;color:var(--green-dk);display:flex;align-items:center;gap:4px;}
 
-/* Stat strip */
-.hub-stats {
-  display: flex;
-  justify-content: center;
-  gap: 32px;
-  padding: 20px 32px 0;
-  flex-wrap: wrap;
-}
-.hub-stat {
-  text-align: center;
-}
-.hub-stat-val {
-  font-size: 22px;
-  font-weight: 800;
-  color: var(--green-dk);
-  font-family: var(--mono);
-  line-height: 1;
-}
-.hub-stat-lbl {
-  font-size: 10px;
-  color: var(--muted);
-  text-transform: uppercase;
-  letter-spacing: 0.1em;
-  margin-top: 3px;
-  font-weight: 600;
-}
+/* Game wrapper */
+.game-wrap{flex:1;overflow-y:auto;padding:32px 20px;max-width:860px;margin:0 auto;width:100%;}
+.back-btn{display:inline-flex;align-items:center;gap:6px;padding:7px 16px;border-radius:var(--radius);font-size:12px;font-weight:700;font-family:var(--font);cursor:pointer;border:1px solid var(--border2);background:var(--surface);color:var(--text2);transition:all 0.15s;box-shadow:var(--shadow-sm);}
+.back-btn:hover{border-color:var(--green);color:var(--green-dk);background:var(--green-lt);}
+.game-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:24px;flex-wrap:wrap;gap:12px;}
+.game-title{font-size:20px;font-weight:800;color:var(--charcoal);letter-spacing:-0.3px;}
+.game-subtitle{font-size:12px;color:var(--muted);margin-top:2px;}
 
-/* Game grid */
-.hub-grid {
-  max-width: 1000px;
-  margin: 40px auto 60px;
-  padding: 0 24px;
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-  gap: 18px;
-}
-.game-card {
-  background: var(--surface);
-  border: 1px solid var(--border);
-  border-radius: var(--radius-xl);
-  padding: 24px;
-  cursor: pointer;
-  transition: all 0.2s;
-  box-shadow: var(--shadow-sm);
-  position: relative;
-  overflow: hidden;
-}
-.game-card::before {
-  content: '';
-  position: absolute;
-  top: 0; left: 0; right: 0;
-  height: 3px;
-  border-radius: 3px 3px 0 0;
-  background: var(--card-color, var(--green));
-  opacity: 0;
-  transition: opacity 0.2s;
-}
-.game-card:hover {
-  transform: translateY(-4px);
-  box-shadow: var(--shadow-lg);
-  border-color: transparent;
-}
-.game-card:hover::before { opacity: 1; }
-.game-card-icon {
-  font-size: 32px;
-  margin-bottom: 14px;
-  display: block;
-}
-.game-card-title {
-  font-size: 16px;
-  font-weight: 800;
-  color: var(--charcoal);
-  margin-bottom: 6px;
-  letter-spacing: -0.2px;
-}
-.game-card-desc {
-  font-size: 12px;
-  color: var(--muted);
-  line-height: 1.6;
-  margin-bottom: 16px;
-}
-.game-card-footer {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-}
-.game-card-tag {
-  font-size: 10px;
-  font-weight: 700;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
-  padding: 3px 9px;
-  border-radius: 20px;
-  background: var(--green-lt);
-  color: var(--green-dk);
-  border: 1px solid var(--green-mid);
-}
-.game-card-play {
-  font-size: 12px;
-  font-weight: 700;
-  color: var(--green-dk);
-  display: flex;
-  align-items: center;
-  gap: 4px;
-}
+/* Progress */
+.progress-bar-wrap{height:4px;background:var(--border);border-radius:4px;margin-bottom:24px;overflow:hidden;}
+.progress-bar-fill{height:100%;background:linear-gradient(90deg,var(--green),var(--green-dk));border-radius:4px;transition:width 0.4s ease;box-shadow:0 0 8px rgba(58,193,74,0.3);}
 
-/* ── GAME WRAPPER ── */
-.game-wrap {
-  flex: 1;
-  overflow-y: auto;
-  padding: 32px 20px;
-  max-width: 860px;
-  margin: 0 auto;
-  width: 100%;
-}
+/* Score */
+.score-badge{display:inline-flex;align-items:center;gap:6px;padding:5px 14px;background:var(--success-lt);border:1px solid var(--green-mid);border-radius:20px;font-size:13px;font-weight:800;color:var(--success);font-family:var(--mono);}
 
-/* Back btn */
-.back-btn {
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
-  padding: 7px 16px;
-  border-radius: var(--radius);
-  font-size: 12px;
-  font-weight: 700;
-  font-family: var(--font);
-  cursor: pointer;
-  border: 1px solid var(--border2);
-  background: var(--surface);
-  color: var(--text2);
-  transition: all 0.15s;
-  box-shadow: var(--shadow-sm);
-}
-.back-btn:hover { border-color: var(--green); color: var(--green-dk); background: var(--green-lt); }
+/* Panel */
+.panel-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-xl);box-shadow:var(--shadow);overflow:hidden;margin-bottom:16px;animation:fadeUp 0.3s ease both;}
+.panel-card-head{padding:16px 22px;border-bottom:1px solid var(--border);background:var(--surface2);display:flex;align-items:center;gap:10px;flex-wrap:wrap;}
+.panel-card-body{padding:22px;}
+.panel-tag{font-size:10px;font-weight:700;letter-spacing:0.12em;text-transform:uppercase;padding:3px 9px;border-radius:20px;}
+.tag-green{background:var(--green-lt);color:var(--green-dk);border:1px solid var(--green-mid);}
+.tag-red{background:var(--danger-lt);color:var(--danger);border:1px solid rgba(229,62,62,0.2);}
+.tag-blue{background:var(--info-lt);color:var(--info);border:1px solid rgba(37,99,235,0.2);}
+.tag-warn{background:var(--warn-lt);color:var(--warn);border:1px solid rgba(217,119,6,0.2);}
+.tag-gray{background:var(--surface2);color:var(--muted);border:1px solid var(--border);}
+.tag-purple{background:#f3f0ff;color:#7c3aed;border:1px solid rgba(124,58,237,0.2);}
+.panel-card-title{font-size:14px;font-weight:700;color:var(--charcoal);}
 
-/* Game header */
-.game-header {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  margin-bottom: 24px;
-  flex-wrap: wrap;
-  gap: 12px;
-}
-.game-title {
-  font-size: 20px;
-  font-weight: 800;
-  color: var(--charcoal);
-  letter-spacing: -0.3px;
-}
-.game-subtitle {
-  font-size: 12px;
-  color: var(--muted);
-  margin-top: 2px;
-}
+/* Options */
+.option-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;}
+.option-btn{padding:14px 16px;background:var(--surface);border:1.5px solid var(--border2);border-radius:var(--radius-lg);color:var(--text2);font-size:13px;font-weight:500;font-family:var(--font);cursor:pointer;text-align:left;line-height:1.4;transition:all 0.2s;box-shadow:var(--shadow-sm);}
+.option-btn:hover:not(:disabled){border-color:var(--green);color:var(--charcoal);box-shadow:var(--shadow-green);}
+.option-btn.correct{border-color:var(--green);background:var(--green-lt);color:var(--success);}
+.option-btn.wrong{border-color:var(--danger);background:var(--danger-lt);color:var(--danger);}
+.option-btn:disabled{cursor:default;}
+.option-letter{font-family:var(--mono);font-size:11px;color:var(--muted);margin-right:8px;}
 
-/* Progress bar */
-.progress-bar-wrap {
-  height: 4px;
-  background: var(--border);
-  border-radius: 4px;
-  margin-bottom: 24px;
-  overflow: hidden;
-}
-.progress-bar-fill {
-  height: 100%;
-  background: linear-gradient(90deg, var(--green), var(--green-dk));
-  border-radius: 4px;
-  transition: width 0.4s ease;
-  box-shadow: 0 0 8px rgba(58,193,74,0.3);
-}
+/* Feedback */
+.feedback-box{border-radius:var(--radius-lg);padding:14px 18px;font-size:13px;line-height:1.6;margin-top:12px;}
+.feedback-box.correct{background:var(--success-lt);border:1px solid var(--green-mid);color:var(--success);}
+.feedback-box.wrong{background:var(--danger-lt);border:1px solid rgba(229,62,62,0.25);color:var(--danger);}
+.feedback-title{font-weight:700;margin-bottom:4px;font-size:13px;}
+.feedback-text{font-size:12px;color:var(--text2);}
 
-/* Score badge */
-.score-badge {
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
-  padding: 5px 14px;
-  background: var(--success-lt);
-  border: 1px solid var(--green-mid);
-  border-radius: 20px;
-  font-size: 13px;
-  font-weight: 800;
-  color: var(--success);
-  font-family: var(--mono);
-}
+/* Buttons */
+.btn-action{display:inline-flex;align-items:center;gap:7px;padding:10px 24px;background:var(--green);border:none;border-radius:var(--radius-lg);color:var(--charcoal);font-size:14px;font-weight:700;font-family:var(--font);cursor:pointer;box-shadow:var(--shadow-green);transition:all 0.18s;letter-spacing:0.01em;}
+.btn-action:hover{background:var(--green-dk);transform:translateY(-1px);}
+.btn-action:disabled{opacity:0.5;cursor:not-allowed;transform:none;}
+.btn-secondary{display:inline-flex;align-items:center;gap:7px;padding:10px 20px;background:var(--surface);border:1px solid var(--border2);border-radius:var(--radius-lg);color:var(--text2);font-size:13px;font-weight:600;font-family:var(--font);cursor:pointer;box-shadow:var(--shadow-sm);transition:all 0.18s;}
+.btn-secondary:hover{border-color:var(--green);color:var(--green-dk);background:var(--green-lt);}
+.btn-danger{display:inline-flex;align-items:center;gap:6px;padding:8px 16px;background:var(--danger-lt);border:1px solid rgba(229,62,62,0.25);border-radius:var(--radius);color:var(--danger);font-size:12px;font-weight:700;font-family:var(--font);cursor:pointer;transition:all 0.15s;}
+.btn-danger:hover{background:var(--danger);color:#fff;}
 
-/* Panel card */
-.panel-card {
-  background: var(--surface);
-  border: 1px solid var(--border);
-  border-radius: var(--radius-xl);
-  box-shadow: var(--shadow);
-  overflow: hidden;
-  margin-bottom: 16px;
-  animation: fadeUp 0.3s ease both;
-}
-.panel-card-head {
-  padding: 16px 22px;
-  border-bottom: 1px solid var(--border);
-  background: var(--surface2);
-  display: flex;
-  align-items: center;
-  gap: 10px;
-}
-.panel-card-body { padding: 22px; }
-.panel-tag {
-  font-size: 10px;
-  font-weight: 700;
-  letter-spacing: 0.12em;
-  text-transform: uppercase;
-  padding: 3px 9px;
-  border-radius: 20px;
-}
-.tag-green { background: var(--green-lt); color: var(--green-dk); border: 1px solid var(--green-mid); }
-.tag-red   { background: var(--danger-lt); color: var(--danger); border: 1px solid rgba(229,62,62,0.2); }
-.tag-blue  { background: var(--info-lt); color: var(--info); border: 1px solid rgba(37,99,235,0.2); }
-.tag-warn  { background: var(--warn-lt); color: var(--warn); border: 1px solid rgba(217,119,6,0.2); }
-.tag-gray  { background: var(--surface2); color: var(--muted); border: 1px solid var(--border); }
-.panel-card-title { font-size: 14px; font-weight: 700; color: var(--charcoal); }
+/* Code */
+.code-block{background:var(--charcoal);border-radius:var(--radius-lg);padding:16px 20px;font-family:var(--mono);font-size:12px;line-height:1.7;color:#e2e8f0;overflow-x:auto;margin-bottom:14px;}
+.code-textarea-dark{width:100%;min-height:130px;background:var(--charcoal);border:1px solid rgba(255,255,255,0.1);border-radius:var(--radius-lg);padding:14px 18px;color:#e2e8f0;font-family:var(--mono);font-size:12px;line-height:1.7;resize:vertical;outline:none;transition:border-color 0.18s;}
+.code-textarea-dark:focus{border-color:var(--green);}
 
-/* Option buttons */
-.option-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
-.option-btn {
-  padding: 14px 16px;
-  background: var(--surface);
-  border: 1.5px solid var(--border2);
-  border-radius: var(--radius-lg);
-  color: var(--text2);
-  font-size: 13px;
-  font-weight: 500;
-  font-family: var(--font);
-  cursor: pointer;
-  text-align: left;
-  line-height: 1.4;
-  transition: all 0.2s;
-  box-shadow: var(--shadow-sm);
-}
-.option-btn:hover:not(:disabled) { border-color: var(--green); color: var(--charcoal); box-shadow: var(--shadow-green); }
-.option-btn.correct { border-color: var(--green); background: var(--green-lt); color: var(--success); }
-.option-btn.wrong   { border-color: var(--danger); background: var(--danger-lt); color: var(--danger); }
-.option-btn:disabled { cursor: default; }
-.option-letter {
-  font-family: var(--mono);
-  font-size: 11px;
-  color: var(--muted);
-  margin-right: 8px;
-}
+/* Match */
+.match-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;}
+.match-col-label{font-size:10px;font-weight:700;letter-spacing:0.15em;text-transform:uppercase;color:var(--muted);text-align:center;margin-bottom:8px;}
+.match-item{padding:11px 14px;border-radius:var(--radius);font-size:12px;font-weight:500;cursor:pointer;text-align:left;transition:all 0.18s;border:1.5px solid var(--border2);background:var(--surface);color:var(--text2);width:100%;font-family:var(--mono);}
+.match-item:hover:not(:disabled){border-color:var(--green);color:var(--charcoal);background:var(--green-lt);}
+.match-item.selected{border-color:var(--info);background:var(--info-lt);color:var(--info);}
+.match-item.matched{border-color:var(--green);background:var(--green-lt);color:var(--success);opacity:0.7;cursor:default;}
+.match-item.wrong-flash{border-color:var(--danger);background:var(--danger-lt);color:var(--danger);}
+.match-meaning{font-family:var(--font);letter-spacing:0;}
 
-/* Feedback box */
-.feedback-box {
-  border-radius: var(--radius-lg);
-  padding: 14px 18px;
-  font-size: 13px;
-  line-height: 1.6;
-  margin-top: 12px;
-}
-.feedback-box.correct { background: var(--success-lt); border: 1px solid var(--green-mid); color: var(--success); }
-.feedback-box.wrong   { background: var(--danger-lt); border: 1px solid rgba(229,62,62,0.25); color: var(--danger); }
-.feedback-title { font-weight: 700; margin-bottom: 4px; font-size: 13px; }
-.feedback-text  { font-size: 12px; color: var(--text2); }
-
-/* Primary action button */
-.btn-action {
-  display: inline-flex;
-  align-items: center;
-  gap: 7px;
-  padding: 10px 24px;
-  background: var(--green);
-  border: none;
-  border-radius: var(--radius-lg);
-  color: var(--charcoal);
-  font-size: 14px;
-  font-weight: 700;
-  font-family: var(--font);
-  cursor: pointer;
-  box-shadow: var(--shadow-green);
-  transition: all 0.18s;
-  letter-spacing: 0.01em;
-}
-.btn-action:hover { background: var(--green-dk); transform: translateY(-1px); }
-.btn-action:disabled { opacity: 0.5; cursor: not-allowed; transform: none; }
-.btn-secondary {
-  display: inline-flex;
-  align-items: center;
-  gap: 7px;
-  padding: 10px 20px;
-  background: var(--surface);
-  border: 1px solid var(--border2);
-  border-radius: var(--radius-lg);
-  color: var(--text2);
-  font-size: 13px;
-  font-weight: 600;
-  font-family: var(--font);
-  cursor: pointer;
-  box-shadow: var(--shadow-sm);
-  transition: all 0.18s;
-}
-.btn-secondary:hover { border-color: var(--green); color: var(--green-dk); background: var(--green-lt); }
-.btn-danger {
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
-  padding: 8px 16px;
-  background: var(--danger-lt);
-  border: 1px solid rgba(229,62,62,0.25);
-  border-radius: var(--radius);
-  color: var(--danger);
-  font-size: 12px;
-  font-weight: 700;
-  font-family: var(--font);
-  cursor: pointer;
-  transition: all 0.15s;
-}
-.btn-danger:hover { background: var(--danger); color: #fff; }
-
-/* Terminal code block */
-.code-block {
-  background: var(--charcoal);
-  border-radius: var(--radius-lg);
-  padding: 16px 20px;
-  font-family: var(--mono);
-  font-size: 12px;
-  line-height: 1.7;
-  color: #e2e8f0;
-  overflow-x: auto;
-  margin-bottom: 14px;
-}
-.code-textarea-dark {
-  width: 100%;
-  min-height: 130px;
-  background: var(--charcoal);
-  border: 1px solid rgba(255,255,255,0.1);
-  border-radius: var(--radius-lg);
-  padding: 14px 18px;
-  color: #e2e8f0;
-  font-family: var(--mono);
-  font-size: 12px;
-  line-height: 1.7;
-  resize: vertical;
-  outline: none;
-  transition: border-color 0.18s;
-}
-.code-textarea-dark:focus { border-color: var(--green); }
-
-/* Match game */
-.match-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
-.match-col-label { font-size: 10px; font-weight: 700; letter-spacing: 0.15em; text-transform: uppercase; color: var(--muted); text-align: center; margin-bottom: 8px; }
-.match-item {
-  padding: 11px 14px;
-  border-radius: var(--radius);
-  font-size: 12px;
-  font-weight: 500;
-  cursor: pointer;
-  text-align: left;
-  transition: all 0.18s;
-  border: 1.5px solid var(--border2);
-  background: var(--surface);
-  color: var(--text2);
-  width: 100%;
-  font-family: var(--mono);
-}
-.match-item:hover:not(:disabled) { border-color: var(--green); color: var(--charcoal); background: var(--green-lt); }
-.match-item.selected { border-color: var(--info); background: var(--info-lt); color: var(--info); }
-.match-item.matched { border-color: var(--green); background: var(--green-lt); color: var(--success); opacity: 0.7; cursor: default; }
-.match-item.wrong-flash { border-color: var(--danger); background: var(--danger-lt); color: var(--danger); }
-.match-meaning { font-family: var(--font); letter-spacing: 0; }
-
-/* RAP sorter */
-.sorter-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 12px; }
-.sorter-card {
-  background: var(--surface);
-  border: 1.5px solid var(--border2);
-  border-radius: var(--radius-lg);
-  padding: 14px;
-  transition: border-color 0.2s;
-}
-.sorter-card.assigned { border-color: var(--info); }
-.sorter-card.correct  { border-color: var(--green); }
-.sorter-card.wrong-ans{ border-color: var(--danger); }
-.sorter-card-text { font-size: 13px; font-weight: 600; color: var(--charcoal); margin-bottom: 10px; line-height: 1.4; }
-.sorter-layer-btn {
-  display: block;
-  width: 100%;
-  text-align: left;
-  padding: 5px 8px;
-  border-radius: var(--radius-sm);
-  font-size: 11px;
-  font-family: var(--font);
-  cursor: pointer;
-  border: 1px solid var(--border);
-  background: transparent;
-  color: var(--muted);
-  margin-bottom: 4px;
-  transition: all 0.15s;
-}
-.sorter-layer-btn:hover { border-color: var(--green); color: var(--green-dk); background: var(--green-lt); }
-.sorter-layer-btn.chosen { border-color: var(--info); background: var(--info-lt); color: var(--info); font-weight: 700; }
+/* Sorter */
+.sorter-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:12px;}
+.sorter-card{background:var(--surface);border:1.5px solid var(--border2);border-radius:var(--radius-lg);padding:14px;transition:border-color 0.2s;}
+.sorter-card.assigned{border-color:var(--info);}
+.sorter-card.correct{border-color:var(--green);}
+.sorter-card.wrong-ans{border-color:var(--danger);}
+.sorter-card-text{font-size:13px;font-weight:600;color:var(--charcoal);margin-bottom:10px;line-height:1.4;}
+.sorter-layer-btn{display:block;width:100%;text-align:left;padding:5px 8px;border-radius:var(--radius-sm);font-size:11px;font-family:var(--font);cursor:pointer;border:1px solid var(--border);background:transparent;color:var(--muted);margin-bottom:4px;transition:all 0.15s;}
+.sorter-layer-btn:hover{border-color:var(--green);color:var(--green-dk);background:var(--green-lt);}
+.sorter-layer-btn.chosen{border-color:var(--info);background:var(--info-lt);color:var(--info);font-weight:700;}
 
 /* Speed coder */
-.speed-target {
-  background: var(--charcoal);
-  border-radius: var(--radius-lg);
-  padding: 20px 22px;
-  font-family: var(--mono);
-  font-size: 14px;
-  line-height: 1.8;
-  margin-bottom: 16px;
-  letter-spacing: 0.02em;
-}
-.speed-char-done  { color: var(--green); }
-.speed-char-error { color: var(--danger); background: rgba(229,62,62,0.15); border-radius: 2px; }
-.speed-char-wait  { color: rgba(255,255,255,0.2); }
+.speed-target{background:var(--charcoal);border-radius:var(--radius-lg);padding:20px 22px;font-family:var(--mono);font-size:14px;line-height:1.8;margin-bottom:16px;letter-spacing:0.02em;}
+.speed-char-done{color:var(--green);}
+.speed-char-error{color:var(--danger);background:rgba(229,62,62,0.15);border-radius:2px;}
+.speed-char-wait{color:rgba(255,255,255,0.2);}
 
-/* Result page */
-.result-wrap {
-  max-width: 500px;
-  margin: 0 auto;
-  text-align: center;
-  padding: 40px 20px;
-}
-.result-emoji { font-size: 56px; margin-bottom: 16px; }
-.result-title { font-size: 26px; font-weight: 800; color: var(--charcoal); margin-bottom: 6px; letter-spacing: -0.4px; }
-.result-score { font-size: 48px; font-weight: 800; color: var(--green-dk); font-family: var(--mono); margin: 16px 0 4px; line-height: 1; }
-.result-pct { font-size: 14px; color: var(--muted); margin-bottom: 28px; }
-.result-actions { display: flex; gap: 12px; justify-content: center; flex-wrap: wrap; }
-.result-msg { font-size: 14px; color: var(--text2); margin-bottom: 20px; }
+/* Topic selector */
+.topic-selector{max-width:680px;margin:0 auto;padding:32px 24px;}
+.topic-selector h2{font-size:20px;font-weight:800;color:var(--charcoal);margin-bottom:6px;}
+.topic-selector p{font-size:13px;color:var(--muted);margin-bottom:24px;}
+.topic-chips{display:flex;flex-wrap:wrap;gap:10px;margin-bottom:28px;}
+.topic-chip{padding:8px 16px;border-radius:20px;font-size:13px;font-weight:600;font-family:var(--font);cursor:pointer;border:1.5px solid var(--border2);background:var(--surface);color:var(--text2);transition:all 0.15s;}
+.topic-chip:hover{border-color:var(--green);color:var(--green-dk);}
+.topic-chip.active{border-color:var(--green);background:var(--green-lt);color:var(--green-dk);}
+.topic-count{font-size:12px;color:var(--muted);margin-bottom:16px;}
 
-@keyframes fadeUp { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: none; } }
-@keyframes pulse { 0%,100% { opacity: 1; } 50% { opacity: 0.6; } }
+/* Inspector */
+.inspector-wrap{padding:8px 0;}
+.inspector-toolbar{display:flex;align-items:center;gap:10px;margin-bottom:14px;flex-wrap:wrap;}
+.inspector-label{font-size:11px;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;color:var(--muted);}
+.adt-config{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:14px;}
+.adt-input{width:100%;padding:8px 12px;border:1px solid var(--border2);border-radius:var(--radius);font-size:12px;font-family:var(--mono);background:var(--surface);color:var(--text);outline:none;transition:border-color 0.15s;}
+.adt-input:focus{border-color:var(--green);}
+.finding-row{display:flex;align-items:flex-start;gap:10px;padding:10px 0;border-bottom:1px solid var(--border);}
+.finding-row:last-child{border-bottom:none;}
+.finding-sev{font-size:10px;font-weight:700;padding:2px 8px;border-radius:20px;white-space:nowrap;flex-shrink:0;margin-top:2px;}
+.sev-error{background:var(--danger-lt);color:var(--danger);border:1px solid rgba(229,62,62,0.2);}
+.sev-warning{background:var(--warn-lt);color:var(--warn);border:1px solid rgba(217,119,6,0.2);}
+.sev-info{background:var(--info-lt);color:var(--info);border:1px solid rgba(37,99,235,0.2);}
+.finding-body{flex:1;}
+.finding-msg{font-size:13px;color:var(--text);font-weight:600;margin-bottom:2px;}
+.finding-detail{font-size:11px;color:var(--muted);font-family:var(--mono);}
+.finding-fix{font-size:11px;color:var(--success);margin-top:3px;}
+.no-issues{text-align:center;padding:24px;color:var(--success);font-weight:700;font-size:14px;}
+.adt-status{font-size:11px;padding:4px 10px;border-radius:20px;font-weight:600;}
+.adt-connected{background:var(--green-lt);color:var(--green-dk);border:1px solid var(--green-mid);}
+.adt-offline{background:var(--warn-lt);color:var(--warn);border:1px solid rgba(217,119,6,0.2);}
+
+/* Result */
+.result-wrap{max-width:500px;margin:0 auto;text-align:center;padding:40px 20px;}
+.result-emoji{font-size:56px;margin-bottom:16px;}
+.result-title{font-size:26px;font-weight:800;color:var(--charcoal);margin-bottom:6px;letter-spacing:-0.4px;}
+.result-score{font-size:48px;font-weight:800;color:var(--green-dk);font-family:var(--mono);margin:16px 0 4px;line-height:1;}
+.result-pct{font-size:14px;color:var(--muted);margin-bottom:28px;}
+.result-actions{display:flex;gap:12px;justify-content:center;flex-wrap:wrap;}
+.result-msg{font-size:14px;color:var(--text2);margin-bottom:20px;}
+
+@keyframes fadeUp{from{opacity:0;transform:translateY(10px);}to{opacity:1;transform:none;}}
+@keyframes pulse{0%,100%{opacity:1;}50%{opacity:0.6;}}
 </style>
 </head>
 <body>
@@ -613,69 +214,28 @@ const { useState, useEffect, useRef, useCallback } = React;
 if (!sessionStorage.getItem('szc_token')) window.location.href = 'index.html';
 const STUDENT_NAME = sessionStorage.getItem('szc_name') || 'Student';
 
-/* ═══════════════════════════════════════════════════
-   GAME DATA
-═══════════════════════════════════════════════════ */
-const QUIZ_QUESTIONS = [
-  { q:"Which keyword declares an internal table?", opts:["DATA","TABLE","ITAB","DECLARE"], ans:0, exp:"DATA lt_table TYPE TABLE OF ... declares an internal table in ABAP." },
-  { q:"What does sy-subrc = 0 mean?", opts:["Error occurred","Success / Record found","Table is empty","Loop ended"], ans:1, exp:"sy-subrc = 0 means the last operation was successful (e.g., SELECT found records)." },
-  { q:"Which statement reads one row from an internal table?", opts:["SELECT SINGLE","READ TABLE","FETCH","GET TABLE"], ans:1, exp:"READ TABLE lt_tab INTO ls_row WITH KEY field = value." },
-  { q:"In RAP, what does 'unmanaged' mean?", opts:["Framework manages CRUD","Developer writes own save logic","No behavior needed","Read-only operations"], ans:1, exp:"Unmanaged RAP: developer writes all CRUD logic in save_modified." },
-  { q:"Which CDS annotation exposes a view as OData?", opts:["@OData.publish","@Fiori.Launch","@OData.entitySet","@Sap.semantics"], ans:0, exp:"@OData.publish: true on the consumption view exposes it as OData service." },
-  { q:"What is HANA-optimized SELECT syntax?", opts:["SELECT * FROM mara","SELECT * FROM I_Material INTO TABLE @lt_mat","SELECT ALL FROM mara","FETCH mara INTO lt_mat"], ans:1, exp:"Use CDS view names with INTO TABLE @lt_mat (ABAP 7.40+ syntax)." },
-  { q:"Which method handles CREATE in RAP behavior impl?", opts:["CREATE","create","MODIFY_ENTITY","create_by_association"], ans:1, exp:"The 'create' method in the behavior implementation class handles CREATE." },
-  { q:"What does AMDP stand for?", opts:["ABAP Managed Dynamic Procedure","ABAP Managed Database Procedure","Advanced MDX Processor","Automated Data Processor"], ans:1, exp:"AMDP = ABAP Managed Database Procedure — runs native HANA SQLScript inside ABAP." },
-  { q:"Which annotation marks the semantic key in CDS?", opts:["@ObjectModel.text.element","@Semantics.businessDate.at","@ObjectModel.semanticKey","@UI.selectionField"], ans:2, exp:"@ObjectModel.semanticKey: ['Field'] marks the business key." },
-  { q:"Which annotation shows a field in Fiori filter bar?", opts:["@UI.lineItem","@UI.selectionField","@Search.defaultSearchElement","@UI.headerInfo"], ans:1, exp:"@UI.selectionField: [{ position: 10 }] makes the field appear in the filter bar." },
-  { q:"What does BDEF stand for in RAP?", opts:["Business Data Entity Framework","Behavior Definition","Business Definition Extension File","BAPI Definition File"], ans:1, exp:"BDEF = Behavior Definition — defines operations (CRUD + actions) on a RAP entity." },
-  { q:"How do you call a static method in ABAP OOP?", opts:["obj->method()","class=>method()","class->method()","CALL METHOD class-method"], ans:1, exp:"Static methods are called with class=>method() using the => operator." },
-  { q:"Which annotation links a field to its description text?", opts:["@ObjectModel.text.association","@Semantics.text","@UI.textArrangement","@ObjectModel.text.element"], ans:3, exp:"@ObjectModel.text.element: ['TextFieldName'] links a code field to its description." },
-  { q:"@UI.facet annotation is used for?", opts:["Filter bar config","Object page section layout","Table column config","Action buttons"], ans:1, exp:"@UI.facet defines sections/groups on a Fiori Object Page." },
-  { q:"COMMIT WORK in RAP unmanaged save_modified is?", opts:["Required","Optional","Forbidden","Conditional"], ans:2, exp:"In RAP, the framework controls the LUW. Adding COMMIT WORK violates the RAP contract." },
-];
+// ── Replace with your deployed Web App URL ──────────────────
+const GAS_URL = 'YOUR_WEB_APP_URL_HERE';
 
+// ── Static debug challenges (these are code, not data — OK to keep here) ──
 const DEBUG_CHALLENGES = [
   { title:"SELECT INTO TABLE syntax", buggy:"DATA lt_mat TYPE TABLE OF i_material.\nSELECT * FROM i_material INTO lt_mat.", fixed:"DATA lt_mat TYPE TABLE OF i_material.\nSELECT * FROM i_material INTO TABLE @lt_mat.", hint:"Missing TABLE keyword and @ symbol for host variable", explanation:"In ABAP 7.40+, use INTO TABLE @lt_mat. TABLE is needed for internal tables, and @ marks host variables." },
   { title:"Loop variable typo", buggy:"LOOP AT lt_orders INTO ls_order.\n  WRITE: / ls_orders-salesorder.\nENDLOOP.", fixed:"LOOP AT lt_orders INTO ls_order.\n  WRITE: / ls_order-salesorder.\nENDLOOP.", hint:"Check the variable name inside the loop — singular vs plural", explanation:"ls_orders (plural) doesn't exist. The loop variable is ls_order (singular). A classic ABAP typo." },
   { title:"RAP method missing RAISING", buggy:"METHODS create_hu\n  IMPORTING it_keys TYPE TABLE OF zpphucreate\n  CHANGING ct_result TYPE TABLE OF zpphucreate_result.", fixed:"METHODS create_hu\n  IMPORTING it_keys TYPE TABLE OF zpphucreate\n  CHANGING ct_result TYPE TABLE OF zpphucreate_result\n  RAISING cx_rap_bo_action_result.", hint:"RAP action methods need an exception declaration", explanation:"RAP action methods must include RAISING cx_rap_bo_action_result to propagate errors to the framework." },
-  { title:"Physical table used instead of CDS", buggy:"SELECT vbeln, posnr, matnr\n  FROM vbap\n  INTO TABLE @lt_items.", fixed:"SELECT vbeln, posnr, matnr\n  FROM I_SalesOrderItem\n  INTO TABLE @lt_items\n  WHERE vbeln = @lv_order.", hint:"Selecting from physical table + no WHERE = bad practice on HANA", explanation:"Always select from CDS views (not physical tables like VBAP) and always add WHERE conditions. Full table scans kill HANA performance." },
-  { title:"COMMIT WORK inside RAP", buggy:"METHOD save_modified.\n  LOOP AT create ASSIGNING FIELD-SYMBOL(<fs>).\n    INSERT zpptbl FROM @<fs>.\n  ENDLOOP.\n  COMMIT WORK.\nENDMETHOD.", fixed:"METHOD save_modified.\n  LOOP AT create ASSIGNING FIELD-SYMBOL(<fs>).\n    INSERT zpptbl FROM @<fs>.\n  ENDLOOP.\n  \" RAP framework handles LUW — NO COMMIT WORK!\nENDMETHOD.", hint:"RAP controls the Logical Unit of Work — never commit manually", explanation:"In RAP unmanaged implementations, the framework controls the LUW. COMMIT WORK causes a runtime error." },
-];
-
-const ANNOTATION_PAIRS = [
-  { annotation:"@UI.lineItem",                   meaning:"Shows field as column in list/table view" },
-  { annotation:"@UI.selectionField",             meaning:"Shows field in Fiori filter bar" },
-  { annotation:"@UI.headerInfo",                 meaning:"Defines Object Page title & subtitle" },
-  { annotation:"@ObjectModel.semanticKey",       meaning:"Marks the business key field(s)" },
-  { annotation:"@Semantics.amount.currencyCode", meaning:"Links amount field to currency field" },
-  { annotation:"@OData.publish",                 meaning:"Exposes CDS view as OData service" },
-  { annotation:"@UI.facet",                      meaning:"Defines Object Page section layout" },
-  { annotation:"@ObjectModel.text.element",      meaning:"Links a code field to its description" },
-  { annotation:"@Search.defaultSearchElement",   meaning:"Enables smart search on this field" },
-  { annotation:"@Semantics.quantity.unitOfMeasure", meaning:"Links quantity to its unit of measure" },
-];
-
-const TABLE_DETECTIVE = [
-  { clue:"I store material master general data. Every material in SAP lives here.", answer:"MARA", options:["MARA","MARC","MAKT","MARM"], cds:"I_Material" },
-  { clue:"I hold Sales Order header data — document number, sold-to party, net value.", answer:"VBAK", options:["VBAK","VBAP","VBFA","LIKP"], cds:"I_SalesOrder" },
-  { clue:"I contain Purchase Order header — vendor, company code, PO date.", answer:"EKKO", options:["EKKO","EKPO","EKAN","EKET"], cds:"I_PurchaseOrder" },
-  { clue:"I store Customer/Vendor master general data for business partners.", answer:"KNA1", options:["KNA1","LFA1","BUT000","KNVV"], cds:"I_BusinessPartner" },
-  { clue:"I am the G/L Account Line Items table — posting date, amount, document.", answer:"BSEG", options:["BSEG","BKPF","FAGLFLEXA","ACDOCA"], cds:"I_JournalEntryItem" },
-  { clue:"I store Production Order header — order type, material, basic dates.", answer:"AUFK", options:["AUFK","AFKO","AFPO","AUFM"], cds:"I_ProductionOrder" },
-  { clue:"I hold material descriptions — one row per material per language.", answer:"MAKT", options:["MAKT","MARA","MBEW","MARD"], cds:"I_MaterialText" },
-  { clue:"I store unrestricted, quality, and blocked stock per plant/storage loc.", answer:"MARD", options:["MARD","MARA","MBEW","MKPF"], cds:"I_MRPElement" },
+  { title:"Physical table instead of CDS view", buggy:"SELECT vbeln, posnr, matnr\n  FROM vbap\n  INTO TABLE @lt_items.", fixed:"SELECT vbeln, posnr, matnr\n  FROM I_SalesOrderItem\n  INTO TABLE @lt_items\n  WHERE vbeln = @lv_order.", hint:"Selecting from physical table + no WHERE = bad practice on HANA", explanation:"Always select from CDS views (not physical tables like VBAP) and always add WHERE conditions. Full table scans kill HANA performance." },
+  { title:"COMMIT WORK inside RAP save_modified", buggy:"METHOD save_modified.\n  LOOP AT create ASSIGNING FIELD-SYMBOL(<fs>).\n    INSERT zpptbl FROM @<fs>.\n  ENDLOOP.\n  COMMIT WORK.\nENDMETHOD.", fixed:"METHOD save_modified.\n  LOOP AT create ASSIGNING FIELD-SYMBOL(<fs>).\n    INSERT zpptbl FROM @<fs>.\n  ENDLOOP.\n  \" RAP framework handles LUW — no COMMIT WORK here!\nENDMETHOD.", hint:"RAP controls the Logical Unit of Work — never commit manually", explanation:"In RAP unmanaged implementations, the framework controls the LUW. COMMIT WORK causes a runtime error." },
 ];
 
 const RAP_LAYERS = ["Interface Layer","Consumption Layer","Behavior Layer","Service Layer"];
 const RAP_ITEMS = [
-  { id:1, text:"Interface CDS View (ZI_)",         layer:"Interface Layer" },
-  { id:2, text:"Consumption CDS View (ZC_)",       layer:"Consumption Layer" },
-  { id:3, text:"Behavior Definition (BDEF)",       layer:"Behavior Layer" },
-  { id:4, text:"Behavior Impl Class (ZBP_)",       layer:"Behavior Layer" },
-  { id:5, text:"OData Service (SRVD)",             layer:"Service Layer" },
-  { id:6, text:"Metadata Extension (ZMDEX)",       layer:"Consumption Layer" },
-  { id:7, text:"Business Service Binding",         layer:"Service Layer" },
-  { id:8, text:"AMDP Class for DB Logic",          layer:"Behavior Layer" },
+  { id:1, text:"Interface CDS View (ZI_)", layer:"Interface Layer" },
+  { id:2, text:"Consumption CDS View (ZC_)", layer:"Consumption Layer" },
+  { id:3, text:"Behavior Definition (BDEF)", layer:"Behavior Layer" },
+  { id:4, text:"Behavior Impl Class (ZBP_)", layer:"Behavior Layer" },
+  { id:5, text:"OData Service (SRVD)", layer:"Service Layer" },
+  { id:6, text:"Metadata Extension (ZMDEX)", layer:"Consumption Layer" },
+  { id:7, text:"Business Service Binding", layer:"Service Layer" },
+  { id:8, text:"AMDP Class for DB Logic", layer:"Behavior Layer" },
 ];
 
 const SPEED_LINES = [
@@ -689,37 +249,58 @@ const SPEED_LINES = [
   "MODIFY lt_tab FROM ls_row TRANSPORTING status WHERE matnr = ls_row-matnr.",
 ];
 
-const GAMES = [
-  { id:'quiz',   icon:'🧠', title:'ABAP Quiz',        desc:'15-question adaptive quiz covering RAP, CDS, HANA & ABAP syntax. Test your knowledge!', tag:'15 Questions',  color:'#3ac14a' },
-  { id:'debug',  icon:'🐛', title:'Debug Master',      desc:'Find and fix real ABAP bugs in RAP code. Each challenge has a hint available (costs 0.5 pts).', tag:'5 Challenges', color:'#e53e3e' },
-  { id:'match',  icon:'🎯', title:'Annotation Match',  desc:'Match CDS annotations to their meanings. Click annotation → then its meaning.', tag:'10 Pairs',      color:'#2563eb' },
-  { id:'detective',icon:'🕵️',title:'Table Detective', desc:"I give you a clue — you name the SAP table. Also shows the CDS view equivalent!", tag:'8 Cases',       color:'#d97706' },
-  { id:'sorter', icon:'🗂', title:'RAP Layer Sorter',  desc:"Assign each RAP artifact to its correct architectural layer: Interface, Consumption, Behavior, or Service.", tag:'8 Artifacts',  color:'#7c3aed' },
-  { id:'speed',  icon:'⚡', title:'Speed Coder',       desc:'Type ABAP statements as fast and accurately as possible. Race the clock!', tag:'Speed Run',     color:'#0891b2' },
+const GAMES_META = [
+  { id:'quiz',      icon:'🧠', title:'ABAP Quiz',        desc:'Adaptive quiz with topic filter — choose what you have covered and practice on it.', tag:'Sheet-driven', color:'#3ac14a' },
+  { id:'debug',     icon:'🐛', title:'Debug Master',      desc:'Find and fix real ABAP bugs in RAP code. Each challenge has a hint (costs 0.5 pts).', tag:'5 Challenges', color:'#e53e3e' },
+  { id:'match',     icon:'🎯', title:'Annotation Match',  desc:'Match CDS annotations to their meanings from the sheet. Click annotation → its meaning.', tag:'Sheet-driven', color:'#2563eb' },
+  { id:'detective', icon:'🕵️', title:'Table Detective',   desc:'Identify the SAP table from the clue. Also shows the CDS view equivalent!', tag:'Sheet-driven', color:'#d97706' },
+  { id:'sorter',    icon:'🗂',  title:'RAP Layer Sorter',  desc:'Assign each RAP artifact to its correct architectural layer.', tag:'8 Artifacts', color:'#7c3aed' },
+  { id:'speed',     icon:'⚡',  title:'Speed Coder',       desc:'Type ABAP statements as fast and accurately as possible. Race the clock!', tag:'Speed Run', color:'#0891b2' },
+  { id:'inspector', icon:'🔍', title:'Code Inspector',    desc:'Paste ABAP/CDS code and get instant static analysis findings — powered by rule engine + ADT API.', tag:'ADT + Rules', color:'#16a34a' },
 ];
+
+/* ═══════════════════════════════════════════════════
+   DATA LOADER
+═══════════════════════════════════════════════════ */
+function useGameData() {
+  const [data, setData] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+
+  useEffect(() => {
+    const cached = sessionStorage.getItem('szc_gamedata');
+    if (cached) {
+      try { setData(JSON.parse(cached)); setLoading(false); return; } catch(e) {}
+    }
+    fetch(`${GAS_URL}?action=getGameData`, { method: 'GET' })
+      .then(r => r.json())
+      .then(res => {
+        if (res.status === 'ok') {
+          sessionStorage.setItem('szc_gamedata', JSON.stringify(res.data));
+          setData(res.data);
+        } else {
+          setError(res.message || 'Failed to load game data');
+        }
+      })
+      .catch(err => setError('Could not connect to game server: ' + err.message))
+      .finally(() => setLoading(false));
+  }, []);
+
+  return { data, loading, error };
+}
 
 /* ═══════════════════════════════════════════════════
    SHARED COMPONENTS
 ═══════════════════════════════════════════════════ */
 function ScoreBadge({ score, total }) {
   const pct = total > 0 ? Math.round((score / total) * 100) : 0;
-  return (
-    <span className="score-badge">
-      {score}/{total} · {pct}%
-    </span>
-  );
+  return <span className="score-badge">{score}/{total} · {pct}%</span>;
 }
-
 function ProgressBar({ current, total }) {
-  return (
-    <div className="progress-bar-wrap">
-      <div className="progress-bar-fill" style={{ width: `${(current / total) * 100}%` }}/>
-    </div>
-  );
+  return <div className="progress-bar-wrap"><div className="progress-bar-fill" style={{ width: `${(current/total)*100}%` }}/></div>;
 }
-
 function GameResult({ score, total, gameName, onBack, onReplay }) {
-  const pct = total > 0 ? Math.round((score / total) * 100) : 0;
+  const pct = total > 0 ? Math.round((score/total)*100) : 0;
   const emoji = pct >= 80 ? '🏆' : pct >= 50 ? '👍' : '📚';
   const msg = pct >= 80 ? 'Outstanding! You clearly know your ABAP.' : pct >= 50 ? 'Good effort! Review the tricky ones and try again.' : 'Keep practicing — ABAP mastery takes repetition!';
   return (
@@ -738,47 +319,91 @@ function GameResult({ score, total, gameName, onBack, onReplay }) {
 }
 
 /* ═══════════════════════════════════════════════════
-   GAME 1: ABAP QUIZ
+   GAME 1: ABAP QUIZ (sheet-driven + topic filter)
 ═══════════════════════════════════════════════════ */
-function QuizGame({ onBack }) {
-  const [questions] = useState(() => [...QUIZ_QUESTIONS].sort(() => Math.random() - 0.5).slice(0, 10));
+function QuizGame({ onBack, allQuestions }) {
+  const topics = [...new Set(allQuestions.map(q => q.topic))].sort();
+  const [phase, setPhase] = useState('topic');   // 'topic' | 'playing' | 'done'
+  const [selectedTopics, setSelectedTopics] = useState(new Set(topics));
+  const [questions, setQuestions] = useState([]);
   const [idx, setIdx] = useState(0);
   const [selected, setSelected] = useState(null);
   const [score, setScore] = useState(0);
-  const [done, setDone] = useState(false);
+
+  const toggleTopic = (t) => {
+    setSelectedTopics(prev => {
+      const next = new Set(prev);
+      next.has(t) ? next.delete(t) : next.add(t);
+      return next;
+    });
+  };
+
+  const startQuiz = () => {
+    const pool = allQuestions.filter(q => selectedTopics.has(q.topic));
+    const shuffled = [...pool].sort(() => Math.random() - 0.5).slice(0, Math.min(15, pool.length));
+    setQuestions(shuffled);
+    setIdx(0);
+    setScore(0);
+    setSelected(null);
+    setPhase('playing');
+  };
+
+  if (phase === 'topic') {
+    const pool = allQuestions.filter(q => selectedTopics.has(q.topic));
+    return (
+      <div className="topic-selector">
+        <button className="btn-danger" style={{ marginBottom: 20 }} onClick={onBack}>← Back</button>
+        <h2>🧠 ABAP Quiz</h2>
+        <p>Select the topics you have covered. Quiz will draw from those questions only.</p>
+        <div className="topic-chips">
+          <div className="topic-chip active" style={{ background:'var(--charcoal)',color:'#fff',borderColor:'var(--charcoal)' }}
+            onClick={() => setSelectedTopics(new Set(topics))}>All Topics</div>
+          <div className="topic-chip" style={{ background:'var(--danger-lt)',color:'var(--danger)',borderColor:'rgba(229,62,62,0.3)' }}
+            onClick={() => setSelectedTopics(new Set())}>Clear All</div>
+          {topics.map(t => (
+            <div key={t} className={`topic-chip${selectedTopics.has(t) ? ' active' : ''}`} onClick={() => toggleTopic(t)}>{t}</div>
+          ))}
+        </div>
+        <div className="topic-count">{pool.length} questions available from selected topics</div>
+        <button className="btn-action" onClick={startQuiz} disabled={pool.length === 0}>
+          Start Quiz ({Math.min(15, pool.length)} Questions) →
+        </button>
+      </div>
+    );
+  }
+
+  if (phase === 'done') {
+    return <GameResult score={score} total={questions.length} gameName="ABAP Quiz" onBack={onBack}
+      onReplay={() => setPhase('topic')}/>;
+  }
 
   const q = questions[idx];
-
   const choose = (i) => {
     if (selected !== null) return;
     setSelected(i);
     if (i === q.ans) setScore(s => s + 1);
   };
-
   const next = () => {
-    if (idx + 1 >= questions.length) { setDone(true); return; }
+    if (idx + 1 >= questions.length) { setPhase('done'); return; }
     setIdx(i => i + 1);
     setSelected(null);
   };
-
-  if (done) return <GameResult score={score} total={questions.length} gameName="ABAP Quiz" onBack={onBack} onReplay={() => { setIdx(0); setScore(0); setDone(false); setSelected(null); }}/>;
 
   return (
     <div className="game-wrap">
       <div className="game-header">
         <div>
           <div className="game-title">🧠 ABAP Quiz</div>
-          <div className="game-subtitle">Q {idx + 1} of {questions.length}</div>
+          <div className="game-subtitle">Q {idx+1} of {questions.length} · Topic: <strong>{q.topic}</strong></div>
         </div>
         <ScoreBadge score={score} total={idx + (selected !== null ? 1 : 0)}/>
-        <button className="btn-danger" onClick={onBack}>← Back</button>
+        <button className="btn-danger" onClick={() => setPhase('topic')}>← Topics</button>
       </div>
-      <ProgressBar current={idx + 1} total={questions.length}/>
-
+      <ProgressBar current={idx+1} total={questions.length}/>
       <div className="panel-card">
         <div className="panel-card-head">
           <span className="panel-tag tag-green">Question</span>
-          <span className="panel-card-title" style={{ flex: 1 }}>{q.q}</span>
+          <span className="panel-card-title" style={{ flex:1 }}>{q.q}</span>
         </div>
         <div className="panel-card-body">
           <div className="option-grid">
@@ -795,18 +420,16 @@ function QuizGame({ onBack }) {
               );
             })}
           </div>
-
           {selected !== null && (
             <div className={`feedback-box${selected === q.ans ? ' correct' : ' wrong'}`}>
               <div className="feedback-title">{selected === q.ans ? '✅ Correct!' : `❌ Wrong — Answer: ${q.opts[q.ans]}`}</div>
               <div className="feedback-text">{q.exp}</div>
             </div>
           )}
-
           {selected !== null && (
-            <div style={{ textAlign: 'right', marginTop: 14 }}>
+            <div style={{ textAlign:'right', marginTop:14 }}>
               <button className="btn-action" onClick={next}>
-                {idx + 1 >= questions.length ? 'See Results →' : 'Next →'}
+                {idx+1 >= questions.length ? 'See Results →' : 'Next →'}
               </button>
             </div>
           )}
@@ -835,72 +458,61 @@ function DebugGame({ onBack }) {
     setResult(correct ? 'correct' : 'wrong');
     if (correct) setScore(s => s + (hintUsed ? 0.5 : 1));
   };
-
   const next = () => {
     const ni = idx + 1;
     if (ni >= DEBUG_CHALLENGES.length) { setDone(true); return; }
-    setIdx(ni);
-    setCode(DEBUG_CHALLENGES[ni].buggy);
-    setResult(null);
-    setHintShown(false);
-    setHintUsed(false);
+    setIdx(ni); setCode(DEBUG_CHALLENGES[ni].buggy);
+    setResult(null); setHintShown(false); setHintUsed(false);
   };
+  const reset = () => { setIdx(0); setCode(DEBUG_CHALLENGES[0].buggy); setResult(null); setScore(0); setDone(false); setHintShown(false); setHintUsed(false); };
 
-  const showHint = () => { setHintShown(true); setHintUsed(true); };
-  const showSolution = () => { setCode(ch.fixed); setResult(null); };
-
-  if (done) return <GameResult score={Math.round(score)} total={DEBUG_CHALLENGES.length} gameName="Debug Master" onBack={onBack} onReplay={() => { setIdx(0); setCode(DEBUG_CHALLENGES[0].buggy); setResult(null); setScore(0); setDone(false); setHintShown(false); setHintUsed(false); }}/>;
+  if (done) return <GameResult score={Math.round(score)} total={DEBUG_CHALLENGES.length} gameName="Debug Master" onBack={onBack} onReplay={reset}/>;
 
   return (
     <div className="game-wrap">
       <div className="game-header">
         <div>
           <div className="game-title">🐛 Debug Master</div>
-          <div className="game-subtitle">Bug {idx + 1} of {DEBUG_CHALLENGES.length} — {score} pts</div>
+          <div className="game-subtitle">Bug {idx+1} of {DEBUG_CHALLENGES.length} — {score} pts</div>
         </div>
         <button className="btn-danger" onClick={onBack}>← Back</button>
       </div>
-      <ProgressBar current={idx + 1} total={DEBUG_CHALLENGES.length}/>
-
+      <ProgressBar current={idx+1} total={DEBUG_CHALLENGES.length}/>
       <div className="panel-card">
         <div className="panel-card-head">
-          <span className="panel-tag tag-red">🐛 Bug #{idx + 1}</span>
+          <span className="panel-tag tag-red">🐛 Bug #{idx+1}</span>
           <span className="panel-card-title">{ch.title}</span>
-          <button className="btn-secondary" style={{ marginLeft: 'auto', fontSize: 12, padding: '5px 12px' }}
-            onClick={showHint} disabled={hintShown}>
+          <button className="btn-secondary" style={{ marginLeft:'auto', fontSize:12, padding:'5px 12px' }}
+            onClick={() => { setHintShown(true); setHintUsed(true); }} disabled={hintShown}>
             {hintShown ? 'Hint used (−0.5)' : '💡 Hint (−0.5)'}
           </button>
         </div>
         <div className="panel-card-body">
-          <div style={{ fontSize: 12, color: 'var(--muted)', marginBottom: 10 }}>
-            Fix the buggy ABAP code below — edit directly in the editor.
-          </div>
+          <div style={{ fontSize:12, color:'var(--muted)', marginBottom:10 }}>Fix the buggy ABAP code below — edit directly in the editor.</div>
           {hintShown && (
-            <div className="feedback-box" style={{ background: 'var(--warn-lt)', border: '1px solid rgba(217,119,6,0.25)', color: 'var(--warn)', marginBottom: 12 }}>
+            <div className="feedback-box" style={{ background:'var(--warn-lt)', border:'1px solid rgba(217,119,6,0.25)', color:'var(--warn)', marginBottom:12 }}>
               💡 {ch.hint}
             </div>
           )}
           <textarea className="code-textarea-dark" value={code} onChange={e => setCode(e.target.value)}/>
-
           {result === 'correct' && (
-            <div className="feedback-box correct" style={{ marginTop: 12 }}>
+            <div className="feedback-box correct" style={{ marginTop:12 }}>
               <div className="feedback-title">✅ Fixed! +{hintUsed ? '0.5' : '1'} point</div>
               <div className="feedback-text">{ch.explanation}</div>
             </div>
           )}
           {result === 'wrong' && (
-            <div className="feedback-box wrong" style={{ marginTop: 12 }}>
-              <div className="feedback-title">❌ Not quite — compare carefully with the original</div>
+            <div className="feedback-box wrong" style={{ marginTop:12 }}>
+              <div className="feedback-title">❌ Not quite — compare carefully</div>
             </div>
           )}
-
-          <div style={{ display: 'flex', gap: 10, marginTop: 16, flexWrap: 'wrap' }}>
+          <div style={{ display:'flex', gap:10, marginTop:16, flexWrap:'wrap' }}>
             {!result && <button className="btn-action" onClick={check}>🔍 Check Fix</button>}
-            {result === 'correct' && <button className="btn-action" onClick={next}>{idx + 1 >= DEBUG_CHALLENGES.length ? 'Results →' : 'Next Bug →'}</button>}
+            {result === 'correct' && <button className="btn-action" onClick={next}>{idx+1 >= DEBUG_CHALLENGES.length ? 'Results →' : 'Next Bug →'}</button>}
             {result === 'wrong' && (
               <>
                 <button className="btn-action" onClick={() => setResult(null)}>Try Again</button>
-                <button className="btn-secondary" onClick={showSolution}>Show Solution</button>
+                <button className="btn-secondary" onClick={() => { setCode(ch.fixed); setResult(null); }}>Show Solution</button>
               </>
             )}
           </div>
@@ -911,34 +523,25 @@ function DebugGame({ onBack }) {
 }
 
 /* ═══════════════════════════════════════════════════
-   GAME 3: ANNOTATION MATCH
+   GAME 3: ANNOTATION MATCH (sheet-driven)
 ═══════════════════════════════════════════════════ */
-function AnnotationMatch({ onBack }) {
-  const [pairs] = useState(() => [...ANNOTATION_PAIRS].sort(() => Math.random() - 0.5).slice(0, 8));
-  const [meanings] = useState(() => {
-    const m = [...ANNOTATION_PAIRS].sort(() => Math.random() - 0.5).slice(0, 8).map(p => p.meaning);
-    return m.sort(() => Math.random() - 0.5);
-  });
+function AnnotationMatch({ onBack, allPairs }) {
+  const [pairs] = useState(() => [...allPairs].sort(() => Math.random()-0.5).slice(0, 8));
+  const [meanings] = useState(() => pairs.map(p => p.meaning).sort(() => Math.random()-0.5));
   const [selected, setSelected] = useState(null);
   const [matched, setMatched] = useState([]);
   const [wrongFlash, setWrongFlash] = useState(null);
   const [score, setScore] = useState(0);
   const [done, setDone] = useState(false);
 
-  const pickAnnotation = (ann) => {
-    if (matched.includes(ann)) return;
-    setSelected(ann);
-  };
-
+  const pickAnnotation = (ann) => { if (matched.includes(ann)) return; setSelected(ann); };
   const pickMeaning = (meaning) => {
     if (!selected) return;
     const correct = pairs.find(p => p.annotation === selected)?.meaning === meaning;
     if (correct) {
-      const newMatched = [...matched, selected];
-      setMatched(newMatched);
-      setScore(s => s + 1);
-      setSelected(null);
-      if (newMatched.length >= pairs.length) setTimeout(() => setDone(true), 500);
+      const newM = [...matched, selected];
+      setMatched(newM); setScore(s => s+1); setSelected(null);
+      if (newM.length >= pairs.length) setTimeout(() => setDone(true), 500);
     } else {
       setWrongFlash({ ann: selected, meaning });
       setTimeout(() => { setWrongFlash(null); setSelected(null); }, 800);
@@ -957,42 +560,26 @@ function AnnotationMatch({ onBack }) {
         <ScoreBadge score={score} total={pairs.length}/>
         <button className="btn-danger" onClick={onBack}>← Back</button>
       </div>
-
       <div className="match-grid">
-        {/* Annotations */}
         <div>
           <div className="match-col-label">CDS Annotations</div>
           {pairs.map(p => {
-            const isMatched = matched.includes(p.annotation);
-            const isSelected = selected === p.annotation;
-            const isWrong = wrongFlash?.ann === p.annotation;
+            const isM = matched.includes(p.annotation);
+            const isSel = selected === p.annotation;
+            const isW = wrongFlash?.ann === p.annotation;
             let cls = 'match-item';
-            if (isMatched) cls += ' matched';
-            else if (isWrong) cls += ' wrong-flash';
-            else if (isSelected) cls += ' selected';
-            return (
-              <button key={p.annotation} className={cls} onClick={() => pickAnnotation(p.annotation)} disabled={isMatched}
-                style={{ marginBottom: 8 }}>
-                {isMatched ? '✓ ' : ''}{p.annotation}
-              </button>
-            );
+            if (isM) cls += ' matched'; else if (isW) cls += ' wrong-flash'; else if (isSel) cls += ' selected';
+            return <button key={p.annotation} className={cls} onClick={() => pickAnnotation(p.annotation)} disabled={isM} style={{ marginBottom:8 }}>{isM ? '✓ ' : ''}{p.annotation}</button>;
           })}
         </div>
-        {/* Meanings */}
         <div>
           <div className="match-col-label">Meanings</div>
           {meanings.map(m => {
-            const isUsed = matched.some(ann => pairs.find(p => p.annotation === ann)?.meaning === m);
-            const isWrong = wrongFlash?.meaning === m;
+            const isUsed = matched.some(ann => pairs.find(p => p.annotation===ann)?.meaning === m);
+            const isW = wrongFlash?.meaning === m;
             let cls = 'match-item match-meaning';
-            if (isUsed) cls += ' matched';
-            else if (isWrong) cls += ' wrong-flash';
-            return (
-              <button key={m} className={cls} onClick={() => pickMeaning(m)} disabled={isUsed}
-                style={{ marginBottom: 8 }}>
-                {isUsed ? '✓ ' : ''}{m}
-              </button>
-            );
+            if (isUsed) cls += ' matched'; else if (isW) cls += ' wrong-flash';
+            return <button key={m} className={cls} onClick={() => pickMeaning(m)} disabled={isUsed} style={{ marginBottom:8 }}>{isUsed ? '✓ ' : ''}{m}</button>;
           })}
         </div>
       </div>
@@ -1001,10 +588,10 @@ function AnnotationMatch({ onBack }) {
 }
 
 /* ═══════════════════════════════════════════════════
-   GAME 4: TABLE DETECTIVE
+   GAME 4: TABLE DETECTIVE (sheet-driven)
 ═══════════════════════════════════════════════════ */
-function TableDetective({ onBack }) {
-  const [cases] = useState(() => [...TABLE_DETECTIVE].sort(() => Math.random() - 0.5));
+function TableDetective({ onBack, allTables }) {
+  const [cases] = useState(() => [...allTables].sort(() => Math.random()-0.5));
   const [idx, setIdx] = useState(0);
   const [selected, setSelected] = useState(null);
   const [score, setScore] = useState(0);
@@ -1014,13 +601,11 @@ function TableDetective({ onBack }) {
   const choose = (opt) => {
     if (selected) return;
     setSelected(opt);
-    if (opt === q.answer) setScore(s => s + 1);
+    if (opt === q.answer) setScore(s => s+1);
   };
-
   const next = () => {
-    if (idx + 1 >= cases.length) { setDone(true); return; }
-    setIdx(i => i + 1);
-    setSelected(null);
+    if (idx+1 >= cases.length) { setDone(true); return; }
+    setIdx(i => i+1); setSelected(null);
   };
 
   if (done) return <GameResult score={score} total={cases.length} gameName="Table Detective" onBack={onBack} onReplay={() => { setIdx(0); setSelected(null); setScore(0); setDone(false); }}/>;
@@ -1030,27 +615,26 @@ function TableDetective({ onBack }) {
       <div className="game-header">
         <div>
           <div className="game-title">🕵️ Table Detective</div>
-          <div className="game-subtitle">Case {idx + 1} of {cases.length}</div>
+          <div className="game-subtitle">Case {idx+1} of {cases.length}</div>
         </div>
         <ScoreBadge score={score} total={idx + (selected ? 1 : 0)}/>
         <button className="btn-danger" onClick={onBack}>← Back</button>
       </div>
-      <ProgressBar current={idx + 1} total={cases.length}/>
-
+      <ProgressBar current={idx+1} total={cases.length}/>
       <div className="panel-card">
         <div className="panel-card-head">
           <span className="panel-tag tag-warn">🕵️ Identify the Table</span>
         </div>
         <div className="panel-card-body">
-          <div style={{ fontSize: 16, fontStyle: 'italic', color: 'var(--text)', lineHeight: 1.7, marginBottom: 20, padding: '14px 18px', background: 'var(--warn-lt)', border: '1px solid rgba(217,119,6,0.2)', borderRadius: 'var(--radius-lg)' }}>
+          <div style={{ fontSize:16, fontStyle:'italic', color:'var(--text)', lineHeight:1.7, marginBottom:20, padding:'14px 18px', background:'var(--warn-lt)', border:'1px solid rgba(217,119,6,0.2)', borderRadius:'var(--radius-lg)' }}>
             "{q.clue}"
           </div>
           {selected && (
-            <div style={{ fontSize: 12, color: 'var(--muted)', marginBottom: 16 }}>
-              CDS equivalent: <span style={{ fontFamily: 'var(--mono)', color: 'var(--info)', fontWeight: 700 }}>{q.cds}</span>
+            <div style={{ fontSize:12, color:'var(--muted)', marginBottom:16 }}>
+              CDS equivalent: <span style={{ fontFamily:'var(--mono)', color:'var(--info)', fontWeight:700 }}>{q.cds}</span>
             </div>
           )}
-          <div className="option-grid" style={{ gridTemplateColumns: 'repeat(4, 1fr)' }}>
+          <div className="option-grid" style={{ gridTemplateColumns:'repeat(4, 1fr)' }}>
             {q.options.map(opt => {
               let cls = 'option-btn';
               if (selected) {
@@ -1059,19 +643,19 @@ function TableDetective({ onBack }) {
               }
               return (
                 <button key={opt} className={cls} onClick={() => choose(opt)} disabled={!!selected}
-                  style={{ textAlign: 'center', fontFamily: 'var(--mono)', fontWeight: 800, fontSize: 15, padding: '18px 8px' }}>
+                  style={{ textAlign:'center', fontFamily:'var(--mono)', fontWeight:800, fontSize:15, padding:'18px 8px' }}>
                   {opt}
                 </button>
               );
             })}
           </div>
           {selected && (
-            <div style={{ textAlign: 'right', marginTop: 16 }}>
-              <div style={{ fontSize: 13, color: selected === q.answer ? 'var(--success)' : 'var(--danger)', fontWeight: 700, marginBottom: 10 }}>
-                {selected === q.answer ? '🎯 Correct!' : `❌ Wrong — it was ${q.answer}`}
+            <div style={{ textAlign:'right', marginTop:16 }}>
+              <div style={{ fontSize:13, color:selected===q.answer ? 'var(--success)' : 'var(--danger)', fontWeight:700, marginBottom:10 }}>
+                {selected===q.answer ? '🎯 Correct!' : `❌ Wrong — it was ${q.answer}`}
               </div>
               <button className="btn-action" onClick={next}>
-                {idx + 1 >= cases.length ? 'Results →' : 'Next Case →'}
+                {idx+1 >= cases.length ? 'Results →' : 'Next Case →'}
               </button>
             </div>
           )}
@@ -1085,23 +669,17 @@ function TableDetective({ onBack }) {
    GAME 5: RAP LAYER SORTER
 ═══════════════════════════════════════════════════ */
 function RAPSorter({ onBack }) {
-  const [items] = useState(() => [...RAP_ITEMS].sort(() => Math.random() - 0.5));
+  const [items] = useState(() => [...RAP_ITEMS].sort(() => Math.random()-0.5));
   const [assignments, setAssignments] = useState({});
   const [checked, setChecked] = useState(false);
   const [score, setScore] = useState(0);
 
-  const assign = (id, layer) => {
-    if (checked) return;
-    setAssignments(a => ({ ...a, [id]: layer }));
-  };
-
+  const assign = (id, layer) => { if (checked) return; setAssignments(a => ({ ...a, [id]: layer })); };
   const checkAll = () => {
     let s = 0;
     items.forEach(item => { if (assignments[item.id] === item.layer) s++; });
-    setScore(s);
-    setChecked(true);
+    setScore(s); setChecked(true);
   };
-
   const allAssigned = items.every(item => assignments[item.id]);
 
   return (
@@ -1114,7 +692,6 @@ function RAPSorter({ onBack }) {
         {checked && <ScoreBadge score={score} total={items.length}/>}
         <button className="btn-danger" onClick={onBack}>← Back</button>
       </div>
-
       <div className="sorter-grid">
         {items.map(item => {
           const chosen = assignments[item.id];
@@ -1127,34 +704,25 @@ function RAPSorter({ onBack }) {
           return (
             <div key={item.id} className={cls}>
               <div className="sorter-card-text">{item.text}</div>
-              {checked && (
-                <div style={{ fontSize: 11, fontWeight: 700, color: correct ? 'var(--success)' : 'var(--danger)', marginBottom: 8 }}>
-                  {correct ? `✓ ${item.layer}` : `✗ → ${item.layer}`}
-                </div>
-              )}
+              {checked && <div style={{ fontSize:11, fontWeight:700, color:correct ? 'var(--success)' : 'var(--danger)', marginBottom:8 }}>{correct ? `✓ ${item.layer}` : `✗ → ${item.layer}`}</div>}
               {!checked && RAP_LAYERS.map(layer => (
-                <button key={layer} className={`sorter-layer-btn${chosen === layer ? ' chosen' : ''}`}
-                  onClick={() => assign(item.id, layer)}>
-                  {chosen === layer ? '● ' : ''}{layer}
+                <button key={layer} className={`sorter-layer-btn${chosen===layer ? ' chosen' : ''}`} onClick={() => assign(item.id, layer)}>
+                  {chosen===layer ? '● ' : ''}{layer}
                 </button>
               ))}
             </div>
           );
         })}
       </div>
-
-      <div style={{ textAlign: 'center', marginTop: 28 }}>
+      <div style={{ textAlign:'center', marginTop:28 }}>
         {!checked ? (
-          <button className="btn-action" onClick={checkAll} disabled={!allAssigned}
-            style={{ opacity: allAssigned ? 1 : 0.5 }}>
-            ✓ Check All Answers
-          </button>
+          <button className="btn-action" onClick={checkAll} disabled={!allAssigned} style={{ opacity:allAssigned ? 1 : 0.5 }}>✓ Check All Answers</button>
         ) : (
           <div>
-            <div style={{ fontSize: 18, fontWeight: 800, color: score >= 6 ? 'var(--success)' : score >= 4 ? 'var(--warn)' : 'var(--danger)', marginBottom: 16, fontFamily: 'var(--mono)' }}>
+            <div style={{ fontSize:18, fontWeight:800, color:score>=6 ? 'var(--success)' : score>=4 ? 'var(--warn)' : 'var(--danger)', marginBottom:16, fontFamily:'var(--mono)' }}>
               {score}/{items.length} Correct!
             </div>
-            <div style={{ display: 'flex', gap: 10, justifyContent: 'center' }}>
+            <div style={{ display:'flex', gap:10, justifyContent:'center' }}>
               <button className="btn-action" onClick={() => window.location.reload()}>↺ Retry</button>
               <button className="btn-secondary" onClick={onBack}>← All Games</button>
             </div>
@@ -1169,7 +737,7 @@ function RAPSorter({ onBack }) {
    GAME 6: SPEED CODER
 ═══════════════════════════════════════════════════ */
 function SpeedCoder({ onBack }) {
-  const [challenges] = useState(() => [...SPEED_LINES].sort(() => Math.random() - 0.5));
+  const [challenges] = useState(() => [...SPEED_LINES].sort(() => Math.random()-0.5));
   const [idx, setIdx] = useState(0);
   const [input, setInput] = useState('');
   const [score, setScore] = useState(0);
@@ -1178,48 +746,32 @@ function SpeedCoder({ onBack }) {
   const [flash, setFlash] = useState(null);
   const [done, setDone] = useState(false);
   const inputRef = useRef(null);
-
   const target = challenges[idx];
 
-  useEffect(() => {
-    inputRef.current?.focus();
-    setStartTime(Date.now());
-  }, [idx]);
+  useEffect(() => { inputRef.current?.focus(); setStartTime(Date.now()); }, [idx]);
 
   const handleInput = (e) => {
     const val = e.target.value;
     setInput(val);
     if (val === target) {
-      const elapsed = Date.now() - startTime;
-      setTimes(t => [...t, elapsed]);
-      setScore(s => s + 1);
+      setTimes(t => [...t, Date.now() - startTime]);
+      setScore(s => s+1);
       setFlash('correct');
       setTimeout(() => {
-        setFlash(null);
-        setInput('');
-        if (idx + 1 >= challenges.length) setDone(true);
-        else setIdx(i => i + 1);
+        setFlash(null); setInput('');
+        if (idx+1 >= challenges.length) setDone(true); else setIdx(i => i+1);
       }, 600);
     }
   };
 
-  const skip = () => {
-    setInput('');
-    if (idx + 1 >= challenges.length) setDone(true);
-    else setIdx(i => i + 1);
-  };
-
   if (done) {
-    const totalMs = times.reduce((a, b) => a + b, 0);
+    const totalMs = times.reduce((a,b) => a+b, 0);
     return (
       <div className="result-wrap">
         <div className="result-emoji">⚡</div>
         <div className="result-title">Speed Coder — Done!</div>
         <div className="result-score">{score}/{challenges.length}</div>
-        <div className="result-pct">
-          Total time: {(totalMs / 1000).toFixed(1)}s
-          {score > 0 && ` · Avg: ${(totalMs / score / 1000).toFixed(1)}s/line`}
-        </div>
+        <div className="result-pct">Total: {(totalMs/1000).toFixed(1)}s{score>0 && ` · Avg: ${(totalMs/score/1000).toFixed(1)}s/line`}</div>
         <div className="result-actions">
           <button className="btn-action" onClick={() => { setIdx(0); setScore(0); setDone(false); setInput(''); setTimes([]); }}>↺ Play Again</button>
           <button className="btn-secondary" onClick={onBack}>← All Games</button>
@@ -1228,61 +780,38 @@ function SpeedCoder({ onBack }) {
     );
   }
 
-  const matched = target.split('').map((ch, i) => ({
-    ch,
-    typed: i < input.length,
-    ok: input[i] === ch,
-  }));
-
+  const matched = target.split('').map((ch, i) => ({ ch, typed: i < input.length, ok: input[i] === ch }));
   return (
     <div className="game-wrap">
       <div className="game-header">
         <div>
           <div className="game-title">⚡ Speed Coder</div>
-          <div className="game-subtitle">Line {idx + 1} of {challenges.length} · Score: {score}</div>
+          <div className="game-subtitle">Line {idx+1} of {challenges.length} · Score: {score}</div>
         </div>
         <button className="btn-danger" onClick={onBack}>← Back</button>
       </div>
-      <ProgressBar current={idx + 1} total={challenges.length}/>
-
-      <div className="panel-card" style={{ borderColor: flash === 'correct' ? 'var(--green)' : undefined, transition: 'border-color 0.3s' }}>
+      <ProgressBar current={idx+1} total={challenges.length}/>
+      <div className="panel-card" style={{ borderColor:flash==='correct' ? 'var(--green)' : undefined, transition:'border-color 0.3s' }}>
         <div className="panel-card-head">
           <span className="panel-tag tag-blue">⚡ Type This Exactly</span>
         </div>
         <div className="panel-card-body">
           <div className="speed-target">
-            {matched.map((m, i) => {
+            {matched.map((m,i) => {
               let cls = 'speed-char-wait';
               if (m.typed) cls = m.ok ? 'speed-char-done' : 'speed-char-error';
               return <span key={i} className={cls}>{m.ch}</span>;
             })}
           </div>
-          <input
-            ref={inputRef}
-            value={input}
-            onChange={handleInput}
-            style={{
-              width: '100%',
-              padding: '12px 16px',
-              fontFamily: 'var(--mono)',
-              fontSize: 13,
-              background: 'var(--surface2)',
-              border: `1.5px solid ${input.length > 0 && input === target.slice(0, input.length) ? 'var(--green)' : 'var(--border2)'}`,
-              borderRadius: 'var(--radius)',
-              color: 'var(--text)',
-              outline: 'none',
-              marginBottom: 14,
-            }}
-            placeholder="Start typing..."
-            spellCheck={false}
-            autoCorrect="off"
-            autoCapitalize="off"
-          />
-          {flash === 'correct' && (
-            <div style={{ fontSize: 13, color: 'var(--success)', fontWeight: 700 }}>✅ Correct! Moving on...</div>
-          )}
-          <div style={{ textAlign: 'right', marginTop: 8 }}>
-            <button className="btn-secondary" onClick={skip} style={{ fontSize: 12, padding: '6px 14px' }}>Skip →</button>
+          <input ref={inputRef} value={input} onChange={handleInput}
+            style={{ width:'100%', padding:'12px 16px', fontFamily:'var(--mono)', fontSize:13, background:'var(--surface2)',
+              border:`1.5px solid ${input.length>0 && input===target.slice(0,input.length) ? 'var(--green)' : 'var(--border2)'}`,
+              borderRadius:'var(--radius)', color:'var(--text)', outline:'none', marginBottom:14 }}
+            placeholder="Start typing..." spellCheck={false} autoCorrect="off" autoCapitalize="off"/>
+          {flash==='correct' && <div style={{ fontSize:13, color:'var(--success)', fontWeight:700 }}>✅ Correct! Moving on...</div>}
+          <div style={{ textAlign:'right', marginTop:8 }}>
+            <button className="btn-secondary" onClick={() => { setInput(''); if(idx+1>=challenges.length) setDone(true); else setIdx(i=>i+1); }}
+              style={{ fontSize:12, padding:'6px 14px' }}>Skip →</button>
           </div>
         </div>
       </div>
@@ -1291,23 +820,319 @@ function SpeedCoder({ onBack }) {
 }
 
 /* ═══════════════════════════════════════════════════
+   GAME 7: ABAP CODE INSPECTOR
+   Static rule engine + optional ADT REST API
+═══════════════════════════════════════════════════ */
+
+// ── Static ABAP rule engine ───────────────────────────────────
+const ABAP_RULES = [
+  {
+    id: 'R001', severity: 'ERROR', category: 'RAP',
+    check: code => /COMMIT\s+WORK/.test(code) && /save_modified|RAP|bdef/i.test(code),
+    msg: 'COMMIT WORK inside RAP implementation',
+    detail: 'RAP controls the LUW — manual COMMIT WORK causes runtime error CX_RAP_COMMIT_NOT_ALLOWED.',
+    fix: 'Remove COMMIT WORK. The framework commits automatically after save_modified completes.'
+  },
+  {
+    id: 'R002', severity: 'ERROR', category: 'ABAP Syntax',
+    check: code => /SELECT\s+\*\s+FROM\s+\w+\s+INTO\s+TABLE\s+\w+[^@]/.test(code.replace(/\n/g,' ')),
+    msg: 'Missing @ symbol for host variable in INTO TABLE',
+    detail: 'ABAP 7.40+ (HANA) syntax requires @ before host variables: INTO TABLE @lt_tab.',
+    fix: 'Change INTO TABLE lt_tab → INTO TABLE @lt_tab'
+  },
+  {
+    id: 'R003', severity: 'WARNING', category: 'Performance',
+    check: code => {
+      const lines = code.split('\n');
+      return lines.some(l => /^\s*SELECT\b/i.test(l) && /FROM\s+(mara|vbak|vbap|ekko|ekpo|bseg|bkpf)\b/i.test(l));
+    },
+    msg: 'Direct SELECT from physical table instead of CDS view',
+    detail: 'Selecting from physical tables (MARA, VBAK, etc.) bypasses buffer, authorization, and extensibility.',
+    fix: 'Use the corresponding CDS view: MARA→I_Material, VBAK→I_SalesOrder, EKKO→I_PurchaseOrder, BSEG→I_JournalEntryItem'
+  },
+  {
+    id: 'R004', severity: 'WARNING', category: 'Performance',
+    check: code => {
+      const selMatch = code.match(/SELECT\b[\s\S]*?FROM\s+\w+/gi);
+      return selMatch ? selMatch.some(s => !/WHERE\b/i.test(s) && !/UP\s+TO\b/i.test(s) && !/SINGLE\b/i.test(s)) : false;
+    },
+    msg: 'SELECT without WHERE clause — full table scan risk',
+    detail: 'SELECT without WHERE reads all records. Catastrophic on large HANA tables.',
+    fix: 'Add a WHERE clause or at least UP TO n ROWS for test scenarios.'
+  },
+  {
+    id: 'R005', severity: 'WARNING', category: 'ABAP Best Practice',
+    check: code => /SELECT\s+\*/i.test(code),
+    msg: 'SELECT * — avoid selecting all columns',
+    detail: 'SELECT * fetches unnecessary data and breaks when table structure changes.',
+    fix: 'Specify only the columns you need: SELECT field1, field2 FROM ...'
+  },
+  {
+    id: 'R006', severity: 'ERROR', category: 'RAP',
+    check: code => /RAISING\s+cx_rap_bo_action_result/i.test(code) === false &&
+                   /METHODS\s+\w+.*IMPORTING.*it_keys/i.test(code.replace(/\n/g,' ')),
+    msg: 'RAP action method missing RAISING cx_rap_bo_action_result',
+    detail: 'All RAP action methods must declare RAISING cx_rap_bo_action_result.',
+    fix: 'Add RAISING cx_rap_bo_action_result to the method signature.'
+  },
+  {
+    id: 'R007', severity: 'INFO', category: 'CDS',
+    check: code => /@odata\.publish\s*:\s*false/i.test(code) && /define\s+view/i.test(code),
+    msg: '@OData.publish: false on a consumption view — may be intentional',
+    detail: 'Consumption views usually have @OData.publish: true to expose as OData.',
+    fix: 'Set @OData.publish: true if this view should be exposed as an OData entity.'
+  },
+  {
+    id: 'R008', severity: 'WARNING', category: 'ABAP Best Practice',
+    check: code => /LOOP\s+AT\s+\w+\s*\.\s*\n.*SELECT/i.test(code),
+    msg: 'SELECT inside a LOOP — N+1 query problem',
+    detail: 'Executing SELECT inside LOOP causes one DB call per row. Very slow on HANA.',
+    fix: 'Move the SELECT outside the loop, fetch all needed data upfront using JOIN or secondary read table.'
+  },
+  {
+    id: 'R009', severity: 'INFO', category: 'CDS',
+    check: code => /define\s+view/i.test(code) && !/@AbapCatalog\.sqlViewName/i.test(code),
+    msg: 'CDS view missing @AbapCatalog.sqlViewName annotation',
+    detail: 'Every CDS view needs an underlying SQL view name for activation.',
+    fix: 'Add @AbapCatalog.sqlViewName: \'ZSQLVIEWNAME\' before the DEFINE VIEW statement.'
+  },
+  {
+    id: 'R010', severity: 'WARNING', category: 'Security',
+    check: code => /AUTHORITY-CHECK\s+OBJECT/i.test(code) === false &&
+                   /METHOD\s+(create|update|delete|modify)/i.test(code),
+    msg: 'Potential missing authorization check in write operation',
+    detail: 'Write methods (create/update/delete) should perform AUTHORITY-CHECK or use @ObjectModel.authorizationCheck.',
+    fix: 'Add AUTHORITY-CHECK OBJECT ... or annotate with @ObjectModel.authorizationCheck: #CHECK'
+  },
+];
+
+function runStaticAnalysis(code) {
+  if (!code.trim()) return [];
+  return ABAP_RULES.filter(rule => {
+    try { return rule.check(code); } catch(e) { return false; }
+  });
+}
+
+// ── ADT REST API helper ────────────────────────────────────────
+// ADT endpoint: https://<host>/sap/bc/adt/checkruns
+// Requires: Basic auth, Content-Type: application/xml
+// This calls the ABAP Code Inspector via ADT protocol
+async function callADT(host, user, pass, objectName, objectType = 'PROG/P') {
+  const url = `${host}/sap/bc/adt/checkruns`;
+  const auth = btoa(`${user}:${pass}`);
+  const body = `<?xml version="1.0" encoding="utf-8"?>
+<checkObjectList:objectSets xmlns:checkObjectList="http://www.sap.com/adt/checkobjectlist">
+  <checkObjectList:checkObjects>
+    <checkObjectList:checkObject adtcore:objectTypeId="${objectType}"
+      xmlns:adtcore="http://www.sap.com/adt/core" adtcore:name="${objectName}"/>
+  </checkObjectList:checkObjects>
+</checkObjectList:objectSets>`;
+
+  const response = await fetch(url, {
+    method: 'POST',
+    headers: {
+      'Authorization': `Basic ${auth}`,
+      'Content-Type': 'application/xml',
+      'Accept': 'application/xml',
+      'X-CSRF-Token': 'Fetch',
+    },
+    body,
+    credentials: 'include',
+  });
+
+  if (!response.ok) throw new Error(`ADT returned HTTP ${response.status}. Check credentials and object name.`);
+  const xml = await response.text();
+
+  // Parse ADT XML response
+  const parser = new DOMParser();
+  const doc = parser.parseFromString(xml, 'application/xml');
+  const findings = [];
+  doc.querySelectorAll('checkResults > checkResult').forEach(r => {
+    findings.push({
+      severity: r.getAttribute('severity') || 'WARNING',
+      msg: r.getAttribute('shortText') || r.textContent.trim(),
+      detail: r.getAttribute('longText') || '',
+      fix: '',
+      source: 'ADT',
+    });
+  });
+  return findings;
+}
+
+function CodeInspector({ onBack }) {
+  const [code, setCode] = useState('');
+  const [findings, setFindings] = useState(null);
+  const [adtEnabled, setAdtEnabled] = useState(false);
+  const [adtHost, setAdtHost] = useState('https://your-sap-host:8000');
+  const [adtUser, setAdtUser] = useState('');
+  const [adtPass, setAdtPass] = useState('');
+  const [adtObject, setAdtObject] = useState('');
+  const [adtStatus, setAdtStatus] = useState('offline');
+  const [analyzing, setAnalyzing] = useState(false);
+
+  const analyze = async () => {
+    setAnalyzing(true);
+    setFindings(null);
+    const staticResults = runStaticAnalysis(code);
+    let allFindings = staticResults.map(r => ({
+      severity: r.severity,
+      msg: r.msg,
+      detail: r.detail,
+      fix: r.fix,
+      id: r.id,
+      category: r.category,
+      source: 'Static Rule Engine'
+    }));
+
+    if (adtEnabled && adtObject) {
+      try {
+        const adtResults = await callADT(adtHost, adtUser, adtPass, adtObject);
+        allFindings = [...allFindings, ...adtResults];
+        setAdtStatus('connected');
+      } catch(e) {
+        setAdtStatus('error:' + e.message);
+      }
+    }
+
+    setFindings(allFindings);
+    setAnalyzing(false);
+  };
+
+  const sevOrder = { ERROR: 0, WARNING: 1, INFO: 2 };
+  const sorted = findings ? [...findings].sort((a,b) => (sevOrder[a.severity]||2) - (sevOrder[b.severity]||2)) : [];
+  const counts = findings ? { ERROR: findings.filter(f => f.severity==='ERROR').length, WARNING: findings.filter(f => f.severity==='WARNING').length, INFO: findings.filter(f => f.severity==='INFO').length } : {};
+
+  return (
+    <div className="game-wrap" style={{ maxWidth:900 }}>
+      <div className="game-header">
+        <div>
+          <div className="game-title">🔍 ABAP Code Inspector</div>
+          <div className="game-subtitle">Static rule engine + optional ADT API integration</div>
+        </div>
+        <button className="btn-danger" onClick={onBack}>← Back</button>
+      </div>
+
+      <div className="panel-card">
+        <div className="panel-card-head">
+          <span className="panel-tag tag-green">Static Analysis</span>
+          <span className="panel-card-title">Paste your ABAP / CDS code</span>
+        </div>
+        <div className="panel-card-body">
+          <textarea className="code-textarea-dark" style={{ minHeight:200 }} value={code} onChange={e => setCode(e.target.value)}
+            placeholder="Paste ABAP, CDS, or BDEF code here...&#10;&#10;Examples:&#10;  SELECT * FROM mara INTO lt_mat.&#10;  COMMIT WORK.&#10;  LOOP AT lt_orders. SELECT ..."/>
+        </div>
+      </div>
+
+      <div className="panel-card">
+        <div className="panel-card-head">
+          <span className="panel-tag tag-blue">ADT Integration</span>
+          <span className="panel-card-title">Connect to ABAP Development Tools REST API</span>
+          <span className={`adt-status ${adtStatus==='connected' ? 'adt-connected' : 'adt-offline'}`} style={{ marginLeft:'auto' }}>
+            {adtStatus === 'connected' ? '● Connected' : adtStatus.startsWith('error:') ? '● Error' : '○ Offline'}
+          </span>
+          <button className="btn-secondary" style={{ fontSize:12, padding:'5px 12px' }} onClick={() => setAdtEnabled(e => !e)}>
+            {adtEnabled ? 'Disable ADT' : 'Enable ADT'}
+          </button>
+        </div>
+        {adtEnabled && (
+          <div className="panel-card-body">
+            <div style={{ fontSize:12, color:'var(--muted)', marginBottom:12, background:'var(--info-lt)', border:'1px solid rgba(37,99,235,0.15)', borderRadius:'var(--radius)', padding:'10px 14px' }}>
+              <strong style={{ color:'var(--info)' }}>ADT API endpoint:</strong> <code style={{ fontFamily:'var(--mono)' }}>POST /sap/bc/adt/checkruns</code><br/>
+              Requires: ADT service enabled on your SAP system · CORS configured · Basic auth · Object must exist in system
+            </div>
+            <div className="adt-config">
+              <div>
+                <div style={{ fontSize:11, color:'var(--muted)', marginBottom:4, fontWeight:600 }}>SAP Host URL</div>
+                <input className="adt-input" value={adtHost} onChange={e => setAdtHost(e.target.value)} placeholder="https://your-sap-host:8000"/>
+              </div>
+              <div>
+                <div style={{ fontSize:11, color:'var(--muted)', marginBottom:4, fontWeight:600 }}>Object Name (e.g. ZMY_PROGRAM)</div>
+                <input className="adt-input" value={adtObject} onChange={e => setAdtObject(e.target.value)} placeholder="ZMY_PROGRAM"/>
+              </div>
+              <div>
+                <div style={{ fontSize:11, color:'var(--muted)', marginBottom:4, fontWeight:600 }}>Username</div>
+                <input className="adt-input" value={adtUser} onChange={e => setAdtUser(e.target.value)} placeholder="DEVELOPER"/>
+              </div>
+              <div>
+                <div style={{ fontSize:11, color:'var(--muted)', marginBottom:4, fontWeight:600 }}>Password</div>
+                <input className="adt-input" type="password" value={adtPass} onChange={e => setAdtPass(e.target.value)} placeholder="••••••••"/>
+              </div>
+            </div>
+            <div style={{ fontSize:11, color:'var(--muted)' }}>
+              ⚠️ ADT calls go directly from your browser to SAP. Your SAP system must allow CORS from this origin, or use a proxy. Credentials are NOT stored anywhere.
+            </div>
+          </div>
+        )}
+      </div>
+
+      <div style={{ textAlign:'center', marginBottom:24 }}>
+        <button className="btn-action" onClick={analyze} disabled={!code.trim() || analyzing}
+          style={{ fontSize:15, padding:'12px 32px' }}>
+          {analyzing ? '⏳ Analyzing...' : '🔍 Run Inspector'}
+        </button>
+      </div>
+
+      {findings !== null && (
+        <div className="panel-card">
+          <div className="panel-card-head">
+            <span className="panel-tag tag-purple">Results</span>
+            <span className="panel-card-title">{sorted.length} finding{sorted.length!==1?'s':''}</span>
+            {sorted.length > 0 && (
+              <div style={{ display:'flex', gap:6, marginLeft:'auto' }}>
+                {counts.ERROR > 0 && <span className="finding-sev sev-error">{counts.ERROR} Error{counts.ERROR!==1?'s':''}</span>}
+                {counts.WARNING > 0 && <span className="finding-sev sev-warning">{counts.WARNING} Warning{counts.WARNING!==1?'s':''}</span>}
+                {counts.INFO > 0 && <span className="finding-sev sev-info">{counts.INFO} Info</span>}
+              </div>
+            )}
+          </div>
+          <div className="panel-card-body">
+            {sorted.length === 0 ? (
+              <div className="no-issues">✅ No issues found — clean code!</div>
+            ) : (
+              sorted.map((f, i) => (
+                <div key={i} className="finding-row">
+                  <span className={`finding-sev ${f.severity==='ERROR' ? 'sev-error' : f.severity==='WARNING' ? 'sev-warning' : 'sev-info'}`}>
+                    {f.severity}
+                  </span>
+                  <div className="finding-body">
+                    <div className="finding-msg">{f.msg}</div>
+                    {f.id && <div className="finding-detail">{f.id} · {f.category} · via {f.source}</div>}
+                    {!f.id && f.source && <div className="finding-detail">via {f.source}</div>}
+                    {f.detail && <div style={{ fontSize:12, color:'var(--text2)', marginTop:3 }}>{f.detail}</div>}
+                    {f.fix && <div className="finding-fix">💡 Fix: {f.fix}</div>}
+                  </div>
+                </div>
+              ))
+            )}
+          </div>
+        </div>
+      )}
+    </div>
+  );
+}
+
+/* ═══════════════════════════════════════════════════
    HUB
 ═══════════════════════════════════════════════════ */
-function Hub({ onSelect }) {
+function Hub({ onSelect, gameData }) {
+  const totalQ = gameData?.quiz?.length || 0;
+  const totalT = gameData?.tables?.length || 0;
+  const totalA = gameData?.annotations?.length || 0;
   return (
     <>
       <div className="hub-hero">
         <div className="hub-badge">🎮 Learning Arena</div>
         <h1>ABAP <span>Learning Games</span></h1>
-        <p>Six games to help you master ABAP, RAP, and CDS through practice, challenge, and speed.</p>
+        <p>Seven games — quiz driven by your Google Sheet. Add questions, tables, annotations directly in the sheet.</p>
       </div>
       <div className="hub-stats">
-        <div className="hub-stat"><div className="hub-stat-val">6</div><div className="hub-stat-lbl">Games</div></div>
-        <div className="hub-stat"><div className="hub-stat-val">50+</div><div className="hub-stat-lbl">Questions</div></div>
-        <div className="hub-stat"><div className="hub-stat-val">∞</div><div className="hub-stat-lbl">Replays</div></div>
+        <div className="hub-stat"><div className="hub-stat-val">7</div><div className="hub-stat-lbl">Games</div></div>
+        <div className="hub-stat"><div className="hub-stat-val">{totalQ}</div><div className="hub-stat-lbl">Quiz Questions</div></div>
+        <div className="hub-stat"><div className="hub-stat-val">{totalT}</div><div className="hub-stat-lbl">Table Cases</div></div>
+        <div className="hub-stat"><div className="hub-stat-val">{totalA}</div><div className="hub-stat-lbl">Annotations</div></div>
       </div>
       <div className="hub-grid">
-        {GAMES.map(g => (
+        {GAMES_META.map(g => (
           <div key={g.id} className="game-card" style={{ '--card-color': g.color }} onClick={() => onSelect(g.id)}>
             <span className="game-card-icon">{g.icon}</span>
             <div className="game-card-title">{g.title}</div>
@@ -1328,6 +1153,49 @@ function Hub({ onSelect }) {
 ═══════════════════════════════════════════════════ */
 function App() {
   const [activeGame, setActiveGame] = useState(null);
+  const { data, loading, error } = useGameData();
+
+  if (loading) {
+    return (
+      <>
+        <div className="topbar">
+          <span className="topbar-logo">SAPZ<span>CODES</span></span>
+          <span className="topbar-sep">/</span>
+          <span className="topbar-page">Learning Games</span>
+        </div>
+        <div className="main-body">
+          <div className="loading-screen">
+            <div className="spinner"/>
+            <div className="loading-text">Loading game data from sheet...</div>
+          </div>
+        </div>
+      </>
+    );
+  }
+
+  if (error) {
+    return (
+      <>
+        <div className="topbar">
+          <span className="topbar-logo">SAPZ<span>CODES</span></span>
+          <span className="topbar-right">
+            <a className="topbar-btn danger" href="index.html" onClick={() => sessionStorage.clear()}>Sign Out</a>
+          </span>
+        </div>
+        <div className="main-body">
+          <div className="loading-screen">
+            <div style={{ fontSize:32 }}>⚠️</div>
+            <div style={{ fontWeight:700, color:'var(--danger)' }}>Could not load game data</div>
+            <div style={{ fontSize:12, color:'var(--muted)', maxWidth:400, textAlign:'center' }}>{error}</div>
+            <div style={{ fontSize:12, color:'var(--muted)', maxWidth:460, textAlign:'center' }}>
+              Make sure GAS_URL in games.html points to your deployed Web App URL.
+            </div>
+            <button className="btn-secondary" onClick={() => { sessionStorage.removeItem('szc_gamedata'); window.location.reload(); }}>↺ Retry</button>
+          </div>
+        </div>
+      </>
+    );
+  }
 
   return (
     <>
@@ -1338,17 +1206,19 @@ function App() {
         <div className="topbar-right">
           <span className="topbar-user">👤 {STUDENT_NAME}</span>
           <a className="topbar-btn" href="executor.html">🖥️ Executor</a>
+          <button className="topbar-btn" onClick={() => { sessionStorage.removeItem('szc_gamedata'); window.location.reload(); }}>↺ Refresh Data</button>
           <a className="topbar-btn danger" href="index.html" onClick={() => sessionStorage.clear()}>Sign Out</a>
         </div>
       </div>
       <div className="main-body">
-        {!activeGame && <Hub onSelect={setActiveGame}/>}
-        {activeGame === 'quiz'      && <QuizGame onBack={() => setActiveGame(null)}/>}
+        {!activeGame && <Hub onSelect={setActiveGame} gameData={data}/>}
+        {activeGame === 'quiz'      && <QuizGame onBack={() => setActiveGame(null)} allQuestions={data.quiz}/>}
         {activeGame === 'debug'     && <DebugGame onBack={() => setActiveGame(null)}/>}
-        {activeGame === 'match'     && <AnnotationMatch onBack={() => setActiveGame(null)}/>}
-        {activeGame === 'detective' && <TableDetective onBack={() => setActiveGame(null)}/>}
+        {activeGame === 'match'     && <AnnotationMatch onBack={() => setActiveGame(null)} allPairs={data.annotations}/>}
+        {activeGame === 'detective' && <TableDetective onBack={() => setActiveGame(null)} allTables={data.tables}/>}
         {activeGame === 'sorter'    && <RAPSorter onBack={() => setActiveGame(null)}/>}
         {activeGame === 'speed'     && <SpeedCoder onBack={() => setActiveGame(null)}/>}
+        {activeGame === 'inspector' && <CodeInspector onBack={() => setActiveGame(null)}/>}
       </div>
     </>
   );
