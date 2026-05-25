@@ -4,509 +4,232 @@
 <meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
 <title>SAPZCodes — ABAP Learning Platform</title>
-<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet"/>
+<link rel="icon" href="favicon.png"/>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+<link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@400;500;600;700&family=Exo+2:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet"/>
+<link rel="stylesheet" href="style.css"/>
 <style>
-:root {
-  --bg: #f5f6f8;
-  --surface: #ffffff;
-  --surface2: #f0f2f5;
-  --border: #e2e6ec;
-  --border2: #cdd3db;
-  --green: #3ac14a;
-  --green-dk: #2da03c;
-  --green-lt: #e8f9eb;
-  --green-mid: #b8edbf;
-  --charcoal: #1a1d23;
-  --text: #2c3038;
-  --text2: #5a6270;
-  --muted: #8a93a2;
-  --placeholder: #b0b8c4;
-  --danger: #e53e3e;
-  --danger-lt: #fff0f0;
-  --warn: #d97706;
-  --warn-lt: #fffbeb;
-  --info: #2563eb;
-  --info-lt: #eff6ff;
-  --success: #16a34a;
-  --success-lt: #f0fdf4;
-  --radius-sm: 6px;
-  --radius: 10px;
-  --radius-lg: 14px;
-  --radius-xl: 20px;
-  --shadow-sm: 0 1px 3px rgba(0,0,0,0.06), 0 1px 2px rgba(0,0,0,0.04);
-  --shadow: 0 4px 12px rgba(0,0,0,0.08), 0 1px 3px rgba(0,0,0,0.05);
-  --shadow-lg: 0 12px 32px rgba(0,0,0,0.10), 0 4px 10px rgba(0,0,0,0.06);
-  --shadow-green: 0 4px 16px rgba(58,193,74,0.25);
-  --font: 'Plus Jakarta Sans', sans-serif;
-  --mono: 'JetBrains Mono', monospace;
-}
+body { cursor: default; overflow-y: auto; }
+#cur, #ring { display: none; }
 
-*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-html { font-size: 14px; }
-body {
-  font-family: var(--font);
-  background: var(--bg);
-  color: var(--text);
+.login-wrap {
   min-height: 100vh;
-  -webkit-font-smoothing: antialiased;
-  overflow-x: hidden;
-}
-::-webkit-scrollbar { width: 5px; }
-::-webkit-scrollbar-track { background: transparent; }
-::-webkit-scrollbar-thumb { background: var(--border2); border-radius: 8px; }
-
-/* ── HEADER ── */
-header {
-  background: var(--charcoal);
-  padding: 0 40px;
-  height: 64px;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  position: sticky;
-  top: 0;
-  z-index: 100;
-  box-shadow: 0 2px 12px rgba(0,0,0,0.15);
-}
-.logo-wrap { display: flex; align-items: center; gap: 12px; }
-.logo-icon {
-  width: 36px; height: 36px;
-  background: var(--green);
-  border-radius: 8px;
-  display: flex; align-items: center; justify-content: center;
-  font-weight: 800; font-size: 13px; color: var(--charcoal);
-  font-family: var(--mono);
-}
-.logo-text { font-size: 18px; font-weight: 800; color: #fff; letter-spacing: -0.3px; }
-.logo-text span { color: var(--green); }
-.logo-sub { font-size: 10px; color: rgba(255,255,255,0.35); letter-spacing: 0.18em; text-transform: uppercase; margin-top: 2px; }
-.header-status {
-  display: flex; align-items: center; gap: 8px;
-  font-family: var(--mono); font-size: 11px; color: rgba(255,255,255,0.4);
-}
-.status-dot {
-  width: 7px; height: 7px;
-  background: var(--green);
-  border-radius: 50%;
-  animation: pulse-dot 2s infinite;
-}
-@keyframes pulse-dot {
-  0%,100% { box-shadow: 0 0 4px var(--green); }
-  50% { box-shadow: 0 0 10px var(--green); }
-}
-
-/* ── HERO ── */
-.hero {
-  background: var(--charcoal);
-  padding: 72px 40px 80px;
-  text-align: center;
-  position: relative;
-  overflow: hidden;
-}
-.hero::before {
-  content: '';
-  position: absolute; inset: 0;
-  background-image:
-    linear-gradient(rgba(255,255,255,0.03) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(255,255,255,0.03) 1px, transparent 1px);
-  background-size: 40px 40px;
-  pointer-events: none;
-}
-.hero::after {
-  content: '';
-  position: absolute;
-  bottom: -2px; left: 0; right: 0;
-  height: 60px;
-  background: var(--bg);
-  clip-path: ellipse(55% 100% at 50% 100%);
-}
-.hero-badge {
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
-  background: rgba(58,193,74,0.15);
-  border: 1px solid rgba(58,193,74,0.3);
-  color: var(--green);
-  font-size: 11px;
-  font-weight: 700;
-  letter-spacing: 0.1em;
-  text-transform: uppercase;
-  padding: 5px 14px;
-  border-radius: 20px;
-  margin-bottom: 28px;
-  animation: fadeUp 0.6s ease both;
-}
-.hero h1 {
-  font-size: clamp(2rem, 5vw, 3.2rem);
-  font-weight: 800;
-  color: #fff;
-  line-height: 1.15;
-  margin-bottom: 18px;
-  animation: fadeUp 0.6s ease 0.1s both;
-  letter-spacing: -0.5px;
-}
-.hero h1 .accent { color: var(--green); }
-.hero-desc {
-  font-size: 15px;
-  color: rgba(255,255,255,0.5);
-  max-width: 540px;
-  margin: 0 auto 44px;
-  line-height: 1.75;
-  animation: fadeUp 0.6s ease 0.2s both;
-}
-.features-row {
-  display: flex;
-  justify-content: center;
-  gap: 12px;
-  flex-wrap: wrap;
-  animation: fadeUp 0.6s ease 0.3s both;
-}
-.feat-chip {
-  display: flex; align-items: center; gap: 8px;
-  background: rgba(255,255,255,0.07);
-  border: 1px solid rgba(255,255,255,0.12);
-  border-radius: var(--radius);
-  padding: 10px 16px;
-  font-size: 13px;
-  color: rgba(255,255,255,0.65);
-  font-weight: 500;
-}
-.feat-chip span { font-size: 16px; }
-
-/* ── MAIN CONTENT ── */
-.content-wrap {
-  max-width: 1100px;
-  margin: 0 auto;
-  padding: 60px 24px 80px;
   display: grid;
   grid-template-columns: 1fr 480px;
-  gap: 60px;
-  align-items: start;
-}
-@media (max-width: 900px) {
-  .content-wrap { grid-template-columns: 1fr; }
-  .info-col { order: 2; }
-  .form-col { order: 1; }
-}
-
-/* ── INFO COL ── */
-.info-col {}
-.section-label {
-  font-size: 10px;
-  font-weight: 800;
-  letter-spacing: 0.18em;
-  text-transform: uppercase;
-  color: var(--green-dk);
-  margin-bottom: 16px;
-}
-.info-col h2 {
-  font-size: 26px;
-  font-weight: 800;
-  color: var(--charcoal);
-  margin-bottom: 12px;
-  letter-spacing: -0.3px;
-  line-height: 1.25;
-}
-.info-col p {
-  font-size: 14px;
-  color: var(--text2);
-  line-height: 1.75;
-  margin-bottom: 32px;
-}
-.steps-list { list-style: none; display: flex; flex-direction: column; gap: 16px; margin-bottom: 36px; }
-.step-item {
-  display: flex; align-items: flex-start; gap: 14px;
-  padding: 16px;
-  background: var(--surface);
-  border: 1px solid var(--border);
-  border-radius: var(--radius-lg);
-  box-shadow: var(--shadow-sm);
-}
-.step-num {
-  width: 28px; height: 28px; flex-shrink: 0;
-  background: var(--green-lt);
-  border: 1.5px solid var(--green-mid);
-  border-radius: 50%;
-  display: flex; align-items: center; justify-content: center;
-  font-size: 11px; font-weight: 800; color: var(--green-dk);
-  font-family: var(--mono);
-}
-.step-text strong { display: block; font-size: 13px; font-weight: 700; color: var(--charcoal); margin-bottom: 2px; }
-.step-text span { font-size: 12px; color: var(--muted); }
-
-.modules-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
-.module-card {
-  padding: 14px 16px;
-  background: var(--surface);
-  border: 1px solid var(--border);
-  border-radius: var(--radius-lg);
-  box-shadow: var(--shadow-sm);
-  transition: all 0.18s;
-}
-.module-card:hover { border-color: var(--green); box-shadow: var(--shadow-green); transform: translateY(-2px); }
-.module-card .icon { font-size: 22px; margin-bottom: 8px; }
-.module-card strong { display: block; font-size: 12px; font-weight: 700; color: var(--charcoal); margin-bottom: 3px; }
-.module-card span { font-size: 11px; color: var(--muted); }
-
-/* ── FORM COL ── */
-.form-col {}
-.main-card {
-  background: var(--surface);
-  border: 1px solid var(--border);
-  border-radius: var(--radius-xl);
-  box-shadow: var(--shadow-lg);
-  overflow: hidden;
-  position: sticky;
-  top: 80px;
-  animation: fadeUp 0.5s ease 0.2s both;
-}
-.card-header {
-  padding: 24px 28px 20px;
-  border-bottom: 1px solid var(--border);
-  background: var(--surface);
   position: relative;
 }
-.card-header::before {
-  content: '';
-  position: absolute;
-  top: 0; left: 0; right: 0; height: 3px;
-  background: linear-gradient(90deg, var(--green), var(--green-dk));
-  border-radius: 3px 3px 0 0;
-}
-.card-title { font-size: 16px; font-weight: 800; color: var(--charcoal); margin-bottom: 4px; }
-.card-sub { font-size: 12px; color: var(--muted); }
-.card-body { padding: 24px 28px; }
+@media(max-width:900px) { .login-wrap { grid-template-columns: 1fr; } .info-side { display: none; } }
 
-/* TABS */
+.info-side {
+  background: var(--s1);
+  border-right: 1px solid var(--bd);
+  padding: 60px 48px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  position: relative;
+  overflow: hidden;
+}
+.info-side::before {
+  content: '';
+  position: absolute; inset: 0;
+  background-image: radial-gradient(circle, rgba(34,160,50,.07) 1px, transparent 1px);
+  background-size: 26px 26px;
+  pointer-events: none;
+}
+.info-logo {
+  display: flex; align-items: center; gap: 12px;
+  margin-bottom: 52px; position: relative; z-index: 1;
+  text-decoration: none;
+}
+.info-logo img { height: 38px; width: auto; }
+.info-logo-text { font-family: var(--fh); font-size: 1.4rem; font-weight: 700; color: var(--text); letter-spacing: .04em; }
+.info-logo-text span { color: var(--g); }
+
+.info-heading {
+  font-family: var(--fh); font-size: clamp(2rem,3.5vw,2.8rem);
+  font-weight: 700; letter-spacing: .02em; color: var(--text);
+  line-height: 1.1; margin-bottom: 16px; position: relative; z-index: 1;
+}
+.info-heading .g { color: var(--g); }
+.info-sub { color: var(--gr); font-size: .95rem; line-height: 1.75; margin-bottom: 44px; max-width: 420px; position: relative; z-index: 1; }
+
+.steps-list { list-style: none; display: flex; flex-direction: column; gap: 14px; margin-bottom: 44px; position: relative; z-index: 1; }
+.step-item {
+  display: flex; align-items: flex-start; gap: 14px;
+  background: var(--bg); border: 1px solid var(--bd2);
+  border-radius: var(--r); padding: 16px 18px;
+}
+.step-num {
+  width: 28px; height: 28px; flex-shrink: 0; border-radius: 50%;
+  background: rgba(34,160,50,.1); border: 1.5px solid rgba(34,160,50,.25);
+  display: flex; align-items: center; justify-content: center;
+  font-family: var(--fm); font-size: .68rem; font-weight: 700; color: var(--g);
+}
+.step-body strong { display: block; font-family: var(--fh); font-size: .95rem; font-weight: 700; color: var(--text); margin-bottom: 2px; }
+.step-body span { font-size: .82rem; color: var(--mu); }
+
+.modules-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; position: relative; z-index: 1; }
+.mod-card {
+  background: var(--bg); border: 1px solid var(--bd2);
+  border-radius: var(--r); padding: 14px;
+  transition: all .2s;
+}
+.mod-card:hover { border-color: rgba(34,160,50,.3); transform: translateY(-2px); box-shadow: var(--glow-s); }
+.mod-card .mi { font-size: 1.4rem; margin-bottom: 6px; }
+.mod-card strong { display: block; font-family: var(--fh); font-size: .88rem; font-weight: 700; color: var(--text); margin-bottom: 2px; }
+.mod-card span { font-size: .75rem; color: var(--mu); }
+
+.form-side {
+  background: var(--bg);
+  display: flex; flex-direction: column; align-items: center; justify-content: center;
+  padding: 48px 36px;
+  position: relative;
+}
+.form-box {
+  width: 100%; max-width: 380px;
+  background: var(--s1);
+  border: 1px solid var(--bd);
+  border-radius: var(--r);
+  overflow: hidden;
+  box-shadow: 0 8px 32px rgba(0,0,0,.06);
+}
+.form-box-head {
+  padding: 22px 26px 18px;
+  border-bottom: 1px solid var(--bd);
+  position: relative;
+}
+.form-box-head::before {
+  content: ''; position: absolute; top: 0; left: 0; right: 0; height: 2.5px;
+  background: var(--g);
+}
+.form-box-title { font-family: var(--fh); font-size: 1.05rem; font-weight: 700; color: var(--text); margin-bottom: 3px; letter-spacing: .04em; }
+.form-box-sub { font-size: .78rem; color: var(--mu); }
+.form-box-body { padding: 22px 26px; }
+
 .tabs {
-  display: flex; gap: 4px;
-  background: var(--surface2);
-  border: 1px solid var(--border);
-  border-radius: var(--radius);
-  padding: 4px;
-  margin-bottom: 24px;
+  display: flex; gap: 3px;
+  background: var(--s2); border: 1px solid var(--bd);
+  border-radius: 7px; padding: 3px; margin-bottom: 20px;
 }
 .tab-btn {
-  flex: 1; padding: 8px;
+  flex: 1; padding: 7px;
   border: none; background: transparent;
-  color: var(--muted); font-family: var(--font);
-  font-size: 13px; font-weight: 600;
-  border-radius: var(--radius-sm);
-  cursor: pointer; transition: all 0.18s;
+  color: var(--mu); font-family: var(--fb);
+  font-size: .8rem; font-weight: 600;
+  border-radius: 5px; cursor: pointer; transition: all .18s;
 }
 .tab-btn.active {
-  background: var(--surface);
-  color: var(--charcoal);
-  box-shadow: var(--shadow-sm);
+  background: var(--bg); color: var(--text);
+  box-shadow: 0 1px 4px rgba(0,0,0,.08);
 }
 
 .form-panel { display: none; }
 .form-panel.active { display: block; }
 
-.field { margin-bottom: 14px; }
-.field label {
-  display: block; font-size: 11px; font-weight: 700;
-  color: var(--text2); margin-bottom: 5px;
-  letter-spacing: 0.06em; text-transform: uppercase;
-}
+.field { margin-bottom: 12px; }
+.field label { display: block; font-family: var(--fm); font-size: .6rem; font-weight: 600; color: var(--mu); margin-bottom: 5px; text-transform: uppercase; letter-spacing: .1em; }
 .field input, .field select, .field textarea {
-  width: 100%; padding: 9px 12px;
-  background: var(--surface); border: 1px solid var(--border2);
-  border-radius: var(--radius); color: var(--text);
-  font-size: 13px; font-family: var(--font); outline: none;
-  transition: border-color 0.18s, box-shadow 0.18s;
+  width: 100%; padding: 9px 11px;
+  background: var(--bg); border: 1px solid var(--bd);
+  border-radius: 7px; color: var(--text);
+  font-size: .85rem; font-family: var(--fb); outline: none;
+  transition: border-color .18s, box-shadow .18s;
 }
 .field input:focus, .field select:focus, .field textarea:focus {
-  border-color: var(--green);
-  box-shadow: 0 0 0 3px rgba(58,193,74,0.12);
+  border-color: var(--g);
+  box-shadow: 0 0 0 3px rgba(34,160,50,.1);
 }
-.field input::placeholder { color: var(--placeholder); }
-.field select option { background: var(--surface); }
-
-.btn-primary {
-  width: 100%; padding: 11px;
-  background: var(--green); border: none;
-  border-radius: var(--radius); color: var(--charcoal);
-  font-family: var(--font); font-size: 14px; font-weight: 800;
-  cursor: pointer; transition: all 0.18s;
-  letter-spacing: 0.02em; box-shadow: var(--shadow-green);
-  margin-top: 6px;
-}
-.btn-primary:hover { background: var(--green-dk); transform: translateY(-1px); box-shadow: 0 6px 20px rgba(58,193,74,0.35); }
-.btn-primary:disabled { opacity: 0.5; cursor: not-allowed; transform: none; }
-.btn-primary.loading .btn-text { display: none; }
-.btn-primary .btn-loader {
-  display: none; width: 16px; height: 16px;
-  border: 2px solid rgba(26,29,35,0.2); border-top-color: var(--charcoal);
-  border-radius: 50%; animation: spin 0.7s linear infinite; margin: 0 auto;
-}
-.btn-primary.loading .btn-loader { display: block; }
-
-.divider {
-  display: flex; align-items: center; gap: 12px;
-  margin: 18px 0; color: var(--muted); font-size: 11px; letter-spacing: 0.1em;
-}
-.divider::before, .divider::after { content: ''; flex: 1; height: 1px; background: var(--border); }
-
-.msg-box {
-  display: none; padding: 10px 14px;
-  border-radius: var(--radius-sm); font-size: 12px; margin-bottom: 14px;
-  font-weight: 500;
-}
-.msg-box.error { display: block; background: var(--danger-lt); border: 1px solid rgba(229,62,62,0.25); color: var(--danger); }
-.msg-box.success { display: block; background: var(--success-lt); border: 1px solid rgba(22,163,74,0.25); color: var(--success); }
-.msg-box.info { display: block; background: var(--info-lt); border: 1px solid rgba(37,99,235,0.2); color: var(--info); }
+.field input::placeholder { color: var(--mu); opacity: .6; }
+.field select option { background: var(--bg); }
 
 .token-wrap { position: relative; }
-.token-eye {
-  position: absolute; right: 12px; top: 50%;
-  transform: translateY(-50%);
-  cursor: pointer; color: var(--muted); font-size: 15px;
-  transition: color 0.15s;
-}
-.token-eye:hover { color: var(--green-dk); }
-.token-wrap input { padding-right: 40px; }
+.token-eye { position: absolute; right: 10px; top: 50%; transform: translateY(-50%); cursor: pointer; color: var(--mu); font-size: .85rem; transition: color .15s; }
+.token-eye:hover { color: var(--g); }
+.token-wrap input { padding-right: 36px; }
 
-/* ── FOOTER ── */
-footer {
-  background: var(--charcoal);
-  text-align: center; padding: 20px;
-  font-size: 12px; color: rgba(255,255,255,0.3);
-  font-family: var(--mono);
-}
-footer a { color: var(--green); text-decoration: none; }
+.msg-box { display: none; padding: 9px 12px; border-radius: 6px; font-size: .78rem; margin-bottom: 12px; font-weight: 500; }
+.msg-box.error { display: block; background: rgba(229,62,62,.08); border: 1px solid rgba(229,62,62,.2); color: #c0392b; }
+.msg-box.success { display: block; background: rgba(34,160,50,.08); border: 1px solid rgba(34,160,50,.2); color: var(--g); }
+.msg-box.info { display: block; background: rgba(34,160,50,.05); border: 1px solid var(--bd); color: var(--mu); }
 
-/* ── TOAST ── */
-.toast {
-  position: fixed; bottom: 24px; right: 24px;
-  padding: 12px 18px; border-radius: var(--radius-lg);
-  font-size: 13px; font-weight: 500;
-  z-index: 999; opacity: 0; transform: translateY(10px);
-  transition: all 0.25s; pointer-events: none;
-  box-shadow: var(--shadow-lg); display: flex; align-items: center; gap: 8px;
-  max-width: 360px; background: var(--surface);
-  border-left: 3px solid var(--green); color: var(--charcoal);
+.btn-submit {
+  width: 100%; padding: 10px;
+  background: var(--g); border: none;
+  border-radius: 7px; color: #fff;
+  font-family: var(--fh); font-size: .93rem; font-weight: 700;
+  letter-spacing: .04em; cursor: pointer; transition: all .2s;
+  margin-top: 4px; display: flex; align-items: center; justify-content: center; gap: 8px;
 }
-.toast.show { opacity: 1; transform: translateY(0); }
-
-@keyframes fadeUp { from { opacity: 0; transform: translateY(16px); } to { opacity: 1; transform: none; } }
+.btn-submit:hover { background: #1a8028; transform: translateY(-1px); box-shadow: var(--glow-s); }
+.btn-submit:disabled { opacity: .55; cursor: not-allowed; transform: none; box-shadow: none; }
+.btn-loader { display: none; width: 14px; height: 14px; border: 2px solid rgba(255,255,255,.3); border-top-color: #fff; border-radius: 50%; animation: spin .7s linear infinite; }
+.btn-submit.loading .btn-loader { display: block; }
+.btn-submit.loading .btn-text { display: none; }
 @keyframes spin { to { transform: rotate(360deg); } }
+
+.divider { display: flex; align-items: center; gap: 10px; margin: 14px 0; color: var(--mu); font-size: .7rem; letter-spacing: .1em; font-family: var(--fm); }
+.divider::before, .divider::after { content: ''; flex: 1; height: 1px; background: var(--bd); }
+
+.form-foot-note { text-align: center; font-size: .75rem; color: var(--mu); }
+.form-foot-note a { color: var(--g); text-decoration: none; font-weight: 600; }
+
+.status-bar {
+  margin-top: 28px; text-align: center;
+  font-family: var(--fm); font-size: .62rem; letter-spacing: .1em;
+  text-transform: uppercase; color: var(--mu);
+  display: flex; align-items: center; justify-content: center; gap: 8px;
+}
+.status-dot { width: 6px; height: 6px; background: var(--g); border-radius: 50%; animation: bl 1.4s infinite; flex-shrink: 0; }
+@keyframes bl { 0%,100%{opacity:1} 50%{opacity:.15} }
+
+.toast { position: fixed; bottom: 22px; right: 22px; padding: 11px 16px; border-radius: 8px; font-size: .82rem; font-weight: 500; z-index: 999; opacity: 0; transform: translateY(8px); transition: all .25s; pointer-events: none; background: var(--s1); border-left: 2.5px solid var(--g); color: var(--text); box-shadow: var(--shadow); max-width: 320px; }
+.toast.show { opacity: 1; transform: translateY(0); }
 </style>
 </head>
 <body>
+<div id="cur"></div>
 
-<header>
-  <div class="logo-wrap">
-    <div class="logo-icon">SZ</div>
-    <div>
-      <div class="logo-text">SAPZ<span>CODES</span></div>
-      <div class="logo-sub">ABAP Learning Platform</div>
-    </div>
-  </div>
-  <div class="header-status">
-    <div class="status-dot"></div>
-    SYSTEM ONLINE · v2.1.0
-  </div>
-</header>
-
-<!-- HERO -->
-<section class="hero">
-  <div class="hero-badge"><span>⚡</span> RESTRICTED ACCESS — STUDENTS ONLY</div>
-  <h1>Master <span class="accent">ABAP</span> &<br/>SAP RAP Development</h1>
-  <p class="hero-desc">Real code execution. Gamified learning. Built for the next generation of SAP developers. Request access and start your journey.</p>
-  <div class="features-row">
-    <div class="feat-chip"><span>🖥️</span> Live ABAP Executor</div>
-    <div class="feat-chip"><span>🎮</span> Learning Games</div>
-    <div class="feat-chip"><span>📊</span> Mock SAP Tables</div>
-    <div class="feat-chip"><span>🏆</span> Progress Tracking</div>
-  </div>
-</section>
-
-<!-- MAIN CONTENT -->
-<div class="content-wrap">
-  <!-- INFO COL -->
-  <div class="info-col">
-    <div class="section-label">How it works</div>
-    <h2>From Request to<br/>Running Code in 24hrs</h2>
-    <p>SAPZCodes is an exclusive platform for enrolled students. Submit your access request, get approved by our team, and start learning ABAP through hands-on execution and gamified challenges.</p>
-
+<div class="login-wrap">
+  <div class="info-side">
+    <a class="info-logo" href="#">
+      <img src="logo.png" alt="SAPZCodes"/>
+      <span class="info-logo-text">SAPZ<span>CODES</span></span>
+    </a>
+    <div class="tag">ABAP Learning Platform</div>
+    <h1 class="info-heading">Master <span class="g">ABAP</span> &<br/>SAP RAP Development</h1>
+    <p class="info-sub">Real code execution. Gamified learning. Built for the next generation of SAP developers.</p>
     <ul class="steps-list">
-      <li class="step-item">
-        <div class="step-num">1</div>
-        <div class="step-text">
-          <strong>Submit Access Request</strong>
-          <span>Fill the form — HR reviews within 24–48 hours</span>
-        </div>
-      </li>
-      <li class="step-item">
-        <div class="step-num">2</div>
-        <div class="step-text">
-          <strong>Receive Your Token</strong>
-          <span>Approved students get a unique access token via email</span>
-        </div>
-      </li>
-      <li class="step-item">
-        <div class="step-num">3</div>
-        <div class="step-text">
-          <strong>Enter the Platform</strong>
-          <span>Use your email + token to unlock the full learning suite</span>
-        </div>
-      </li>
+      <li class="step-item"><div class="step-num">1</div><div class="step-body"><strong>Submit Access Request</strong><span>HR reviews within 24–48 hours</span></div></li>
+      <li class="step-item"><div class="step-num">2</div><div class="step-body"><strong>Receive Your Token</strong><span>Approved students get a unique token via email</span></div></li>
+      <li class="step-item"><div class="step-num">3</div><div class="step-body"><strong>Enter the Platform</strong><span>Email + token unlocks the full learning suite</span></div></li>
     </ul>
-
-    <div class="section-label">What's inside</div>
     <div class="modules-grid">
-      <div class="module-card">
-        <div class="icon">🖥️</div>
-        <strong>ABAP Executor</strong>
-        <span>Write & run simulated ABAP with mock SAP tables</span>
-      </div>
-      <div class="module-card">
-        <div class="icon">🧠</div>
-        <strong>ABAP Quiz</strong>
-        <span>15-question adaptive quizzes on RAP, CDS & HANA</span>
-      </div>
-      <div class="module-card">
-        <div class="icon">🐛</div>
-        <strong>Debug Master</strong>
-        <span>Find and fix real ABAP bugs in RAP code</span>
-      </div>
-      <div class="module-card">
-        <div class="icon">🎯</div>
-        <strong>Annotation Match</strong>
-        <span>Master @UI, @Semantics, @ObjectModel annotations</span>
-      </div>
+      <div class="mod-card"><div class="mi">🖥️</div><strong>ABAP Executor</strong><span>Write & run simulated ABAP</span></div>
+      <div class="mod-card"><div class="mi">🎮</div><strong>Learning Games</strong><span>Quiz, Debug, Match & more</span></div>
+      <div class="mod-card"><div class="mi">🏃</div><strong>ABAP Runner</strong><span>Endless runner with questions</span></div>
+      <div class="mod-card"><div class="mi">🏆</div><strong>Certificates</strong><span>Earn on completion</span></div>
     </div>
   </div>
 
-  <!-- FORM COL -->
-  <div class="form-col">
-    <div class="main-card">
-      <div class="card-header">
-        <div class="card-title">Platform Access</div>
-        <div class="card-sub">New student? Request access. Got your token? Enter below.</div>
+  <div class="form-side">
+    <div class="form-box">
+      <div class="form-box-head">
+        <div class="form-box-title">Platform Access</div>
+        <div class="form-box-sub">New student? Request access. Got a token? Enter below.</div>
       </div>
-      <div class="card-body">
+      <div class="form-box-body">
         <div class="tabs">
           <button class="tab-btn active" onclick="switchTab('request')">Request Access</button>
           <button class="tab-btn" onclick="switchTab('enter')">Enter Platform</button>
         </div>
 
-        <!-- REQUEST FORM -->
         <div class="form-panel active" id="panel-request">
           <div id="msg-request" class="msg-box"></div>
-          <div class="field">
-            <label>Full Name</label>
-            <input id="req-name" type="text" placeholder="e.g. Rahul Sharma" autocomplete="off"/>
-          </div>
-          <div class="field">
-            <label>Email Address</label>
-            <input id="req-email" type="email" placeholder="your@email.com" autocomplete="off"/>
-          </div>
-          <div class="field">
-            <label>Batch / Course</label>
-            <input id="req-batch" type="text" placeholder="e.g. RAP Batch 2025 – Cohort 3" autocomplete="off"/>
-          </div>
+          <div class="field"><label>Full Name</label><input id="req-name" type="text" placeholder="e.g. Rahul Sharma" autocomplete="off"/></div>
+          <div class="field"><label>Email Address</label><input id="req-email" type="email" placeholder="your@email.com" autocomplete="off"/></div>
+          <div class="field"><label>Batch / Course</label><input id="req-batch" type="text" placeholder="e.g. RAP Batch 2025 – Cohort 3" autocomplete="off"/></div>
           <div class="field">
             <label>Experience Level</label>
             <select id="req-level">
@@ -516,139 +239,120 @@ footer a { color: var(--green); text-decoration: none; }
               <option value="Advanced">Advanced (OOP/RAP aware)</option>
             </select>
           </div>
-          <div class="field">
-            <label>Why do you want access?</label>
-            <input id="req-reason" type="text" placeholder="Brief reason..." autocomplete="off"/>
-          </div>
-          <button class="btn-primary" id="btn-request" onclick="submitRequest()">
-            <span class="btn-text">Submit Access Request</span>
+          <div class="field"><label>Why do you want access?</label><input id="req-reason" type="text" placeholder="Brief reason..." autocomplete="off"/></div>
+          <button class="btn-submit" id="btn-request" onclick="submitRequest()">
+            <span class="btn-text">Submit Request</span>
             <div class="btn-loader"></div>
           </button>
         </div>
 
-        <!-- ENTER PLATFORM -->
         <div class="form-panel" id="panel-enter">
-          <div id="msg-enter" class="msg-box info">Enter the access token sent to your email after HR approval.</div>
-          <div class="field">
-            <label>Email Address</label>
-            <input id="ent-email" type="email" placeholder="your@email.com" autocomplete="off"/>
-          </div>
+          <div id="msg-enter" class="msg-box info">Enter the token sent to your email after HR approval.</div>
+          <div class="field"><label>Email Address</label><input id="ent-email" type="email" placeholder="your@email.com" autocomplete="off"/></div>
           <div class="field">
             <label>Access Token</label>
             <div class="token-wrap">
               <input id="ent-token" type="password" placeholder="SZC-XXXX-XXXX-XXXX" autocomplete="off"/>
-              <span class="token-eye" onclick="toggleTokenVis(this)">👁️</span>
+              <span class="token-eye" onclick="toggleTokenVis(this)">👁</span>
             </div>
           </div>
-          <button class="btn-primary" id="btn-enter" onclick="enterPlatform()">
+          <button class="btn-submit" id="btn-enter" onclick="enterPlatform()">
             <span class="btn-text">🚀 Enter Platform</span>
             <div class="btn-loader"></div>
           </button>
-          <div class="divider">NEED ACCESS?</div>
-          <p style="text-align:center;font-size:12px;color:var(--muted);">
-            Switch to <a href="#" onclick="switchTab('request');return false;" style="color:var(--green-dk);font-weight:600;">Request Access</a> if you haven't applied yet.
-          </p>
+          <div class="divider">OR</div>
+          <p class="form-foot-note">No access yet? <a href="#" onclick="switchTab('request');return false;">Request here →</a></p>
         </div>
       </div>
     </div>
+    <div class="status-bar"><div class="status-dot"></div>SYSTEM ONLINE · v2.1.0</div>
   </div>
 </div>
-
-<footer>
-  © 2025 SAPZCodes · All rights reserved · <a href="mailto:hr@sapzcodes.com">hr@sapzcodes.com</a>
-</footer>
 
 <div class="toast" id="toast"></div>
 
 <script>
-const GAS_URL = 'https://script.google.com/macros/s/AKfycbwy_yWVkYL6qN_QAokIUMNClWqI96wdiF3qasWVLihOMi9ecH12BSzG6ypSZI1A54VA/exec';
+(function(){
+  const _o = XMLHttpRequest.prototype.open;
+  XMLHttpRequest.prototype.open = function(){ return _o.apply(this, arguments); };
+  document.addEventListener('contextmenu', e => e.preventDefault());
+  document.addEventListener('keydown', e => {
+    if (e.key === 'F12' || (e.ctrlKey && e.shiftKey && ['I','J','C'].includes(e.key)) || (e.ctrlKey && e.key==='U')) e.preventDefault();
+  });
+  document.addEventListener('copy', e => { if (!e.target.matches('input,textarea')) e.preventDefault(); });
+})();
+
+const GAS = 'https://script.google.com/macros/s/AKfycbwy_yWVkYL6qN_QAokIUMNClWqI96wdiF3qasWVLihOMi9ecH12BSzG6ypSZI1A54VA/exec';
 
 function switchTab(tab) {
-  document.querySelectorAll('.tab-btn').forEach((b, i) => {
-    b.classList.toggle('active', (tab==='request'&&i===0)||(tab==='enter'&&i===1));
-  });
+  document.querySelectorAll('.tab-btn').forEach((b,i) => b.classList.toggle('active', (tab==='request'&&i===0)||(tab==='enter'&&i===1)));
   document.getElementById('panel-request').classList.toggle('active', tab==='request');
   document.getElementById('panel-enter').classList.toggle('active', tab==='enter');
 }
-
-function showToast(msg) {
-  const t = document.getElementById('toast');
-  t.textContent = msg; t.classList.add('show');
-  setTimeout(() => t.classList.remove('show'), 4000);
-}
-
-function showMsg(id, msg, type) {
-  const el = document.getElementById(id);
-  el.className = 'msg-box ' + type;
-  el.textContent = msg;
-}
-
 function toggleTokenVis(el) {
-  const inp = document.getElementById('ent-token');
-  if (inp.type === 'password') { inp.type = 'text'; el.textContent = '🙈'; }
-  else { inp.type = 'password'; el.textContent = '👁️'; }
+  const i = document.getElementById('ent-token');
+  i.type = i.type==='password' ? 'text' : 'password';
+  el.textContent = i.type==='password' ? '👁' : '🙈';
+}
+function showMsg(id, msg, type) { const e=document.getElementById(id); e.className='msg-box '+type; e.textContent=msg; }
+function showToast(msg) {
+  const t=document.getElementById('toast'); t.textContent=msg; t.classList.add('show');
+  setTimeout(()=>t.classList.remove('show'), 4000);
+}
+function setLoading(btnId, on) {
+  const b=document.getElementById(btnId); b.classList.toggle('loading',on); b.disabled=on;
+}
+
+async function gasPost(payload) {
+  const res = await fetch(GAS, {
+    method: 'POST',
+    body: JSON.stringify(payload)
+  });
+  return res.json();
 }
 
 async function submitRequest() {
-  const name   = document.getElementById('req-name').value.trim();
-  const email  = document.getElementById('req-email').value.trim();
-  const batch  = document.getElementById('req-batch').value.trim();
-  const level  = document.getElementById('req-level').value;
-  const reason = document.getElementById('req-reason').value.trim();
-  if (!name||!email||!batch||!level||!reason) {
-    showMsg('msg-request','⚠️ Please fill all fields.','error'); return;
-  }
-  if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
-    showMsg('msg-request','⚠️ Invalid email address.','error'); return;
-  }
-  const btn = document.getElementById('btn-request');
-  btn.classList.add('loading'); btn.disabled = true;
+  const name=document.getElementById('req-name').value.trim();
+  const email=document.getElementById('req-email').value.trim();
+  const batch=document.getElementById('req-batch').value.trim();
+  const level=document.getElementById('req-level').value;
+  const reason=document.getElementById('req-reason').value.trim();
+  if (!name||!email||!batch||!level||!reason) { showMsg('msg-request','⚠ Please fill all fields.','error'); return; }
+  if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) { showMsg('msg-request','⚠ Invalid email address.','error'); return; }
+  setLoading('btn-request', true);
   try {
-    const res  = await fetch(GAS_URL, { method:'POST', headers:{'Content-Type':'text/plain;charset=utf-8'}, body: JSON.stringify({action:'request',name,email,batch,level,reason}) });
-    const data = await res.json();
-    if (data.status === 'ok') {
-      showMsg('msg-request','✅ Request submitted! HR will review and email you within 24–48 hrs.','success');
-      ['req-name','req-email','req-batch','req-reason'].forEach(id => document.getElementById(id).value='');
-      document.getElementById('req-level').value = '';
-      showToast('🎉 Access request sent to hr@sapzcodes.com!');
-    } else {
-      showMsg('msg-request','❌ '+(data.message||'Something went wrong. Try again.'),'error');
-    }
-  } catch(e) {
-    showMsg('msg-request','❌ Network error. Check your connection.','error');
-  } finally {
-    btn.classList.remove('loading'); btn.disabled = false;
-  }
+    const data = await gasPost({action:'request',name,email,batch,level,reason});
+    if (data.status==='ok') {
+      showMsg('msg-request','✅ Request submitted! HR will email you within 24–48 hrs.','success');
+      ['req-name','req-email','req-batch','req-reason'].forEach(id=>document.getElementById(id).value='');
+      document.getElementById('req-level').value='';
+      showToast('🎉 Request sent to HR!');
+    } else { showMsg('msg-request','❌ '+(data.message||'Something went wrong.'),'error'); }
+  } catch(e) { showMsg('msg-request','❌ Network error. Check your connection.','error'); }
+  finally { setLoading('btn-request', false); }
 }
 
 async function enterPlatform() {
-  const email = document.getElementById('ent-email').value.trim();
-  const token = document.getElementById('ent-token').value.trim().toUpperCase();
-  if (!email||!token) { showMsg('msg-enter','⚠️ Enter your email and token.','error'); return; }
-  const btn = document.getElementById('btn-enter');
-  btn.classList.add('loading'); btn.disabled = true;
+  const email=document.getElementById('ent-email').value.trim();
+  const token=document.getElementById('ent-token').value.trim().toUpperCase();
+  if (!email||!token) { showMsg('msg-enter','⚠ Enter your email and token.','error'); return; }
+  setLoading('btn-enter', true);
   try {
-    const res  = await fetch(GAS_URL, { method:'POST', headers:{'Content-Type':'text/plain;charset=utf-8'}, body: JSON.stringify({action:'verify',email,token}) });
-    const data = await res.json();
-    if (data.status === 'ok') {
+    const data = await gasPost({action:'verify',email,token});
+    if (data.status==='ok') {
       showMsg('msg-enter','✅ Access granted! Redirecting...','success');
       sessionStorage.setItem('szc_email', email);
       sessionStorage.setItem('szc_token', token);
-      sessionStorage.setItem('szc_name',  data.name||'Student');
-      showToast('🚀 Welcome, '+(data.name||'Student')+'! Loading platform...');
-      setTimeout(() => { window.location.href = 'loading.html'; }, 1800);
-    } else {
-      showMsg('msg-enter','❌ '+(data.message||'Invalid token or email.'),'error');
-    }
-  } catch(e) {
-    showMsg('msg-enter','❌ Network error. Try again.','error');
-  } finally {
-    btn.classList.remove('loading'); btn.disabled = false;
-  }
+      sessionStorage.setItem('szc_name', data.name||'Student');
+      showToast('🚀 Welcome, '+(data.name||'Student')+'!');
+      setTimeout(()=>{ window.location.href='loading.html'; }, 1600);
+    } else { showMsg('msg-enter','❌ '+(data.message||'Invalid token or email.'),'error'); }
+  } catch(e) { showMsg('msg-enter','❌ Network error. Try again.','error'); }
+  finally { setLoading('btn-enter', false); }
 }
 
-document.getElementById('ent-token').addEventListener('keydown', e => { if (e.key==='Enter') enterPlatform(); });
-document.getElementById('ent-email').addEventListener('keydown', e => { if (e.key==='Enter') enterPlatform(); });
+document.getElementById('ent-token').addEventListener('keydown', e=>{ if(e.key==='Enter') enterPlatform(); });
+document.getElementById('ent-email').addEventListener('keydown', e=>{ if(e.key==='Enter') enterPlatform(); });
 </script>
 </body>
 </html>
