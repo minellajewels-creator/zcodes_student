@@ -80,7 +80,7 @@
              color:rgba(240,244,240,.3); margin-bottom:5px; }
 
     /* ── Lane labels ─────────────────────────────────────── */
-    .obs-label {
+    /*.obs-label {
       position:fixed; transform:translate(-50%,-50%);
       background:rgba(0,0,0,.82); padding:7px 13px; border-radius:6px;
       font-size:.78rem; font-weight:700; text-align:center; pointer-events:none;
@@ -88,7 +88,7 @@
     }
     .obs-label.l0 { border:1px solid #2563eb; color:#93c5fd; }
     .obs-label.l1 { border:1px solid #d97706; color:#fcd34d; }
-    .obs-label.l2 { border:1px solid #c0392b; color:#fca5a5; }
+    .obs-label.l2 { border:1px solid #c0392b; color:#fca5a5; } */
 
     /* ── Feedback flash ──────────────────────────────────── */
     #flash {
@@ -178,9 +178,9 @@
 </div>
 
 <!-- Lane answer labels -->
-<div id="obs-0" class="obs-label l0"></div>
+<!--<div id="obs-0" class="obs-label l0"></div>
 <div id="obs-1" class="obs-label l1"></div>
-<div id="obs-2" class="obs-label l2"></div>
+<div id="obs-2" class="obs-label l2"></div> --!>
 
 <!-- Feedback -->
 <div id="flash"></div>
@@ -305,8 +305,8 @@ const scene    = new THREE.Scene();
 scene.fog      = new THREE.FogExp2(0x0d1117, 0.026);
 
 const camera   = new THREE.PerspectiveCamera(60, window.innerWidth / window.innerHeight, 0.1, 500);
-camera.position.set(0, 4, -8);
-camera.lookAt(0, 1, 10);
+camera.position.set(0, 3.5, -6);
+camera.lookAt(0, 1.5, 8);
 
 const renderer = new THREE.WebGLRenderer({ antialias: true });
 renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
@@ -529,35 +529,82 @@ function spawnNextQuestion() {
     { text: activeQuestion.wrong2,  correct: false },
   ].sort(() => Math.random() - 0.5);
 
-  // Clear old obstacles
   obstacleMeshes.forEach(m => scene.remove(m));
   obstacleMeshes = [];
   obstacleData   = [];
 
+  const LANE_COLORS_HEX = ['#2563eb', '#d97706', '#c0392b'];
+
   for (let i = 0; i < 3; i++) {
-    // Pillar mesh
-    const geo  = new THREE.BoxGeometry(1.8, 1.8, 0.5);
-    const mat  = new THREE.MeshLambertMaterial({
-      color: LANE_COLORS[i], transparent: true, opacity: 0.6,
+    // Build canvas texture with answer text
+    const canvas = document.createElement('canvas');
+    canvas.width  = 512;
+    canvas.height = 256;
+    const ctx = canvas.getContext('2d');
+
+    // Background
+    ctx.fillStyle = 'rgba(0,0,0,0.85)';
+    ctx.roundRect(4, 4, 504, 248, 16);
+    ctx.fill();
+
+    // Border
+    ctx.strokeStyle = LANE_COLORS_HEX[i];
+    ctx.lineWidth = 8;
+    ctx.roundRect(4, 4, 504, 248, 16);
+    ctx.stroke();
+
+    // Text
+    ctx.fillStyle = '#ffffff';
+    ctx.textAlign = 'center';
+    ctx.textBaseline = 'middle';
+
+    const words = answers[i].text.split(' ');
+    const lines = [];
+    let line = '';
+    for (const w of words) {
+      const test = line ? line + ' ' + w : w;
+      ctx.font = 'bold 44px monospace';
+      if (ctx.measureText(test).width > 460 && line) {
+        lines.push(line);
+        line = w;
+      } else {
+        line = test;
+      }
+    }
+    lines.push(line);
+
+    const lineH = 54;
+    const startY = 128 - ((lines.length - 1) * lineH) / 2;
+    ctx.font = 'bold 44px monospace';
+    lines.forEach((l, li) => ctx.fillText(l, 256, startY + li * lineH));
+
+    const tex = new THREE.CanvasTexture(canvas);
+
+    // Front face material with text, sides solid color
+    const solidMat = new THREE.MeshLambertMaterial({
+      color: LANE_COLORS_HEX[i],
+      transparent: true,
+      opacity: 0.75,
     });
-    const box = new THREE.Mesh(geo, mat);
+    const textMat = new THREE.MeshLambertMaterial({ map: tex });
+
+    // BoxGeometry face order: +X, -X, +Y, -Y, +Z(front), -Z(back)
+    const materials = [solidMat, solidMat, solidMat, solidMat, textMat, solidMat];
+
+    const geo = new THREE.BoxGeometry(2.2, 1.6, 0.5);
+    const box = new THREE.Mesh(geo, materials);
     box.position.set(LANES[i], 1.2, SPAWN_Z);
     box.castShadow = true;
 
-    // Outline edges
+    // Glowing edge outline
     const edges = new THREE.EdgesGeometry(geo);
     box.add(new THREE.LineSegments(edges,
-      new THREE.LineBasicMaterial({ color: LANE_COLORS[i], transparent: true, opacity: 0.95 })
+      new THREE.LineBasicMaterial({ color: LANE_COLORS_HEX[i], transparent: true, opacity: 0.95 })
     ));
 
     scene.add(box);
     obstacleMeshes.push(box);
-
-    const label = document.getElementById(`obs-${i}`);
-    label.textContent = answers[i].text;
-    label.style.display = 'block';
-
-    obstacleData.push({ mesh: box, correct: answers[i].correct, label });
+    obstacleData.push({ mesh: box, correct: answers[i].correct });
   }
   questionPending = false;
 }
@@ -570,29 +617,22 @@ function updateObstacles(dt) {
     const obs = obstacleData[i];
     obs.mesh.position.z -= state.speed * dt;
 
-    // Project to screen for HTML label positioning
-    projVec.copy(obs.mesh.position);
-    projVec.project(camera);
-    if (projVec.z < 1.0) {
-      obs.label.style.left = ((projVec.x * 0.5 + 0.5) * window.innerWidth)  + 'px';
-      obs.label.style.top  = ((projVec.y * -0.5 + 0.5) * window.innerHeight) + 'px';
-    }
+    // Face the camera slightly as it approaches
+    obs.mesh.rotation.y = 0;
 
     // Collision zone
     if (obs.mesh.position.z < 1.0 && obs.mesh.position.z > -1.5) {
-      if (Math.abs(LANES[state.currentLane] - obs.mesh.position.x) < 0.7) {
+      if (Math.abs(LANES[state.currentLane] - obs.mesh.position.x) < 0.8) {
         questionPending = true;
-        obstacleData.forEach(o => { o.label.style.display = 'none'; });
         onAnswer(obs.correct);
         return;
       }
     }
 
-    // Missed — all obstacles passed the player
+    // All passed player without collision = missed
     if (obs.mesh.position.z < -3.5 && !questionPending) {
       questionPending = true;
-      obstacleData.forEach(o => { o.label.style.display = 'none'; });
-      onAnswer(false); // missed = wrong
+      onAnswer(false);
       return;
     }
   }
