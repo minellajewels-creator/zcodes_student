@@ -1,251 +1,172 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8"/>
-<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-<title>ABAP Runner — SAPZCodes</title>
-<link rel="icon" href="favicon.png"/>
-<link rel="preconnect" href="https://fonts.googleapis.com"/>
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
-<link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@400;500;600;700&family=Exo+2:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet"/>
-<link rel="stylesheet" href="style.css"/>
-<style>
-body { cursor:default; overflow:hidden; background:#0d1117; }
-#cur,#ring { display:none; }
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+  <title>SAPZCodes 3D Endless Runner</title>
+  <style>
+    :root { --g: #22a032; --fm: 'JetBrains Mono', monospace; --fh: 'Rajdhani', sans-serif; }
+    body { margin: 0; overflow: hidden; background: #0d1117; color: white; font-family: var(--fm); }
 
-.screen { position:fixed; inset:0; display:flex; align-items:center; justify-content:center; z-index:10; }
-.screen.hidden { display:none; }
+    /* ── Auth Screen ─────────────────────────────────────────── */
+    #auth-screen {
+      position: fixed; inset: 0; background: #0d1117;
+      display: flex; flex-direction: column; align-items: center;
+      justify-content: center; gap: 14px; z-index: 999;
+    }
+    #auth-screen.hidden { display: none; }
+    .auth-lock-icon  { font-size: 3rem; }
+    .auth-lock-title { font-size: 1.5rem; font-weight: 700; color: #c0392b; text-align: center; }
+    .auth-lock-sub   { font-size: .82rem; color: rgba(240,244,240,.4); text-align: center; max-width: 340px; }
+    .auth-lock-btn   { padding: 10px 26px; border: none; border-radius: 8px; background: var(--g); color: #fff; font-size: .95rem; font-weight: 700; cursor: pointer; margin-top: 8px; transition: all .18s; }
+    .auth-lock-btn:hover { background: #1a8028; transform: translateY(-1px); }
 
-/* ── Loading ── */
-#loading-screen {
-  background:radial-gradient(ellipse at 50% 30%,rgba(34,160,50,.07) 0%,transparent 60%),#0d1117;
-  flex-direction:column; gap:0;
-}
-.loading-brand { font-family:var(--fm); font-size:.68rem; letter-spacing:.25em; text-transform:uppercase; color:var(--g); margin-bottom:26px; display:flex; align-items:center; gap:10px; }
-.loading-brand::before,.loading-brand::after { content:''; height:1px; width:32px; background:var(--g); opacity:.4; }
-.loading-title { font-family:var(--fh); font-size:1.7rem; font-weight:700; letter-spacing:-.3px; margin-bottom:7px; text-align:center; color:#f0f4f0; }
-.loading-title span { color:var(--g); }
-.loading-sub { font-size:.82rem; color:rgba(240,244,240,.4); margin-bottom:32px; text-align:center; }
-.loading-bar-wrap { width:300px; max-width:88vw; background:rgba(255,255,255,.06); border:1px solid rgba(255,255,255,.08); border-radius:20px; height:5px; overflow:hidden; margin-bottom:12px; }
-.loading-bar-fill { height:100%; background:linear-gradient(90deg,var(--g),#58a6ff); border-radius:20px; width:0%; transition:width .4s ease; }
-.loading-status { font-family:var(--fm); font-size:.65rem; color:rgba(240,244,240,.3); letter-spacing:.05em; min-height:16px; text-align:center; }
-.loading-err { margin-top:18px; padding:11px 18px; background:rgba(192,57,43,.1); border:1px solid rgba(192,57,43,.25); border-radius:8px; color:#c0392b; font-size:.8rem; text-align:center; display:none; max-width:380px; line-height:1.5; }
-.loading-err.show { display:block; }
-.loading-retry { margin-top:12px; padding:8px 22px; border-radius:7px; background:rgba(255,255,255,.06); border:1px solid rgba(255,255,255,.1); color:rgba(240,244,240,.6); font-family:var(--fb); font-size:.8rem; font-weight:600; cursor:pointer; display:none; transition:all .18s; }
-.loading-retry.show { display:inline-block; }
-.loading-retry:hover { border-color:var(--g); color:var(--g); }
+    /* ── Loading Screen ──────────────────────────────────────── */
+    #loading-screen {
+      position: fixed; inset: 0; background: #0d1117;
+      display: flex; flex-direction: column; align-items: center;
+      justify-content: center; gap: 10px; z-index: 90;
+    }
+    #loading-screen.hidden { display: none; }
+    .ld-title  { font-size: 1.6rem; font-weight: 700; color: #f0f4f0; margin-bottom: 4px; }
+    .ld-title span { color: var(--g); }
+    .ld-bar-wrap { width: 300px; max-width: 88vw; background: rgba(255,255,255,.06); border: 1px solid rgba(255,255,255,.08); border-radius: 20px; height: 5px; overflow: hidden; }
+    .ld-bar-fill { height: 100%; background: linear-gradient(90deg, var(--g), #58a6ff); border-radius: 20px; width: 0%; transition: width .4s ease; }
+    .ld-status  { font-size: .65rem; color: rgba(240,244,240,.3); letter-spacing: .05em; min-height: 16px; }
+    .ld-err     { margin-top: 16px; padding: 10px 18px; background: rgba(192,57,43,.1); border: 1px solid rgba(192,57,43,.25); border-radius: 8px; color: #c0392b; font-size: .8rem; text-align: center; display: none; max-width: 380px; line-height: 1.5; }
+    .ld-err.show { display: block; }
+    .ld-retry   { margin-top: 10px; padding: 8px 22px; border-radius: 7px; background: rgba(255,255,255,.06); border: 1px solid rgba(255,255,255,.1); color: rgba(240,244,240,.6); font-size: .8rem; font-weight: 600; cursor: pointer; display: none; transition: all .18s; }
+    .ld-retry.show { display: inline-block; }
+    .ld-retry:hover { border-color: var(--g); color: var(--g); }
 
-/* ── Auth locked ── */
-#auth-screen {
-  background:#0d1117; flex-direction:column; gap:14px;
-}
-.auth-lock-icon { font-size:3rem; margin-bottom:8px; }
-.auth-lock-title { font-family:var(--fh); font-size:1.5rem; font-weight:700; color:#c0392b; text-align:center; }
-.auth-lock-sub { font-size:.82rem; color:rgba(240,244,240,.4); text-align:center; max-width:340px; }
-.auth-lock-btn { padding:10px 26px; border:none; border-radius:8px; background:var(--g); color:#fff; font-family:var(--fh); font-size:.95rem; font-weight:700; cursor:pointer; margin-top:8px; transition:all .18s; }
-.auth-lock-btn:hover { background:#1a8028; transform:translateY(-1px); }
+    /* ── UI Overlays ─────────────────────────────────────────── */
+    #ui-layer { position: absolute; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; }
 
-/* ── Start screen ── */
-#start-screen {
-  background:radial-gradient(ellipse at 50% 30%,rgba(34,160,50,.08) 0%,transparent 60%),#0d1117;
-  flex-direction:column; gap:0;
-}
-.start-logo { font-family:var(--fm); font-size:.68rem; letter-spacing:.25em; text-transform:uppercase; color:var(--g); margin-bottom:22px; display:flex; align-items:center; gap:10px; }
-.start-logo::before,.start-logo::after { content:''; height:1px; width:36px; background:var(--g); opacity:.4; }
-.start-title { font-family:var(--fh); font-size:clamp(2rem,6vw,3.2rem); font-weight:700; line-height:1.1; letter-spacing:-.4px; text-align:center; margin-bottom:9px; color:#f0f4f0; }
-.start-title span { color:var(--g); }
-.start-sub { font-size:.85rem; color:rgba(240,244,240,.45); text-align:center; margin-bottom:32px; max-width:420px; line-height:1.65; }
-.start-form { display:flex; flex-direction:column; gap:12px; width:340px; max-width:88vw; margin-bottom:24px; }
-.start-form label { font-family:var(--fm); font-size:.6rem; font-weight:700; letter-spacing:.12em; text-transform:uppercase; color:rgba(240,244,240,.35); margin-bottom:4px; display:block; }
-.start-form input { width:100%; padding:10px 13px; background:rgba(255,255,255,.06); border:1px solid rgba(255,255,255,.1); border-radius:7px; color:#f0f4f0; font-family:var(--fb); font-size:.88rem; outline:none; transition:border-color .18s,box-shadow .18s; }
-.start-form input:focus { border-color:var(--g); box-shadow:0 0 0 3px rgba(34,160,50,.14); }
-.start-form input::placeholder { color:rgba(240,244,240,.2); }
-.start-btn { padding:12px 32px; border:none; border-radius:8px; background:var(--g); color:#fff; font-family:var(--fh); font-size:.98rem; font-weight:700; letter-spacing:.03em; cursor:pointer; transition:all .18s; box-shadow:0 4px 18px rgba(34,160,50,.3); }
-.start-btn:hover { background:#1a8028; transform:translateY(-2px); box-shadow:0 8px 26px rgba(34,160,50,.4); }
-.keyboard-hint { font-size:.72rem; color:rgba(240,244,240,.25); display:flex; align-items:center; gap:7px; margin-top:16px; flex-wrap:wrap; justify-content:center; }
-.key { display:inline-flex; align-items:center; justify-content:center; padding:2px 7px; background:rgba(255,255,255,.06); border:1px solid rgba(255,255,255,.1); border-radius:4px; font-family:var(--fm); font-size:.65rem; color:rgba(240,244,240,.4); }
+    #score-board {
+      position: absolute; top: 20px; right: 30px;
+      font-size: 1.5rem; font-weight: bold; color: var(--g);
+      text-shadow: 1px 1px 4px #000;
+    }
 
-/* ── HUD ── */
-#hud { position:fixed; top:0; left:0; right:0; height:50px; padding:0 18px; display:flex; align-items:center; justify-content:space-between; background:rgba(13,17,23,.92); backdrop-filter:blur(8px); border-bottom:1px solid rgba(255,255,255,.06); z-index:20; }
-.hud-brand { font-family:var(--fm); font-size:.65rem; font-weight:600; letter-spacing:.18em; text-transform:uppercase; color:var(--g); }
-.hud-stats { display:flex; align-items:center; gap:18px; }
-.hud-stat { display:flex; flex-direction:column; align-items:center; }
-.hud-stat-label { font-family:var(--fm); font-size:.52rem; letter-spacing:.12em; text-transform:uppercase; color:rgba(240,244,240,.3); }
-.hud-stat-value { font-family:var(--fm); font-size:.95rem; font-weight:700; color:#f0f4f0; line-height:1; }
-.hud-stat-value.score-val { color:var(--g); }
-.hud-lives { display:flex; gap:3px; align-items:center; }
-.heart { font-size:.82rem; transition:all .2s; }
-.heart.lost { opacity:.2; filter:grayscale(1); transform:scale(.8); }
+    #current-question {
+      position: absolute; top: 20px; left: 50%; transform: translateX(-50%);
+      text-align: center; background: rgba(13,17,23,.88); padding: 15px 30px;
+      border: 1px solid var(--g); border-radius: 8px; font-size: 1.1rem;
+      max-width: 62%; display: none; line-height: 1.55;
+      box-shadow: 0 4px 24px rgba(34,160,50,.15);
+    }
+    #current-question .q-label {
+      font-size: .6rem; letter-spacing: .14em; text-transform: uppercase;
+      color: rgba(240,244,240,.3); margin-bottom: 6px;
+    }
 
-/* ── Question overlay ── */
-#question-overlay { position:fixed; inset:0; background:rgba(0,0,0,.75); backdrop-filter:blur(6px); z-index:30; display:flex; align-items:center; justify-content:center; animation:fadeIn .2s ease both; }
-#question-overlay.hidden { display:none; }
-@keyframes fadeIn { from{opacity:0} to{opacity:1} }
+    /* ── Lane Answer Labels ──────────────────────────────────── */
+    .obstacle-text {
+      position: absolute; transform: translate(-50%,-50%);
+      background: rgba(0,0,0,.78); padding: 8px 14px; border-radius: 6px;
+      font-weight: bold; font-size: .8rem; text-align: center;
+      border: 1px solid #555; pointer-events: none; display: none;
+      max-width: 160px; line-height: 1.35;
+    }
+    .lane-0 { border-color: #2563eb; color: #93c5fd; }
+    .lane-1 { border-color: #d97706; color: #fcd34d; }
+    .lane-2 { border-color: #c0392b; color: #fca5a5; }
 
-.q-card { background:var(--s1); border:1px solid var(--bd); border-radius:var(--r); padding:26px 30px; width:580px; max-width:94vw; animation:slideUp .3s cubic-bezier(.16,1,.3,1) both; box-shadow:0 24px 60px rgba(0,0,0,.5); }
-@keyframes slideUp { from{opacity:0;transform:translateY(22px) scale(.97)} to{opacity:1;transform:none} }
-.q-header { display:flex; align-items:center; justify-content:space-between; margin-bottom:18px; }
-.q-tag { font-family:var(--fm); font-size:.58rem; letter-spacing:.15em; text-transform:uppercase; color:var(--g); background:rgba(34,160,50,.1); padding:3px 9px; border-radius:20px; border:1px solid rgba(34,160,50,.2); }
-.q-timer { font-family:var(--fm); font-size:.8rem; font-weight:700; color:#d97706; background:rgba(217,119,6,.1); padding:3px 11px; border-radius:20px; border:1px solid rgba(217,119,6,.2); }
-.q-timer.urgent { color:#c0392b; background:rgba(192,57,43,.1); border-color:rgba(192,57,43,.2); animation:pulse .6s ease infinite alternate; }
-@keyframes pulse { from{opacity:1} to{opacity:.6} }
-.q-snippet { background:var(--text); border:1px solid var(--bd); border-radius:8px; padding:14px 16px; font-family:var(--fm); font-size:.8rem; line-height:1.8; margin-bottom:18px; overflow-x:auto; color:var(--bg); }
-.q-snippet .blank { display:inline-block; min-width:100px; height:20px; background:rgba(34,160,50,.15); border:2px dashed var(--g); border-radius:4px; vertical-align:middle; animation:blinkBorder 1.2s ease infinite alternate; position:relative; top:-1px; }
-@keyframes blinkBorder { from{border-color:var(--g)} to{border-color:rgba(34,160,50,.3)} }
-.q-hint { font-size:.75rem; color:var(--mu); font-style:italic; margin-bottom:10px; padding:7px 11px; background:rgba(37,99,235,.06); border-radius:6px; border-left:2px solid #2563eb; }
-.q-label { font-family:var(--fm); font-size:.6rem; font-weight:700; letter-spacing:.1em; text-transform:uppercase; color:var(--mu); margin-bottom:9px; }
-.q-options { display:grid; grid-template-columns:1fr 1fr; gap:9px; }
-.q-opt { padding:10px 14px; background:var(--s2); border:1px solid var(--bd); border-radius:8px; cursor:pointer; font-family:var(--fm); font-size:.8rem; font-weight:500; color:var(--text); transition:all .18s; text-align:left; display:flex; align-items:center; gap:9px; }
-.q-opt:hover:not(:disabled) { border-color:var(--g); background:rgba(34,160,50,.08); color:var(--g); transform:translateY(-1px); }
-.q-opt .opt-key { display:inline-flex; align-items:center; justify-content:center; width:18px; height:18px; background:var(--bd); border-radius:4px; font-size:.62rem; font-weight:700; color:var(--mu); flex-shrink:0; }
-.q-opt.correct { border-color:var(--g); background:rgba(34,160,50,.1); color:var(--g); }
-.q-opt.wrong   { border-color:#c0392b; background:rgba(192,57,43,.08); color:#c0392b; animation:shake .4s ease; }
-.q-opt:disabled { cursor:default; }
-@keyframes shake { 0%,100%{transform:translateX(0)} 25%{transform:translateX(-5px)} 75%{transform:translateX(5px)} }
+    /* ── Feedback Flash ──────────────────────────────────────── */
+    #feedback-flash {
+      position: absolute; top: 50%; left: 50%; transform: translate(-50%,-50%);
+      font-size: 2rem; font-weight: 900; letter-spacing: .04em;
+      padding: 12px 28px; border-radius: 10px; pointer-events: none;
+      display: none; z-index: 50;
+    }
+    #feedback-flash.correct { background: rgba(34,160,50,.15); color: var(--g); border: 2px solid rgba(34,160,50,.4); }
+    #feedback-flash.wrong   { background: rgba(192,57,43,.13); color: #ef4444; border: 2px solid rgba(192,57,43,.35); }
 
-#result-flash { position:fixed; top:58px; left:50%; transform:translateX(-50%); z-index:40; pointer-events:none; font-family:var(--fm); font-size:.82rem; font-weight:700; padding:7px 18px; border-radius:20px; opacity:0; transition:opacity .25s; white-space:nowrap; }
-#result-flash.show { opacity:1; }
-#result-flash.correct { background:rgba(34,160,50,.15); color:var(--g); border:1px solid rgba(34,160,50,.25); }
-#result-flash.wrong   { background:rgba(192,57,43,.12); color:#c0392b; border:1px solid rgba(192,57,43,.22); }
+    /* ── HUD Lives ───────────────────────────────────────────── */
+    #lives-bar {
+      position: absolute; top: 20px; left: 30px; font-size: 1.4rem;
+      display: none; gap: 4px;
+    }
+    .heart.lost { opacity: .2; filter: grayscale(1); }
 
-/* ── End screen ── */
-#end-screen { flex-direction:column; gap:0; background:radial-gradient(ellipse at 50% 20%,rgba(34,160,50,.06) 0%,transparent 60%),#0d1117; }
-.end-emoji { font-size:3.8rem; margin-bottom:14px; }
-.end-title { font-family:var(--fh); font-size:2.2rem; font-weight:700; letter-spacing:-.3px; text-align:center; margin-bottom:7px; }
-.end-title.win { color:var(--g); }
-.end-title.lose { color:#c0392b; }
-.end-sub { font-size:.85rem; color:rgba(240,244,240,.4); text-align:center; margin-bottom:26px; max-width:380px; line-height:1.6; }
-.end-stats-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:10px; width:360px; max-width:88vw; margin-bottom:26px; }
-.end-stat { background:rgba(255,255,255,.04); border:1px solid rgba(255,255,255,.07); border-radius:10px; padding:13px 10px; text-align:center; }
-.end-stat-val { font-family:var(--fm); font-size:1.5rem; font-weight:700; color:var(--g); line-height:1; margin-bottom:4px; }
-.end-stat-label { font-family:var(--fm); font-size:.55rem; letter-spacing:.1em; text-transform:uppercase; color:rgba(240,244,240,.3); }
-.end-actions { display:flex; gap:10px; flex-wrap:wrap; justify-content:center; }
-.end-btn { padding:10px 24px; border:none; border-radius:8px; font-family:var(--fb); font-size:.88rem; font-weight:700; cursor:pointer; transition:all .18s; }
-.end-btn-primary  { background:var(--g); color:#fff; box-shadow:0 3px 18px rgba(34,160,50,.3); }
-.end-btn-primary:hover { background:#1a8028; transform:translateY(-2px); }
-.end-btn-secondary { background:rgba(255,255,255,.06); color:rgba(240,244,240,.6); border:1px solid rgba(255,255,255,.1); }
-.end-btn-secondary:hover { border-color:var(--g); color:var(--g); background:rgba(34,160,50,.08); }
+    /* ── Game Over Screen ────────────────────────────────────── */
+    #game-over-screen {
+      position: absolute; inset: 0; background: rgba(0,0,0,.88);
+      display: none; flex-direction: column; align-items: center;
+      justify-content: center; pointer-events: auto; gap: 10px;
+    }
+    #game-over-screen h1 { color: #c0392b; font-size: 4rem; margin: 0; }
+    #final-score  { font-size: 2rem; color: var(--g); }
+    #final-detail { font-size: .85rem; color: rgba(240,244,240,.4); margin-bottom: 14px; }
+    .btn { padding: 12px 30px; background: var(--g); border: none; border-radius: 8px; color: white; font-size: 1.1rem; cursor: pointer; font-weight: bold; transition: all .18s; margin: 4px; }
+    .btn:hover { background: #1a8028; transform: translateY(-2px); }
+    .btn-sec { background: rgba(255,255,255,.07); border: 1px solid rgba(255,255,255,.12); color: rgba(240,244,240,.6); }
+    .btn-sec:hover { border-color: var(--g); color: var(--g); background: rgba(34,160,50,.08); }
+  </style>
 
-/* ── Certificate ── */
-#cert-overlay { position:fixed; inset:0; background:rgba(0,0,0,.85); backdrop-filter:blur(10px); z-index:50; display:flex; align-items:center; justify-content:center; flex-direction:column; gap:14px; }
-#cert-overlay.hidden { display:none; }
-#cert-canvas { border-radius:8px; max-width:94vw; max-height:74vh; box-shadow:0 32px 80px rgba(0,0,0,.8); }
-.cert-actions { display:flex; gap:10px; }
-.cert-btn { padding:9px 22px; border:none; border-radius:7px; font-family:var(--fb); font-size:.82rem; font-weight:700; cursor:pointer; transition:all .18s; }
-.cert-btn-dl { background:var(--g); color:#fff; }
-.cert-btn-dl:hover { background:#1a8028; }
-.cert-btn-cl { background:rgba(255,255,255,.07); color:rgba(240,244,240,.6); border:1px solid rgba(255,255,255,.1); }
-
-/* ── Mobile controls ── */
-#mobile-controls { position:fixed; bottom:18px; left:0; right:0; display:none; justify-content:center; gap:14px; z-index:20; }
-@media(max-width:768px) { #mobile-controls { display:flex; } }
-.mobile-btn { width:60px; height:60px; border-radius:50%; background:rgba(255,255,255,.07); border:2px solid rgba(255,255,255,.12); color:#f0f4f0; font-size:1.4rem; display:flex; align-items:center; justify-content:center; cursor:pointer; user-select:none; -webkit-user-select:none; transition:all .15s; }
-.mobile-btn:active { background:rgba(34,160,50,.15); border-color:var(--g); transform:scale(.94); }
-
-#game-canvas { position:fixed; inset:0; width:100vw; height:100vh; }
-</style>
+  <script type="importmap">
+    {
+      "imports": {
+        "three": "https://unpkg.com/three@0.160.0/build/three.module.js",
+        "three/addons/": "https://unpkg.com/three@0.160.0/examples/jsm/"
+      }
+    }
+  </script>
 </head>
 <body>
 
-<!-- Auth lock screen (shown if not logged in) -->
-<div id="auth-screen" class="screen hidden">
+<!-- ── Auth Screen ─────────────────────────────────────────── -->
+<div id="auth-screen" class="hidden">
   <div class="auth-lock-icon">🔒</div>
   <div class="auth-lock-title">Access Required</div>
-  <div class="auth-lock-sub">You need to be logged in to play ABAP Runner. Please enter the platform first.</div>
+  <div class="auth-lock-sub">You need to be logged in to play the Runner. Please enter the platform first.</div>
   <button class="auth-lock-btn" onclick="window.location.href='index.html'">→ Login / Get Access</button>
 </div>
 
-<div id="loading-screen" class="screen">
-  <div class="loading-brand">SAPZCODES</div>
-  <h2 class="loading-title">Loading <span>ABAP Runner</span></h2>
-  <p class="loading-sub">Fetching questions from your sheet…</p>
-  <div class="loading-bar-wrap"><div class="loading-bar-fill" id="load-bar"></div></div>
-  <div class="loading-status" id="load-status">Connecting to question bank…</div>
-  <div class="loading-err" id="load-err"></div>
-  <button class="loading-retry" id="load-retry" onclick="fetchQuestions()">↩ Retry</button>
+<!-- ── Loading Screen ─────────────────────────────────────── -->
+<div id="loading-screen">
+  <div class="ld-title">Loading <span>3D Runner</span></div>
+  <div class="ld-bar-wrap"><div class="ld-bar-fill" id="ld-bar"></div></div>
+  <div class="ld-status" id="ld-status">Connecting to question bank…</div>
+  <div class="ld-err"  id="ld-err"></div>
+  <button class="ld-retry" id="ld-retry" onclick="fetchQuestions()">↩ Retry</button>
 </div>
 
-<div id="start-screen" class="screen hidden">
-  <div class="start-logo">SAPZCODES</div>
-  <h1 class="start-title">ABAP <span>Runner</span></h1>
-  <p class="start-sub">Jump over obstacles to trigger questions. Answer correctly to keep running — wrong answers cost a life!</p>
-  <div class="start-form">
+<!-- ── Game UI (shown after load) ────────────────────────── -->
+<div id="game-ui" style="display:none; position:fixed; inset:0; pointer-events:none;">
+  <div id="ui-layer">
+    <div id="score-board">Score: <span id="score">0</span></div>
+    <div id="lives-bar" style="display:flex;">
+      <span class="heart" id="h1">❤️</span>
+      <span class="heart" id="h2">❤️</span>
+      <span class="heart" id="h3">❤️</span>
+    </div>
+    <div id="current-question">
+      <div class="q-label">Question</div>
+      <span id="q-text">Loading…</span>
+    </div>
+    <div id="obs-0" class="obstacle-text lane-0">Option A</div>
+    <div id="obs-1" class="obstacle-text lane-1">Option B</div>
+    <div id="obs-2" class="obstacle-text lane-2">Option C</div>
+    <div id="feedback-flash"></div>
+  </div>
+  <div id="game-over-screen">
+    <h1>GAME OVER</h1>
+    <div id="final-score">Score: 0</div>
+    <div id="final-detail">0 correct answers</div>
     <div>
-      <label>Your Name (for certificate)</label>
-      <input type="text" id="player-name" placeholder="e.g. Ashok Kumar" maxlength="50"/>
-    </div>
-  </div>
-  <button class="start-btn" id="start-btn">Start Running →</button>
-  <div class="keyboard-hint">
-    <span class="key">Space</span>/<span class="key">↑</span> Jump &nbsp;|&nbsp;
-    <span class="key">1</span><span class="key">2</span><span class="key">3</span><span class="key">4</span> Answer
-  </div>
-</div>
-
-<canvas id="game-canvas" class="hidden"></canvas>
-
-<div id="hud" class="hidden">
-  <div class="hud-brand">◉ ABAP Runner</div>
-  <div class="hud-stats">
-    <div class="hud-stat"><span class="hud-stat-label">Score</span><span class="hud-stat-value score-val" id="hud-score">0</span></div>
-    <div class="hud-stat"><span class="hud-stat-label">Q Answered</span><span class="hud-stat-value" id="hud-q">0 / 0</span></div>
-    <div class="hud-lives">
-      <span class="heart" id="h1">❤️</span><span class="heart" id="h2">❤️</span>
-      <span class="heart" id="h3">❤️</span><span class="heart" id="h4">❤️</span>
-      <span class="heart" id="h5">❤️</span>
+      <button class="btn" onclick="location.reload()">↩ Play Again</button>
+      <button class="btn btn-sec" onclick="window.location.href='games.html'">← Games Hub</button>
     </div>
   </div>
 </div>
 
-<div id="question-overlay" class="hidden">
-  <div class="q-card">
-    <div class="q-header">
-      <span class="q-tag" id="q-tag">ABAP</span>
-      <span class="q-timer" id="q-timer">⏱ 20s</span>
-    </div>
-    <div class="q-snippet" id="q-snippet"></div>
-    <div class="q-hint hidden" id="q-hint"></div>
-    <div class="q-label">Select the correct answer:</div>
-    <div class="q-options" id="q-options"></div>
-  </div>
-</div>
-
-<div id="result-flash"></div>
-
-<div id="end-screen" class="screen hidden">
-  <div class="end-emoji" id="end-emoji">🏆</div>
-  <h2 class="end-title" id="end-title">You Finished!</h2>
-  <p class="end-sub" id="end-sub">Great run!</p>
-  <div class="end-stats-grid">
-    <div class="end-stat"><div class="end-stat-val" id="es-score">0</div><div class="end-stat-label">Score</div></div>
-    <div class="end-stat"><div class="end-stat-val" id="es-correct">0</div><div class="end-stat-label">Correct</div></div>
-    <div class="end-stat"><div class="end-stat-val" id="es-time">0s</div><div class="end-stat-label">Time</div></div>
-  </div>
-  <div class="end-actions">
-    <button class="end-btn end-btn-primary" id="cert-btn">🎓 Get Certificate</button>
-    <button class="end-btn end-btn-secondary" id="retry-btn">↩ Play Again</button>
-    <button class="end-btn end-btn-secondary" id="hub-btn" onclick="window.location.href='games.html'">← Games Hub</button>
-  </div>
-</div>
-
-<div id="cert-overlay" class="hidden">
-  <canvas id="cert-canvas" width="900" height="640"></canvas>
-  <div class="cert-actions">
-    <button class="cert-btn cert-btn-dl" id="cert-dl">⬇ Download PNG</button>
-    <button class="cert-btn cert-btn-cl" id="cert-close">✕ Close</button>
-  </div>
-</div>
-
-<div id="mobile-controls" class="hidden">
-  <button class="mobile-btn" id="mob-jump">↑</button>
-</div>
-
+<!-- ─────────────────────────────────────────────────────────────
+     SECURITY BLOCK — runs synchronously before module load
+───────────────────────────────────────────────────────────────── -->
 <script>
-// ════════════════════════════════════════════════════════════════
-// SECURITY BLOCK — runs before anything else
-// ════════════════════════════════════════════════════════════════
 (function() {
-  // ── Anti-copy / devtools (Light) ──────────────────────────
+  // Anti-devtools
   document.addEventListener('contextmenu', e => e.preventDefault());
   document.addEventListener('keydown', e => {
     if (e.key === 'F12' ||
@@ -253,17 +174,13 @@ body { cursor:default; overflow:hidden; background:#0d1117; }
        (e.ctrlKey && e.key === 'U') ||
        (e.ctrlKey && ['s','S','a','A'].includes(e.key))) { e.preventDefault(); }
   });
-  document.addEventListener('copy',  e => { if (!e.target.matches('input,textarea')) e.preventDefault(); });
-  document.addEventListener('cut',   e => { if (!e.target.matches('input,textarea')) e.preventDefault(); });
-
-  // ── DevTools size detector (Medium) ──────────────────────
   setInterval(() => {
     if (window.outerWidth - window.innerWidth > 160 || window.outerHeight - window.innerHeight > 160) {
-      document.body.innerHTML = '<div style="display:flex;align-items:center;justify-content:center;height:100vh;background:#0d1117;font-family:monospace;color:#c0392b;font-size:1.1rem;text-align:center;padding:20px;">⛔ DevTools detected.<br/>Close DevTools to continue.</div>';
+      document.body.innerHTML = '<div style="display:flex;align-items:center;justify-content:center;height:100vh;background:#0d1117;color:#c0392b;font-family:monospace;font-size:1.1rem;text-align:center;padding:20px;">⛔ DevTools detected. Close DevTools to continue.</div>';
     }
   }, 1200);
 
-  // ── Domain lock (Strong) — check we're on the right origin ─
+  // Domain lock
   const ALLOWED = ['students.sapzcodes.com', 'localhost', '127.0.0.1'];
   const host = window.location.hostname;
   if (!ALLOWED.some(d => host === d || host.endsWith('.' + d))) {
@@ -271,508 +188,476 @@ body { cursor:default; overflow:hidden; background:#0d1117; }
     throw new Error('Domain lock');
   }
 
-  // ── Auth guard — redirect if not logged in ────────────────
- if (!sessionStorage.getItem('szc_token') && !localStorage.getItem('szc_token')) {
+  // Auth guard — same tokens as abap-runner.html
+  if (!sessionStorage.getItem('szc_token') && !localStorage.getItem('szc_token')) {
     document.getElementById('loading-screen').classList.add('hidden');
     document.getElementById('auth-screen').classList.remove('hidden');
     throw new Error('Not authenticated');
   }
 })();
+</script>
 
-// ════════════════════════════════════════════════════════════════
-// CONFIG
-// ════════════════════════════════════════════════════════════════
-const GAS_URL    = 'https://script.google.com/macros/s/AKfycbwy_yWVkYL6qN_QAokIUMNClWqI96wdiF3qasWVLihOMi9ecH12BSzG6ypSZI1A54VA/exec';
-const API_SECRET = 'SZC-INTERNAL-2025-XK9';
-const CONFIG = { TIMER_SECS: 20, LIVES: 5 };
+<!-- ─────────────────────────────────────────────────────────────
+     MAIN GAME MODULE
+───────────────────────────────────────────────────────────────── -->
+<script type="module">
+  import * as THREE from 'three';
 
-const STUDENT_NAME_SAVED = sessionStorage.getItem('szc_name') || '';
-if (STUDENT_NAME_SAVED) {
-  const inp = document.getElementById('player-name');
-  if (inp) inp.value = STUDENT_NAME_SAVED;
-}
+  // ── CONFIG ────────────────────────────────────────────────────
+  const GAS_URL    = 'https://script.google.com/macros/s/AKfycbwy_yWVkYL6qN_QAokIUMNClWqI96wdiF3qasWVLihOMi9ecH12BSzG6ypSZI1A54VA/exec';
+  const API_SECRET = 'SZC-INTERNAL-2025-XK9';
 
-let QUESTIONS = [];
-
-// ════════════════════════════════════════════════════════════════
-// QUESTION FETCH — uses API key in query param
-// ════════════════════════════════════════════════════════════════
-function setLoadBar(pct, msg) {
-  document.getElementById('load-bar').style.width = pct + '%';
-  document.getElementById('load-status').textContent = msg;
-}
-function showLoadError(msg) {
-  const el = document.getElementById('load-err');
-  el.textContent = msg; el.classList.add('show');
-  document.getElementById('load-retry').classList.add('show');
-}
-function hideLoadError() {
-  document.getElementById('load-err').classList.remove('show');
-  document.getElementById('load-retry').classList.remove('show');
-}
-
-function rowToQuestion(row) {
-  const tag = String(row[0]||'').trim() || 'ABAP';
-  const snippet = String(row[1]||'').trim();
-  const opts = [row[3],row[4],row[5],row[6]].map(v=>String(v||'').trim()).filter(Boolean);
-  const answer = String(row[7]||'').trim();
-  const hint   = String(row[8]||'').trim();
-
-  // Build template tokens from snippet
-  const parts = [];
-  const lines = snippet.replace(/\\n/g,'\n').split('\n');
-  const KW = /\b(DATA|TYPE|SELECT|FROM|WHERE|INTO|TABLE|LOOP AT|LOOP|ENDLOOP|IF|ENDIF|ELSE|ELSEIF|METHOD|ENDMETHOD|CLASS|ENDCLASS|WRITE|MOVE|CLEAR|SORT|READ TABLE|MODIFY|INSERT|DELETE|APPEND|DO|ENDDO|WHILE|ENDWHILE|TRY|CATCH|ENDTRY|RAISE|NEW|FOR|OF|CORRESPONDING)\b/g;
-  lines.forEach((line, li) => {
-    if (li > 0) parts.push({ t:'br' });
-    const segs = line.split('__BLANK__');
-    segs.forEach((seg, si) => {
-      if (si > 0) parts.push({ t:'blank' });
-      if (!seg) return;
-      let last=0, m; KW.lastIndex=0;
-      while ((m=KW.exec(seg)) !== null) {
-        if (m.index>last) parts.push({t:'op',v:seg.slice(last,m.index)});
-        parts.push({t:'kw',v:m[0]}); last=KW.lastIndex;
-      }
-      if (last < seg.length) parts.push({t:'op',v:seg.slice(last)});
-    });
-  });
-  if (!snippet.includes('__BLANK__')) {
-    // Show question as plain text in snippet area
-    parts.length = 0;
-    parts.push({t:'op', v: snippet});
+  // ── LOADING HELPERS ───────────────────────────────────────────
+  function setBar(pct, msg) {
+    document.getElementById('ld-bar').style.width = pct + '%';
+    document.getElementById('ld-status').textContent = msg;
+  }
+  function showLoadErr(msg) {
+    const el = document.getElementById('ld-err');
+    el.textContent = msg; el.classList.add('show');
+    document.getElementById('ld-retry').classList.add('show');
+  }
+  function hideLoadErr() {
+    document.getElementById('ld-err').classList.remove('show');
+    document.getElementById('ld-retry').classList.remove('show');
   }
 
-  return { tag, template: parts, options: opts.length>=2 ? opts : ['A','B','C','D'], answer, hint };
-}
+  // ── FETCH QUESTIONS FROM SUBWAY TAB ───────────────────────────
+  let quizData = [];
 
-async function fetchQuestions() {
-  hideLoadError();
-  setLoadBar(10, 'Connecting…');
-  try {
-    setLoadBar(30, 'Fetching questions…');
-    // Pass API key as query param for GET
-    const url = `${GAS_URL}?action=getGameData&key=${encodeURIComponent(API_SECRET)}`;
-    const res = await fetch(url, { redirect: 'follow' });
-    setLoadBar(65, 'Parsing…');
-    if (!res.ok) throw new Error('HTTP ' + res.status);
-    const json = await res.json();
+  window.fetchQuestions = async function fetchQuestions() {
+    hideLoadErr(); setBar(10, 'Connecting…');
+    try {
+      setBar(35, 'Fetching subway questions…');
+      const url = `${GAS_URL}?action=getSubwayData&key=${encodeURIComponent(API_SECRET)}`;
+      const res  = await fetch(url, { redirect: 'follow' });
+      setBar(65, 'Parsing…');
+      if (!res.ok) throw new Error('HTTP ' + res.status);
+      const json = await res.json();
 
-    let rows = null;
-    if (json.status === 'ok' && json.data) {
-      // runner array from getRunnerQuestions
-      rows = json.data.runner || null;
-      // fallback: use quiz data reformatted
-      if (!rows && json.data.quiz) {
-        rows = json.data.quiz.map(q => [
-          q.topic, q.q, '', q.opts[0], q.opts[1], q.opts[2], q.opts[3],
-          q.opts[q.ans], q.exp
-        ]);
-      }
+      if (json.status !== 'ok' || !json.data || json.data.length === 0)
+        throw new Error('No subway questions found. Check the "subway" tab in your sheet.');
+
+      quizData = json.data; // array of { question, correct, wrong1, wrong2 }
+      setBar(100, '✓ Loaded ' + quizData.length + ' questions!');
+      await new Promise(r => setTimeout(r, 500));
+
+      // Show game
+      document.getElementById('loading-screen').classList.add('hidden');
+      document.getElementById('game-ui').style.display = 'block';
+      initGame();
+    } catch (err) {
+      setBar(30, '');
+      showLoadErr('Could not load questions: ' + err.message);
     }
-    if (!rows || rows.length === 0) throw new Error('No questions returned. Check your Google Sheet.');
+  };
 
-    QUESTIONS = rows.filter(r => r && r.length >= 4).map(rowToQuestion);
-    if (QUESTIONS.length === 0) throw new Error('Questions parsed to zero — check sheet format.');
+  // ─────────────────────────────────────────────────────────────
+  // SCENE SETUP
+  // ─────────────────────────────────────────────────────────────
+  const scene = new THREE.Scene();
+  scene.fog = new THREE.FogExp2(0x0d1117, 0.028);
 
-    setLoadBar(100, '✓ Loaded ' + QUESTIONS.length + ' questions!');
-    await new Promise(r => setTimeout(r, 600));
-    document.getElementById('loading-screen').classList.add('hidden');
-    document.getElementById('start-screen').classList.remove('hidden');
-  } catch (err) {
-    setLoadBar(30, '');
-    showLoadError('Could not load questions: ' + err.message);
+  const camera = new THREE.PerspectiveCamera(60, window.innerWidth / window.innerHeight, 0.1, 1000);
+  camera.position.set(0, 5, -10);
+  camera.lookAt(0, 2, 5);
+
+  const renderer = new THREE.WebGLRenderer({ antialias: true });
+  renderer.setSize(window.innerWidth, window.innerHeight);
+  renderer.setClearColor(0x0d1117);
+  document.body.appendChild(renderer.domElement);
+  renderer.domElement.style.cssText = 'position:fixed;inset:0;z-index:1;';
+
+  // Bring UI above canvas
+  document.getElementById('game-ui').style.zIndex = '10';
+
+  // Lighting
+  const hemiLight = new THREE.HemisphereLight(0xffffff, 0x444444, 0.6);
+  hemiLight.position.set(0, 20, 0);
+  scene.add(hemiLight);
+  const dirLight = new THREE.DirectionalLight(0xffffff, 0.8);
+  dirLight.position.set(-3, 10, -10);
+  scene.add(dirLight);
+
+  // ─── Track ────────────────────────────────────────────────────
+  const trackGeo  = new THREE.PlaneGeometry(10, 500);
+  const trackMat  = new THREE.MeshLambertMaterial({ color: 0x161b22 });
+  const trackMesh = new THREE.Mesh(trackGeo, trackMat);
+  trackMesh.rotation.x = -Math.PI / 2;
+  trackMesh.position.z = 200;
+  scene.add(trackMesh);
+
+  // Lane dividers
+  [-1.2, 1.2].forEach(x => {
+    const divGeo = new THREE.PlaneGeometry(0.06, 500);
+    const divMat = new THREE.MeshBasicMaterial({ color: 0x22a032, opacity: 0.35, transparent: true });
+    const div    = new THREE.Mesh(divGeo, divMat);
+    div.rotation.x = -Math.PI / 2;
+    div.position.set(x, 0.01, 200);
+    scene.add(div);
+  });
+
+  // Grid floor (side areas)
+  const grid = new THREE.GridHelper(100, 50, 0x22a032, 0x1a2a1e);
+  grid.position.y = 0;
+  scene.add(grid);
+
+  // Side walls (glowing borders)
+  [-5.5, 5.5].forEach(x => {
+    const wGeo = new THREE.PlaneGeometry(0.15, 500);
+    const wMat = new THREE.MeshBasicMaterial({ color: 0x22a032, opacity: 0.5, transparent: true });
+    const wall = new THREE.Mesh(wGeo, wMat);
+    wall.position.set(x, 1, 200);
+    scene.add(wall);
+  });
+
+  // ─────────────────────────────────────────────────────────────
+  // SIMPLE RUNNER CHARACTER (box-man, no FBX needed)
+  // ─────────────────────────────────────────────────────────────
+  const charGroup = new THREE.Group();
+  // Body
+  const bodyGeo  = new THREE.BoxGeometry(0.6, 0.8, 0.35);
+  const bodyMat  = new THREE.MeshLambertMaterial({ color: 0x22a032 });
+  const bodyMesh = new THREE.Mesh(bodyGeo, bodyMat);
+  bodyMesh.position.y = 0.9;
+  charGroup.add(bodyMesh);
+  // Head
+  const headGeo  = new THREE.BoxGeometry(0.45, 0.45, 0.45);
+  const headMat  = new THREE.MeshLambertMaterial({ color: 0xf0c080 });
+  const headMesh = new THREE.Mesh(headGeo, headMat);
+  headMesh.position.y = 1.65;
+  charGroup.add(headMesh);
+  // Legs
+  [-0.17, 0.17].forEach((x, i) => {
+    const legGeo = new THREE.BoxGeometry(0.22, 0.5, 0.22);
+    const legMat = new THREE.MeshLambertMaterial({ color: 0x1a4a2a });
+    const leg    = new THREE.Mesh(legGeo, legMat);
+    leg.position.set(x, 0.25, 0);
+    leg.name = 'leg' + i;
+    charGroup.add(leg);
+  });
+
+  scene.add(charGroup);
+
+  // ─────────────────────────────────────────────────────────────
+  // GAME STATE
+  // ─────────────────────────────────────────────────────────────
+  const lanes       = [-2.5, 0, 2.5];
+  const GAME_CONFIG = { LIVES: 3, GAME_SPEED: 15 };
+
+  let state = {
+    currentLane : 1,
+    targetX     : 0,
+    score       : 0,
+    lives       : GAME_CONFIG.LIVES,
+    correct     : 0,
+    isGameOver  : false,
+    isRunning   : false,
+    qIndex      : 0,
+  };
+
+  let activeQuestion = null;
+  let obstacleMeshes = [];
+  let obstacleData   = [];
+  let questionPending = false;
+  let legPhase        = 0;
+  let gameSpeed       = GAME_CONFIG.GAME_SPEED;
+
+  const clock = new THREE.Clock();
+  const vec3  = new THREE.Vector3();
+
+  // ── Obstacle pool: Z spawning positions ──────────────────────
+  const SPAWN_Z = 45;
+
+  // ─────────────────────────────────────────────────────────────
+  // INIT GAME
+  // ─────────────────────────────────────────────────────────────
+  function initGame() {
+    state = {
+      currentLane : 1, targetX : 0, score : 0,
+      lives       : GAME_CONFIG.LIVES, correct : 0,
+      isGameOver  : false, isRunning : true, qIndex : 0,
+    };
+    updateHUD();
+    updateLives();
+    document.getElementById('game-over-screen').style.display = 'none';
+    spawnNextQuestion();
+    animate();
   }
-}
 
-// ════════════════════════════════════════════════════════════════
-// GAME STATE
-// ════════════════════════════════════════════════════════════════
-const STATE = { playerName:'', score:0, lives:CONFIG.LIVES, qIndex:0, correctCount:0, startTime:0, paused:false, running:false };
-
-const canvas = document.getElementById('game-canvas');
-const ctx    = canvas.getContext('2d');
-let W, H, GROUND_Y;
-function resize() { W=canvas.width=window.innerWidth; H=canvas.height=window.innerHeight; GROUND_Y=H-90; }
-window.addEventListener('resize', resize); resize();
-
-const BG_LAYERS = [{chars:[],speed:.2,y:.15,alpha:.04},{chars:[],speed:.5,y:.40,alpha:.07},{chars:[],speed:.9,y:.65,alpha:.10}];
-const ABAP_KW   = ['DATA','TYPE','SELECT','IF','ENDIF','LOOP','ENDLOOP','FORM','ENDFORM','WRITE','INTO','FROM','WHERE','MOVE','CALL','METHOD','CLASS','ENDCLASS','SORT','DELETE','INSERT','READ TABLE','CLEAR','CREATE OBJECT'];
-
-function initBGLayers() {
-  BG_LAYERS.forEach(layer => {
-    layer.chars = []; layer.x = 0;
-    for (let i=0; i<Math.ceil(W/120)+4; i++)
-      layer.chars.push({word:ABAP_KW[Math.floor(Math.random()*ABAP_KW.length)], x:i*140});
+  // ─────────────────────────────────────────────────────────────
+  // CONTROLS
+  // ─────────────────────────────────────────────────────────────
+  window.addEventListener('keydown', e => {
+    if (state.isGameOver) return;
+    if (e.key === 'ArrowLeft'  && state.currentLane > 0) { state.currentLane--; state.targetX = lanes[state.currentLane]; }
+    if (e.key === 'ArrowRight' && state.currentLane < 2) { state.currentLane++; state.targetX = lanes[state.currentLane]; }
   });
-}
 
-function drawBG() {
-  ctx.fillStyle='#0d1117'; ctx.fillRect(0,0,W,H);
-  ctx.strokeStyle='rgba(48,54,61,.4)'; ctx.lineWidth=1;
-  for(let x=0;x<W;x+=60){ctx.beginPath();ctx.moveTo(x,0);ctx.lineTo(x,H);ctx.stroke();}
-  for(let y=0;y<H;y+=60){ctx.beginPath();ctx.moveTo(0,y);ctx.lineTo(W,y);ctx.stroke();}
-  ctx.font=`400 11px 'JetBrains Mono',monospace`;
-  BG_LAYERS.forEach(layer=>{
-    ctx.globalAlpha=layer.alpha; ctx.fillStyle='#22a032';
-    layer.chars.forEach(ch=>ctx.fillText(ch.word,ch.x,H*layer.y));
-    ctx.globalAlpha=1;
+  let touchStartX = 0;
+  window.addEventListener('touchstart', e => { touchStartX = e.changedTouches[0].screenX; });
+  window.addEventListener('touchend',   e => {
+    const dx = e.changedTouches[0].screenX - touchStartX;
+    if (dx < -30 && state.currentLane > 0) { state.currentLane--; state.targetX = lanes[state.currentLane]; }
+    if (dx >  30 && state.currentLane < 2) { state.currentLane++; state.targetX = lanes[state.currentLane]; }
   });
-}
 
-let floorOffset=0;
-const TILE_W=100, TILE_H=28;
-const FLOOR_WORDS=['DATA','TYPE','LOOP','SELECT','IF','FORM','CALL','READ','SORT','MOVE','WRITE','___','CLASS','METHOD','CLEAR','FREE'];
-let floorTiles=[];
-function initFloor() {
-  floorTiles=[];
-  const count=Math.ceil(W/TILE_W)+4;
-  for(let i=0;i<count;i++) floorTiles.push({x:i*TILE_W,word:FLOOR_WORDS[Math.floor(Math.random()*FLOOR_WORDS.length)]});
-}
-function drawFloor() {
-  const GY=GROUND_Y;
-  const grad=ctx.createLinearGradient(0,GY,0,GY+50);
-  grad.addColorStop(0,'rgba(34,160,50,.08)'); grad.addColorStop(1,'transparent');
-  ctx.fillStyle=grad; ctx.fillRect(0,GY,W,50);
-  ctx.strokeStyle='#22a032'; ctx.lineWidth=2;
-  ctx.beginPath(); ctx.moveTo(0,GY); ctx.lineTo(W,GY); ctx.stroke();
-  floorTiles.forEach(tile=>{
-    const tx=tile.x-floorOffset;
-    if(tx>W+TILE_W||tx<-TILE_W) return;
-    ctx.fillStyle='rgba(22,27,34,.9)'; ctx.strokeStyle='rgba(48,54,61,.6)'; ctx.lineWidth=1;
-    rr(ctx,tx+2,GY+2,TILE_W-4,TILE_H,4); ctx.fill(); ctx.stroke();
-    ctx.fillStyle='#8b949e'; ctx.font=`400 9px 'JetBrains Mono',monospace`;
-    ctx.textAlign='center'; ctx.fillText(tile.word,tx+TILE_W/2,GY+19); ctx.textAlign='left';
-  });
-}
-function rr(ctx,x,y,w,h,r) {
-  ctx.beginPath(); ctx.moveTo(x+r,y); ctx.lineTo(x+w-r,y); ctx.quadraticCurveTo(x+w,y,x+w,y+r);
-  ctx.lineTo(x+w,y+h-r); ctx.quadraticCurveTo(x+w,y+h,x+w-r,y+h); ctx.lineTo(x+r,y+h);
-  ctx.quadraticCurveTo(x,y+h,x,y+h-r); ctx.lineTo(x,y+r); ctx.quadraticCurveTo(x,y,x+r,y); ctx.closePath();
-}
+  // ─────────────────────────────────────────────────────────────
+  // QUIZ LOGIC
+  // ─────────────────────────────────────────────────────────────
+  function spawnNextQuestion() {
+    if (quizData.length === 0) return;
+    if (state.qIndex >= quizData.length) { state.qIndex = 0; } // loop questions
 
-const CHAR = {x:80,y:0,w:36,h:48,vy:0,grounded:true,frame:0,frameTimer:0,stumble:0};
-function initChar() { CHAR.y=GROUND_Y-CHAR.h; CHAR.vy=0; CHAR.grounded=true; CHAR.stumble=0; }
-function jump() { if(CHAR.grounded&&!STATE.paused){CHAR.vy=-14;CHAR.grounded=false;} }
-function updateChar(dt) {
-  if(!CHAR.grounded){CHAR.vy+=.6;CHAR.y+=CHAR.vy;if(CHAR.y>=GROUND_Y-CHAR.h){CHAR.y=GROUND_Y-CHAR.h;CHAR.vy=0;CHAR.grounded=true;}}
-  if(CHAR.stumble>0) CHAR.stumble-=dt;
-  CHAR.frameTimer+=dt; if(CHAR.frameTimer>120){CHAR.frame=(CHAR.frame+1)%4;CHAR.frameTimer=0;}
-}
-function drawChar() {
-  const x=CHAR.x,y=CHAR.y,cx=x+CHAR.w/2,s=CHAR.stumble>0;
-  ctx.save(); if(s) ctx.globalAlpha=.7+Math.sin(Date.now()/50)*.3;
-  ctx.fillStyle='rgba(0,0,0,.2)'; ctx.beginPath(); ctx.ellipse(cx,GROUND_Y+4,17,5,0,0,Math.PI*2); ctx.fill();
-  const lp=CHAR.grounded?CHAR.frame:2, lo=[0,8,0,-8][lp];
-  ctx.strokeStyle=s?'#c0392b':'#22a032'; ctx.lineWidth=5; ctx.lineCap='round';
-  ctx.beginPath();ctx.moveTo(cx-6,y+CHAR.h*.6);ctx.lineTo(cx-8+lo,y+CHAR.h);ctx.stroke();
-  ctx.beginPath();ctx.moveTo(cx+6,y+CHAR.h*.6);ctx.lineTo(cx+8-lo,y+CHAR.h);ctx.stroke();
-  const bg=ctx.createLinearGradient(x+4,y+10,x+CHAR.w-4,y+CHAR.h*.65);
-  bg.addColorStop(0,s?'#c0392b':'#22a032'); bg.addColorStop(1,s?'#922b21':'#1a8028');
-  ctx.fillStyle=bg; rr(ctx,x+4,y+CHAR.h*.2,CHAR.w-8,CHAR.h*.45,6); ctx.fill();
-  ctx.fillStyle='#0d1117'; ctx.font=`bold 7px 'JetBrains Mono',monospace`; ctx.textAlign='center';
-  ctx.fillText('SAP',cx,y+CHAR.h*.47); ctx.textAlign='left';
-  const as=[-8,-12,-8,-4][lp];
-  ctx.strokeStyle=s?'#c0392b':'#22a032'; ctx.lineWidth=4;
-  ctx.beginPath();ctx.moveTo(x+6,y+CHAR.h*.3);ctx.lineTo(x-2,y+CHAR.h*.5+as);ctx.stroke();
-  ctx.beginPath();ctx.moveTo(x+CHAR.w-6,y+CHAR.h*.3);ctx.lineTo(x+CHAR.w+2,y+CHAR.h*.5-as);ctx.stroke();
-  ctx.fillStyle='#f0c080'; ctx.beginPath(); ctx.ellipse(cx,y+CHAR.h*.14,13,14,0,0,Math.PI*2); ctx.fill();
-  if(s){
-    ctx.strokeStyle='#333'; ctx.lineWidth=1.5;
-    [cx-5,cx+3].forEach(ex=>{ctx.beginPath();ctx.moveTo(ex-2.5,y+CHAR.h*.1-2.5);ctx.lineTo(ex+2.5,y+CHAR.h*.1+2.5);ctx.stroke();ctx.beginPath();ctx.moveTo(ex+2.5,y+CHAR.h*.1-2.5);ctx.lineTo(ex-2.5,y+CHAR.h*.1+2.5);ctx.stroke();});
-  } else {
-    ctx.fillStyle='#333';
-    ctx.beginPath();ctx.ellipse(cx-4,y+CHAR.h*.1,2,2.5,0,0,Math.PI*2);ctx.fill();
-    ctx.beginPath();ctx.ellipse(cx+4,y+CHAR.h*.1,2,2.5,0,0,Math.PI*2);ctx.fill();
-  }
-  ctx.fillStyle='#1a1d23'; ctx.beginPath(); ctx.ellipse(cx,y+CHAR.h*.04,13,7,0,Math.PI,Math.PI*2); ctx.fill();
-  ctx.restore();
-}
+    activeQuestion = quizData[state.qIndex];
+    state.qIndex++;
 
-let obstacles=[],obsTimer=0,obsInterval=3000,questionPending=false,GAME_SPEED=4;
-const OBS_TYPES=[{label:'BUG',color:'#c0392b',icon:'🐛'},{label:'DUMP',color:'#d97706',icon:'💥'},{label:'ERR',color:'#c0392b',icon:'⚠️'}];
-function spawnObstacle() {
-  const type=OBS_TYPES[Math.floor(Math.random()*OBS_TYPES.length)];
-  obstacles.push({x:W+60,w:28,h:38,type,triggered:false});
-}
-function updateObstacles(dt) {
-  obsTimer+=dt;
-  if(obsTimer>=obsInterval){obsTimer=0;obsInterval=Math.max(1600,obsInterval-15);spawnObstacle();}
-  obstacles.forEach((ob,idx)=>{
-    ob.x-=GAME_SPEED*dt*.06;
-    if(!ob.triggered&&!STATE.paused){
-      const charRight=CHAR.x+CHAR.w-6,charLeft=CHAR.x+6,obLeft=ob.x+4,obRight=ob.x+ob.w-4;
-      if(charRight>obLeft&&charLeft<obRight){ob.triggered=true;if(!questionPending){questionPending=true;triggerQuestion();}}
-    }
-  });
-  obstacles=obstacles.filter(ob=>ob.x>-100);
-}
-function drawObstacles() {
-  obstacles.forEach(ob=>{
-    const oy=GROUND_Y-ob.h;
-    ctx.fillStyle=ob.type.color+'22'; ctx.strokeStyle=ob.type.color; ctx.lineWidth=2;
-    rr(ctx,ob.x,oy,ob.w,ob.h,5); ctx.fill(); ctx.stroke();
-    ctx.font='16px serif'; ctx.textAlign='center'; ctx.fillText(ob.type.icon,ob.x+ob.w/2,oy+22);
-    ctx.font=`600 8px 'JetBrains Mono',monospace`; ctx.fillStyle=ob.type.color;
-    ctx.fillText(ob.type.label,ob.x+ob.w/2,oy+ob.h-5); ctx.textAlign='left';
-  });
-}
+    document.getElementById('q-text').textContent = activeQuestion.question;
+    document.getElementById('current-question').style.display = 'block';
 
-let particles=[];
-function spawnParticles(x,y,color,count){
-  for(let i=0;i<count;i++){
-    const angle=(Math.PI*2*i/count)+Math.random()*.5;
-    particles.push({x,y,vx:Math.cos(angle)*(2+Math.random()*3),vy:Math.sin(angle)*(2+Math.random()*3)-2,alpha:1,color,life:700+Math.random()*400,size:3+Math.random()*3});
-  }
-}
-function updateParticles(dt){particles.forEach(p=>{p.x+=p.vx;p.y+=p.vy;p.vy+=.08;p.life-=dt;p.alpha=Math.max(0,p.life/1000);});particles=particles.filter(p=>p.life>0);}
-function drawParticles(){particles.forEach(p=>{ctx.globalAlpha=p.alpha;ctx.fillStyle=p.color;ctx.beginPath();ctx.arc(p.x,p.y,p.size,0,Math.PI*2);ctx.fill();});ctx.globalAlpha=1;}
+    const answers = [
+      { text: activeQuestion.correct, isCorrect: true  },
+      { text: activeQuestion.wrong1,  isCorrect: false },
+      { text: activeQuestion.wrong2,  isCorrect: false },
+    ];
+    answers.sort(() => Math.random() - 0.5);
 
-function drawProgress() {
-  const pct=QUESTIONS.length>0?STATE.qIndex/QUESTIONS.length:0;
-  const barW=W-40,barY=H-18;
-  ctx.fillStyle='rgba(48,54,61,.6)'; rr(ctx,20,barY,barW,6,3); ctx.fill();
-  if(pct>0){
-    const grad=ctx.createLinearGradient(20,0,20+barW*pct,0);
-    grad.addColorStop(0,'#22a032'); grad.addColorStop(1,'#58a6ff');
-    ctx.fillStyle=grad; rr(ctx,20,barY,barW*pct,6,3); ctx.fill();
-  }
-  ctx.font=`500 10px 'Exo 2',sans-serif`; ctx.fillStyle='#6e7681';
-  ctx.textAlign='right'; ctx.fillText(Math.round(pct*100)+'% complete',W-22,barY-4); ctx.textAlign='left';
-}
+    // Clear old obstacles
+    obstacleMeshes.forEach(m => scene.remove(m));
+    obstacleMeshes = [];
+    obstacleData   = [];
 
-let lastTime=0, rafId;
-function loop(ts) {
-  const dt=Math.min(ts-lastTime,50); lastTime=ts;
-  if(!STATE.paused&&STATE.running){
-    floorOffset+=GAME_SPEED*dt*.06;
-    floorTiles.forEach(tile=>{
-      if(tile.x-floorOffset<-TILE_W){
-        const mx=Math.max(...floorTiles.map(t=>t.x));
-        tile.x=mx+TILE_W; tile.word=FLOOR_WORDS[Math.floor(Math.random()*FLOOR_WORDS.length)];
-      }
-    });
-    BG_LAYERS.forEach(layer=>{
-      layer.chars.forEach(ch=>{
-        ch.x-=layer.speed*dt*.03;
-        if(ch.x<-200){const mx=Math.max(...layer.chars.map(c=>c.x));ch.x=mx+130+Math.random()*60;ch.word=ABAP_KW[Math.floor(Math.random()*ABAP_KW.length)];}
+    const LANE_COLORS = [0x2563eb, 0xd97706, 0xc0392b];
+
+    for (let i = 0; i < 3; i++) {
+      // Pillar body
+      const geo  = new THREE.BoxGeometry(1.8, 2.2, 0.5);
+      const mat  = new THREE.MeshLambertMaterial({
+        color       : LANE_COLORS[i],
+        transparent : true,
+        opacity     : 0.55,
       });
+      const box = new THREE.Mesh(geo, mat);
+      box.position.set(lanes[i], 1.1, SPAWN_Z);
+      scene.add(box);
+
+      // Glow edge outline
+      const edges    = new THREE.EdgesGeometry(geo);
+      const lineMat  = new THREE.LineBasicMaterial({ color: LANE_COLORS[i], opacity: 0.9, transparent: true });
+      const outline  = new THREE.LineSegments(edges, lineMat);
+      box.add(outline);
+
+      obstacleMeshes.push(box);
+
+      const uiElem = document.getElementById(`obs-${i}`);
+      uiElem.textContent = answers[i].text;
+      uiElem.style.display = 'block';
+
+      obstacleData.push({
+        mesh      : box,
+        isCorrect : answers[i].isCorrect,
+        uiElement : uiElem,
+      });
+    }
+    questionPending = false;
+  }
+
+  // ── Collision & Answer Handling ───────────────────────────────
+  function updateObstacles(delta) {
+    if (!activeQuestion || state.isGameOver || questionPending) return;
+
+    for (let i = 0; i < obstacleData.length; i++) {
+      const obs = obstacleData[i];
+      obs.mesh.position.z -= gameSpeed * delta;
+
+      // Project 3D → 2D screen for HTML labels
+      vec3.copy(obs.mesh.position);
+      vec3.project(camera);
+      const sx = (vec3.x * 0.5 + 0.5) * window.innerWidth;
+      const sy = (vec3.y * -0.5 + 0.5) * window.innerHeight;
+
+      // Hide label when obstacle is behind camera or very far
+      if (vec3.z < 1) {
+        obs.uiElement.style.left = sx + 'px';
+        obs.uiElement.style.top  = (sy - 55) + 'px';
+      }
+
+      // Collision zone: character is at Z ≈ 0
+      if (obs.mesh.position.z < 0.8 && obs.mesh.position.z > -1.2) {
+        if (Math.abs(lanes[state.currentLane] - obs.mesh.position.x) < 0.5) {
+          questionPending = true;
+          obstacleData.forEach(o => { o.uiElement.style.display = 'none'; });
+          handleCollision(obs.isCorrect);
+          break;
+        }
+      }
+
+      // Obstacle passed without collision → wrong (missed question)
+      if (obs.mesh.position.z < -4 && !questionPending) {
+        questionPending = true;
+        obstacleData.forEach(o => { o.uiElement.style.display = 'none'; });
+        handleCollision(false); // missed = wrong
+        break;
+      }
+    }
+  }
+
+  function handleCollision(isCorrect) {
+    document.getElementById('current-question').style.display = 'none';
+    const flash = document.getElementById('feedback-flash');
+
+    if (isCorrect) {
+      state.score   += 100;
+      state.correct += 1;
+      flash.textContent = '✓ CORRECT! +100';
+      flash.className = 'correct';
+      flash.style.display = 'block';
+      gameSpeed = Math.min(30, gameSpeed + 0.5); // speed up slightly
+    } else {
+      state.lives--;
+      updateLives();
+      flash.textContent = '✗ WRONG! −1 Life';
+      flash.className = 'wrong';
+      flash.style.display = 'block';
+      if (state.lives <= 0) {
+        setTimeout(() => triggerGameOver(), 900);
+        return;
+      }
+    }
+
+    updateHUD();
+    setTimeout(() => { flash.style.display = 'none'; }, 1100);
+
+    // Clear current obstacles then spawn next question
+    obstacleMeshes.forEach(m => scene.remove(m));
+    obstacleMeshes = [];
+    obstacleData   = [];
+    setTimeout(() => spawnNextQuestion(), 1200);
+  }
+
+  function triggerGameOver() {
+    state.isGameOver = true;
+    document.getElementById('current-question').style.display = 'none';
+    document.getElementById('feedback-flash').style.display   = 'none';
+    obstacleData.forEach(o => { o.uiElement.style.display = 'none'; });
+    document.getElementById('final-score').textContent  = 'Score: ' + state.score;
+    document.getElementById('final-detail').textContent = state.correct + ' correct answers';
+    document.getElementById('game-over-screen').style.display = 'flex';
+  }
+
+  // ─────────────────────────────────────────────────────────────
+  // HUD HELPERS
+  // ─────────────────────────────────────────────────────────────
+  function updateHUD() {
+    document.getElementById('score').textContent = state.score;
+  }
+  function updateLives() {
+    ['h1','h2','h3'].forEach((id, i) => {
+      const el = document.getElementById(id);
+      if (el) el.className = 'heart' + (i >= state.lives ? ' lost' : '');
     });
-    updateChar(dt); updateObstacles(dt); updateParticles(dt);
-    GAME_SPEED=Math.min(10,4+STATE.score/800);
   }
-  drawBG(); drawFloor(); drawObstacles(); drawParticles(); drawChar(); drawProgress();
-  rafId=requestAnimationFrame(loop);
-}
 
-// ════════════════════════════════════════════════════════════════
-// QUESTION LOGIC
-// ════════════════════════════════════════════════════════════════
-let qTimerInterval=null, qTimeLeft=CONFIG.TIMER_SECS;
-
-function triggerQuestion() {
-  if(STATE.qIndex>=QUESTIONS.length){endGame(true);return;}
-  STATE.paused=true;
-  renderQuestion(QUESTIONS[STATE.qIndex]);
-  document.getElementById('question-overlay').classList.remove('hidden');
-  startQTimer();
-}
-
-function renderQuestion(q) {
-  document.getElementById('q-tag').textContent=q.tag;
-  let html='';
-  q.template.forEach(part=>{
-    if(part.t==='blank') html+=`<span class="blank">&nbsp;&nbsp;&nbsp;</span>`;
-    else if(part.t==='br') html+='<br/>';
-    else html+=`<span class="${part.t==='kw'?'kw':'op'}">${esc(part.v)}</span>`;
-  });
-  document.getElementById('q-snippet').innerHTML=html;
-  const hintEl=document.getElementById('q-hint');
-  if(q.hint){hintEl.textContent='💡 '+q.hint;hintEl.classList.remove('hidden');}else{hintEl.classList.add('hidden');}
-  const keys=['1','2','3','4'];
-  const optsEl=document.getElementById('q-options'); optsEl.innerHTML='';
-  q.options.forEach((opt,i)=>{
-    const btn=document.createElement('button'); btn.className='q-opt';
-    btn.innerHTML=`<span class="opt-key">${keys[i]}</span> <code style="font-family:var(--fm);font-size:.78rem">${esc(opt)}</code>`;
-    btn.setAttribute('data-answer',opt);
-    btn.addEventListener('click',()=>submitAnswer(opt,q,btn));
-    optsEl.appendChild(btn);
-  });
-}
-
-function esc(s){return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');}
-
-function startQTimer(){
-  qTimeLeft=CONFIG.TIMER_SECS; updateTimerUI();
-  clearInterval(qTimerInterval);
-  qTimerInterval=setInterval(()=>{qTimeLeft--;updateTimerUI();if(qTimeLeft<=0){clearInterval(qTimerInterval);onTimeout();}},1000);
-}
-function updateTimerUI(){
-  const el=document.getElementById('q-timer');
-  el.textContent=`⏱ ${qTimeLeft}s`;
-  el.className='q-timer'+(qTimeLeft<=5?' urgent':'');
-}
-function submitAnswer(answer,q,btn){
-  clearInterval(qTimerInterval);
-  document.querySelectorAll('.q-opt').forEach(b=>b.disabled=true);
-  const correct=answer.trim().toLowerCase()===q.answer.trim().toLowerCase();
-  btn.classList.add(correct?'correct':'wrong');
-  if(!correct) document.querySelectorAll('.q-opt').forEach(b=>{if(b.getAttribute('data-answer').trim().toLowerCase()===q.answer.trim().toLowerCase())b.classList.add('correct');});
-  setTimeout(()=>closeQuestion(correct),1000);
-}
-function onTimeout(){
-  document.querySelectorAll('.q-opt').forEach(b=>{b.disabled=true;if(b.getAttribute('data-answer').trim().toLowerCase()===QUESTIONS[STATE.qIndex]?.answer?.trim().toLowerCase())b.classList.add('correct');});
-  setTimeout(()=>closeQuestion(false),1000);
-}
-function closeQuestion(correct){
-  document.getElementById('question-overlay').classList.add('hidden');
-  STATE.paused=false; questionPending=false; STATE.qIndex++;
-  if(correct){
-    STATE.score+=100+qTimeLeft*5; STATE.correctCount++;
-    spawnParticles(CHAR.x+CHAR.w/2,CHAR.y+CHAR.h/2,'#22a032',10);
-    showFlash('✓ Correct! +'+(100+qTimeLeft*5),'correct');
-  } else {
-    STATE.lives--; CHAR.stumble=800;
-    spawnParticles(CHAR.x+CHAR.w/2,CHAR.y+CHAR.h/2,'#c0392b',10);
-    showFlash('✗ Wrong! −1 Life','wrong'); updateLives();
-    if(STATE.lives<=0){setTimeout(()=>endGame(false),700);return;}
+  // ─────────────────────────────────────────────────────────────
+  // SCROLLING FLOOR TILES (simulate movement)
+  // ─────────────────────────────────────────────────────────────
+  const floorTiles = [];
+  const TILE_COUNT = 20;
+  const TILE_SPAN  = 8;
+  for (let i = 0; i < TILE_COUNT; i++) {
+    const geo = new THREE.PlaneGeometry(9.5, TILE_SPAN, 1, 1);
+    const mat = new THREE.MeshBasicMaterial({ color: 0x0d1117 });
+    const tile = new THREE.Mesh(geo, mat);
+    tile.rotation.x = -Math.PI / 2;
+    tile.position.set(0, 0.005, i * TILE_SPAN);
+    scene.add(tile);
+    floorTiles.push(tile);
   }
-  updateHUD();
-  if(STATE.qIndex>=QUESTIONS.length) setTimeout(()=>endGame(true),1500);
-}
-function showFlash(msg,type){
-  const el=document.getElementById('result-flash');
-  el.textContent=msg; el.className=`show ${type}`;
-  setTimeout(()=>{el.className='';},2000);
-}
-function updateHUD(){
-  document.getElementById('hud-score').textContent=STATE.score;
-  document.getElementById('hud-q').textContent=STATE.qIndex+' / '+QUESTIONS.length;
-}
-function updateLives(){
-  ['h1','h2','h3','h4','h5'].forEach((id,i)=>{
-    const el=document.getElementById(id);
-    if(el) el.className='heart'+(i>=STATE.lives?' lost':'');
+  const TOTAL_FLOOR = TILE_COUNT * TILE_SPAN;
+
+  // ─────────────────────────────────────────────────────────────
+  // PARTICLES (correct answer burst)
+  // ─────────────────────────────────────────────────────────────
+  const particleMeshes = [];
+  function spawnParticles(color) {
+    for (let i = 0; i < 12; i++) {
+      const geo = new THREE.SphereGeometry(0.08, 4, 4);
+      const mat = new THREE.MeshBasicMaterial({ color });
+      const p   = new THREE.Mesh(geo, mat);
+      p.position.copy(charGroup.position);
+      p.position.y += 1;
+      p._vel = new THREE.Vector3(
+        (Math.random() - 0.5) * 4,
+        2 + Math.random() * 3,
+        (Math.random() - 0.5) * 2
+      );
+      p._life = 1.0;
+      scene.add(p);
+      particleMeshes.push(p);
+    }
+  }
+  function updateParticles(dt) {
+    for (let i = particleMeshes.length - 1; i >= 0; i--) {
+      const p = particleMeshes[i];
+      p._vel.y -= 6 * dt;
+      p.position.addScaledVector(p._vel, dt);
+      p._life -= dt * 1.5;
+      p.material.opacity = Math.max(0, p._life);
+      p.material.transparent = true;
+      if (p._life <= 0) { scene.remove(p); particleMeshes.splice(i, 1); }
+    }
+  }
+
+  // ─────────────────────────────────────────────────────────────
+  // ANIMATE LOOP
+  // ─────────────────────────────────────────────────────────────
+  function animate() {
+    requestAnimationFrame(animate);
+    const delta = Math.min(clock.getDelta(), 0.05);
+
+    if (!state.isGameOver && state.isRunning) {
+      // Smooth lane switch
+      charGroup.position.x = THREE.MathUtils.lerp(charGroup.position.x, state.targetX, 10 * delta);
+
+      // Leg animation (running)
+      legPhase += delta * 8;
+      charGroup.children.forEach(child => {
+        if (child.name === 'leg0') child.rotation.x =  Math.sin(legPhase) * 0.5;
+        if (child.name === 'leg1') child.rotation.x = -Math.sin(legPhase) * 0.5;
+      });
+
+      // Scroll floor tiles forward
+      floorTiles.forEach(tile => {
+        tile.position.z -= gameSpeed * delta;
+        if (tile.position.z < -TILE_SPAN * 2) {
+          tile.position.z += TOTAL_FLOOR;
+        }
+      });
+
+      // Scroll grid
+      grid.position.z -= gameSpeed * delta;
+      if (grid.position.z < -10) grid.position.z = 0;
+
+      updateObstacles(delta);
+      updateParticles(delta);
+    }
+
+    renderer.render(scene, camera);
+  }
+
+  // ─────────────────────────────────────────────────────────────
+  // WINDOW RESIZE
+  // ─────────────────────────────────────────────────────────────
+  window.addEventListener('resize', () => {
+    camera.aspect = window.innerWidth / window.innerHeight;
+    camera.updateProjectionMatrix();
+    renderer.setSize(window.innerWidth, window.innerHeight);
   });
-}
 
-// ════════════════════════════════════════════════════════════════
-// GAME FLOW
-// ════════════════════════════════════════════════════════════════
-function startGame(){
-  STATE.score=0; STATE.lives=CONFIG.LIVES; STATE.qIndex=0; STATE.correctCount=0;
-  STATE.paused=false; STATE.running=true; GAME_SPEED=4;
-  obstacles=[]; particles=[]; obsTimer=0; obsInterval=3000; questionPending=false;
-  initBGLayers(); initFloor(); initChar(); updateHUD(); updateLives();
-  document.getElementById('start-screen').classList.add('hidden');
-  document.getElementById('end-screen').classList.add('hidden');
-  document.getElementById('hud').classList.remove('hidden');
-  canvas.classList.remove('hidden');
-  document.getElementById('mobile-controls').classList.remove('hidden');
-  STATE.startTime=Date.now(); lastTime=performance.now();
-  cancelAnimationFrame(rafId); rafId=requestAnimationFrame(loop);
-}
-
-function endGame(win){
-  STATE.running=false; STATE.paused=true; clearInterval(qTimerInterval); cancelAnimationFrame(rafId);
-  const elapsed=Math.round((Date.now()-STATE.startTime)/1000);
-  document.getElementById('hud').classList.add('hidden');
-  canvas.classList.add('hidden');
-  document.getElementById('mobile-controls').classList.add('hidden');
-  document.getElementById('question-overlay').classList.add('hidden');
-  document.getElementById('end-emoji').textContent=win?'🏆':'💀';
-  document.getElementById('end-title').textContent=win?'Race Complete!':'Game Over!';
-  document.getElementById('end-title').className='end-title '+(win?'win':'lose');
-  document.getElementById('end-sub').textContent=win
-    ?`Excellent! ${STATE.correctCount}/${QUESTIONS.length} correct answers.`
-    :`Out of lives. ${STATE.correctCount} correct — keep practicing!`;
-  document.getElementById('es-score').textContent=STATE.score;
-  document.getElementById('es-correct').textContent=STATE.correctCount+'/'+QUESTIONS.length;
-  document.getElementById('es-time').textContent=elapsed+'s';
-  document.getElementById('end-screen').classList.remove('hidden');
-  document.getElementById('cert-btn').style.display=win?'inline-flex':'none';
-}
-
-// ════════════════════════════════════════════════════════════════
-// CERTIFICATE
-// ════════════════════════════════════════════════════════════════
-function generateCertificate(){
-  const cc=document.getElementById('cert-canvas'), cx=cc.getContext('2d');
-  const CW=900,CH=640; cc.width=CW; cc.height=CH;
-  cx.fillStyle='#f5f9f5'; cx.fillRect(0,0,CW,CH);
-  cx.strokeStyle='#22a032'; cx.lineWidth=3; cx.strokeRect(18,18,CW-36,CH-36);
-  cx.strokeStyle='rgba(34,160,50,.25)'; cx.lineWidth=1; cx.strokeRect(26,26,CW-52,CH-52);
-  [[34,34],[CW-34,34],[34,CH-34],[CW-34,CH-34]].forEach(([x,y])=>{cx.fillStyle='#22a032';cx.beginPath();cx.arc(x,y,5,0,Math.PI*2);cx.fill();});
-  cx.globalAlpha=.04; cx.fillStyle='#22a032'; cx.font=`10px 'JetBrains Mono',monospace`;
-  const cl=["DATA lv_name TYPE string.","SELECT * FROM I_Material INTO TABLE @lt_mat.","LOOP AT lt_orders INTO DATA(ls).","WRITE: / ls-vbeln.","ENDLOOP."];
-  for(let r=0;r<30;r++) for(let c=0;c<4;c++) cx.fillText(cl[(r*4+c)%cl.length],c*230+40,r*22+30);
-  cx.globalAlpha=1;
-  cx.font=`600 12px 'JetBrains Mono',monospace`; cx.fillStyle='#22a032'; cx.textAlign='center';
-  cx.fillText('SAPZCODES · ABAP RUNNER CHALLENGE',CW/2,90);
-  cx.font=`800 38px 'Rajdhani',sans-serif`; cx.fillStyle='#0a100a';
-  cx.fillText('CERTIFICATE OF COMPLETION',CW/2,148);
-  const div=cx.createLinearGradient(180,160,CW-180,160);
-  div.addColorStop(0,'transparent'); div.addColorStop(.3,'#22a032'); div.addColorStop(.7,'#22a032'); div.addColorStop(1,'transparent');
-  cx.strokeStyle=div; cx.lineWidth=1.5; cx.beginPath(); cx.moveTo(180,168); cx.lineTo(CW-180,168); cx.stroke();
-  cx.font=`400 15px 'Exo 2',sans-serif`; cx.fillStyle='#5a6e5a'; cx.fillText('This certifies that',CW/2,208);
-  cx.font=`700 44px 'Rajdhani',sans-serif`; cx.fillStyle='#22a032'; cx.fillText(STATE.playerName||'Learner',CW/2,268);
-  const nw=cx.measureText(STATE.playerName||'Learner').width;
-  cx.strokeStyle='rgba(34,160,50,.35)'; cx.lineWidth=1; cx.beginPath(); cx.moveTo(CW/2-nw/2,278); cx.lineTo(CW/2+nw/2,278); cx.stroke();
-  cx.font=`400 15px 'Exo 2',sans-serif`; cx.fillStyle='#5a6e5a';
-  cx.fillText('has successfully completed the ABAP Runner Challenge',CW/2,316);
-  cx.font=`500 15px 'Exo 2',sans-serif`; cx.fillStyle='#0a100a';
-  cx.fillText('Score: '+STATE.score+' · '+STATE.correctCount+'/'+QUESTIONS.length+' correct answers',CW/2,344);
-  const stats=[{val:String(STATE.score),label:'Final Score'},{val:STATE.correctCount+'/'+QUESTIONS.length,label:'Correct'},{val:Math.round((Date.now()-STATE.startTime)/1000)+'s',label:'Time'}];
-  const bW=160,bH=70,sx=CW/2-(bW*3+20*2)/2;
-  stats.forEach((s,i)=>{
-    const bx=sx+i*(bW+20);
-    cx.fillStyle='rgba(34,160,50,.06)'; cx.strokeStyle='rgba(34,160,50,.25)'; cx.lineWidth=1;
-    rrC(cx,bx,372,bW,bH,8); cx.fill(); cx.stroke();
-    cx.font=`700 22px 'JetBrains Mono',monospace`; cx.fillStyle='#22a032'; cx.fillText(s.val,bx+bW/2,405);
-    cx.font=`500 10px 'Exo 2',sans-serif`; cx.fillStyle='#5a6e5a'; cx.fillText(s.label.toUpperCase(),bx+bW/2,425);
-  });
-  cx.font=`500 12px 'JetBrains Mono',monospace`; cx.fillStyle='#8a93a2';
-  cx.fillText('Issued on '+new Date().toLocaleDateString('en-IN',{day:'numeric',month:'long',year:'numeric'}),CW/2,490);
-  cx.fillStyle='rgba(34,160,50,.1)'; cx.strokeStyle='#22a032'; cx.lineWidth=2; cx.beginPath(); cx.arc(CW/2,548,44,0,Math.PI*2); cx.fill(); cx.stroke();
-  cx.font=`800 14px 'Rajdhani',sans-serif`; cx.fillStyle='#22a032'; cx.fillText('SAPZCODES',CW/2,544);
-  cx.font=`500 9px 'Exo 2',sans-serif`; cx.fillStyle='#5a6e5a'; cx.fillText('VERIFIED',CW/2,562); cx.textAlign='left';
-  document.getElementById('cert-overlay').classList.remove('hidden');
-}
-function rrC(cx,x,y,w,h,r){cx.beginPath();cx.moveTo(x+r,y);cx.lineTo(x+w-r,y);cx.quadraticCurveTo(x+w,y,x+w,y+r);cx.lineTo(x+w,y+h-r);cx.quadraticCurveTo(x+w,y+h,x+w-r,y+h);cx.lineTo(x+r,y+h);cx.quadraticCurveTo(x,y+h,x,y+h-r);cx.lineTo(x,y+r);cx.quadraticCurveTo(x,y,x+r,y);cx.closePath();}
-
-// ════════════════════════════════════════════════════════════════
-// EVENT LISTENERS
-// ════════════════════════════════════════════════════════════════
-document.addEventListener('keydown', e => {
-  if(!STATE.running) return;
-  if(e.code==='Space'||e.code==='ArrowUp'){e.preventDefault();jump();}
-  if(!STATE.paused) return;
-  const map={'1':0,'2':1,'3':2,'4':3};
-  if(e.key in map){const btns=document.querySelectorAll('.q-opt');const btn=btns[map[e.key]];if(btn&&!btn.disabled)btn.click();}
-});
-canvas.addEventListener('click', ()=>{if(!STATE.paused)jump();});
-document.getElementById('mob-jump').addEventListener('touchstart', e=>{e.preventDefault();jump();});
-
-document.getElementById('start-btn').addEventListener('click', ()=>{
-  const name=document.getElementById('player-name').value.trim();
-  if(!name){document.getElementById('player-name').focus();return;}
-  STATE.playerName=name; startGame();
-});
-document.getElementById('player-name').addEventListener('keydown', e=>{if(e.key==='Enter')document.getElementById('start-btn').click();});
-document.getElementById('retry-btn').addEventListener('click', ()=>{
-  document.getElementById('end-screen').classList.add('hidden');
-  document.getElementById('start-screen').classList.remove('hidden');
-});
-document.getElementById('cert-btn').addEventListener('click', generateCertificate);
-document.getElementById('cert-dl').addEventListener('click', ()=>{
-  const link=document.createElement('a');
-  link.download='SAPZCODES_Certificate_'+(STATE.playerName||'Learner').replace(/\s/g,'_')+'.png';
-  link.href=document.getElementById('cert-canvas').toDataURL('image/png');
-  link.click();
-});
-document.getElementById('cert-close').addEventListener('click', ()=>{document.getElementById('cert-overlay').classList.add('hidden');});
-
-// ── Start fetching ────────────────────────────────────────────
-fetchQuestions();
+  // ─────────────────────────────────────────────────────────────
+  // KICK OFF
+  // ─────────────────────────────────────────────────────────────
+  fetchQuestions();
 </script>
 </body>
 </html>
