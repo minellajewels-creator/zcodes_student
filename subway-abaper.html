@@ -4,6 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
   <title>SAPZCodes 3D Endless Runner</title>
+  <link rel="icon" type="image/png" href="favicon.png">
   <style>
     :root { --g:#22a032; --fm:'JetBrains Mono',monospace; }
     * { box-sizing:border-box; margin:0; padding:0; }
@@ -64,9 +65,78 @@
                  color:rgba(240,244,240,.3); }
     .hud-val   { font-size:.92rem; font-weight:700; color:#f0f4f0; line-height:1; }
     .hud-val.green { color:var(--g); }
-    .hud-lives { display:flex; gap:3px; }
+    .hud-lives { display:flex; gap:3px; align-items:center; }
     .heart { font-size:.8rem; transition:all .2s; }
     .heart.lost { opacity:.18; filter:grayscale(1); transform:scale(.8); }
+
+    /* Play/Pause button */
+    #btn-playpause {
+      background: rgba(34,160,50,0.15);
+      border: 1px solid rgba(34,160,50,0.4);
+      border-radius: 7px;
+      color: var(--g);
+      font-size: 1.1rem;
+      width: 34px; height: 34px;
+      cursor: pointer;
+      display: flex; align-items: center; justify-content: center;
+      transition: all .18s;
+      flex-shrink: 0;
+    }
+    #btn-playpause:hover { background: rgba(34,160,50,0.28); border-color: var(--g); }
+
+    /* ── Pause overlay ───────────────────────────────────── */
+    #pause-overlay {
+      position:fixed; inset:0; background:rgba(0,0,0,.75); z-index:35;
+      display:none; flex-direction:column; align-items:center;
+      justify-content:center; gap:14px; backdrop-filter:blur(4px);
+    }
+    #pause-overlay h2 { font-size:2.8rem; color:var(--g); letter-spacing:.1em; }
+    #pause-overlay p  { font-size:.82rem; color:rgba(240,244,240,.4); }
+    .btn-resume {
+      padding:12px 34px; border:none; border-radius:8px;
+      background:var(--g); color:#fff; font-size:1rem;
+      font-weight:700; cursor:pointer; margin-top:8px;
+    }
+    .btn-resume:hover { background:#1a8028; }
+
+    /* ── Choose lane overlay ─────────────────────────────── */
+    #choose-overlay {
+      position:fixed; bottom:28px; left:50%; transform:translateX(-50%);
+      background:rgba(13,17,23,.92); border:1px solid var(--g);
+      border-radius:12px; padding:12px 24px; z-index:25;
+      display:none; align-items:center; gap:12px;
+      box-shadow:0 4px 28px rgba(34,160,50,.22);
+    }
+    #choose-overlay span {
+      font-size:.72rem; letter-spacing:.08em; color:rgba(240,244,240,.5);
+      text-transform:uppercase;
+    }
+    .lane-btn {
+      padding:8px 16px; border-radius:7px; border:none;
+      font-size:.85rem; font-weight:700; cursor:pointer;
+      transition:all .15s;
+    }
+    .lane-btn.l0 { background:#2563eb; color:#fff; }
+    .lane-btn.l0:hover { background:#1d4ed8; }
+    .lane-btn.l1 { background:#d97706; color:#fff; }
+    .lane-btn.l1:hover { background:#b45309; }
+    .lane-btn.l2 { background:#c0392b; color:#fff; }
+    .lane-btn.l2:hover { background:#9b2020; }
+    .lane-btn.selected { outline:3px solid #fff; transform:scale(1.08); }
+
+    /* Mobile lane arrows */
+    #mobile-lanes {
+      position:fixed; bottom:90px; left:50%; transform:translateX(-50%);
+      display:none; gap:16px; z-index:25;
+    }
+    .mob-lane-btn {
+      width:56px; height:56px; border-radius:50%; border:none;
+      font-size:1.3rem; font-weight:900; cursor:pointer;
+      display:flex; align-items:center; justify-content:center;
+    }
+    .mob-lane-btn.l0 { background:#2563eb; color:#fff; }
+    .mob-lane-btn.l1 { background:#d97706; color:#fff; }
+    .mob-lane-btn.l2 { background:#c0392b; color:#fff; }
 
     /* ── Question box ────────────────────────────────────── */
     #question-box {
@@ -78,17 +148,6 @@
     }
     .q-lbl { font-size:.55rem; letter-spacing:.14em; text-transform:uppercase;
              color:rgba(240,244,240,.3); margin-bottom:5px; }
-
-    /* ── Lane labels ─────────────────────────────────────── */
-    /*.obs-label {
-      position:fixed; transform:translate(-50%,-50%);
-      background:rgba(0,0,0,.82); padding:7px 13px; border-radius:6px;
-      font-size:.78rem; font-weight:700; text-align:center; pointer-events:none;
-      display:none; max-width:150px; line-height:1.3; z-index:20;
-    }
-    .obs-label.l0 { border:1px solid #2563eb; color:#93c5fd; }
-    .obs-label.l1 { border:1px solid #d97706; color:#fcd34d; }
-    .obs-label.l2 { border:1px solid #c0392b; color:#fca5a5; } */
 
     /* ── Feedback flash ──────────────────────────────────── */
     #flash {
@@ -168,25 +227,44 @@
       <span class="heart" id="h2">❤️</span>
       <span class="heart" id="h3">❤️</span>
     </div>
+    <!-- Play / Pause button -->
+    <button id="btn-playpause" title="Pause / Resume">⏸</button>
   </div>
+</div>
+
+<!-- Pause overlay -->
+<div id="pause-overlay">
+  <h2>PAUSED</h2>
+  <p>Game is paused</p>
+  <button class="btn-resume" id="btn-resume-overlay">▶ Resume</button>
 </div>
 
 <!-- Question -->
 <div id="question-box">
-  <div class="q-lbl">Question</div>
+  <div class="q-lbl">Question — Move to the correct lane</div>
   <span id="q-text"></span>
 </div>
 
-<!-- Lane answer labels -->
-<!--<div id="obs-0" class="obs-label l0"></div>
-<div id="obs-1" class="obs-label l1"></div>
-<div id="obs-2" class="obs-label l2"></div> --!>
+<!-- Choose lane overlay (shown while obstacles are waiting) -->
+<div id="choose-overlay">
+  <span>Pick your lane:</span>
+  <button class="lane-btn l0" id="cl-0" onclick="window._chooseLane(0)">Left</button>
+  <button class="lane-btn l1" id="cl-1" onclick="window._chooseLane(1)">Centre</button>
+  <button class="lane-btn l2" id="cl-2" onclick="window._chooseLane(2)">Right</button>
+</div>
+
+<!-- Mobile lane tap buttons (shown while choosing) -->
+<div id="mobile-lanes">
+  <button class="mob-lane-btn l0" onclick="window._chooseLane(0)">◀</button>
+  <button class="mob-lane-btn l1" onclick="window._chooseLane(1)">▲</button>
+  <button class="mob-lane-btn l2" onclick="window._chooseLane(2)">▶</button>
+</div>
 
 <!-- Feedback -->
 <div id="flash"></div>
 
-<!-- Mobile hint -->
-<div id="swipe-hint">← Swipe to change lane →</div>
+<!-- Mobile swipe hint -->
+<div id="swipe-hint">← Swipe to switch lane, then confirm →</div>
 
 <!-- Game Over -->
 <div id="game-over">
@@ -197,10 +275,9 @@
   <button class="btn btn-s" onclick="window.location.href='games.html'">← Games Hub</button>
 </div>
 
-<!-- ── Security block (sync, before module) ────────────────── -->
+<!-- ── Security block ─────────────────────────────────────────── -->
 <script>
 (function () {
-  // Disable right-click + common devtools shortcuts
   document.addEventListener('contextmenu', e => e.preventDefault());
   document.addEventListener('keydown', e => {
     if (e.key === 'F12' ||
@@ -209,7 +286,6 @@
        (e.ctrlKey && ['s','S','a','A'].includes(e.key))) { e.preventDefault(); }
   });
 
-  // DevTools size detector
   setInterval(() => {
     if (window.outerWidth  - window.innerWidth  > 160 ||
         window.outerHeight - window.innerHeight > 160) {
@@ -220,7 +296,6 @@
     }
   }, 1200);
 
-  // Domain lock
   const ALLOWED = ['students.sapzcodes.com', 'localhost', '127.0.0.1'];
   if (!ALLOWED.some(d => {
     const h = window.location.hostname;
@@ -233,7 +308,6 @@
     throw new Error('Domain lock');
   }
 
-  // Auth guard — same tokens as index.html / abap-runner.html
   if (!sessionStorage.getItem('szc_token') && !localStorage.getItem('szc_token')) {
     document.getElementById('loading-screen').style.display = 'none';
     document.getElementById('auth-screen').style.display    = 'flex';
@@ -242,7 +316,7 @@
 })();
 </script>
 
-<!-- ── Main game module ─────────────────────────────────────── -->
+<!-- ── Main game module ─────────────────────────────────────────── -->
 <script type="module">
 import * as THREE from 'three';
 import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
@@ -253,8 +327,8 @@ const API_SECRET = 'SZC-INTERNAL-2025-XK9';
 const LIVES      = 3;
 const SPAWN_Z    = 35;
 const LANES      = [-2.5, 0, 2.5];
+const MODEL_URL  = 'https://threejs.org/examples/models/gltf/Soldier.glb';
 
-  const MODEL_URL = 'https://threejs.org/examples/models/gltf/Soldier.glb';
 // ─── LOADING UI ────────────────────────────────────────────────
 function setBar(pct, msg) {
   document.getElementById('ld-bar').style.width = pct + '%';
@@ -286,7 +360,7 @@ async function fetchQuestions() {
       throw new Error('No questions returned — check the "subway" tab in your sheet.');
     quizData = json.data;
     setBar(85, 'Loading 3D assets…');
-    await loadScene();                     // load Three.js scene + FBX models
+    await loadScene();
     setBar(100, '✓ Ready!');
     await new Promise(r => setTimeout(r, 400));
     document.getElementById('loading-screen').style.display = 'none';
@@ -297,7 +371,6 @@ async function fetchQuestions() {
   }
 }
 
-// Expose for the retry button (outside module scope)
 window._retryFetch = fetchQuestions;
 
 // ─── SCENE ─────────────────────────────────────────────────────
@@ -334,13 +407,11 @@ sun.castShadow = true;
 sun.shadow.mapSize.set(1024, 1024);
 scene.add(sun);
 
-// Subtle green rim light from front
 const rim = new THREE.PointLight(0x22a032, 0.6, 30);
 rim.position.set(0, 6, 8);
 scene.add(rim);
 
 // ─── TRACK ─────────────────────────────────────────────────────
-// Main track surface
 const trackMat  = new THREE.MeshLambertMaterial({ color: 0xb0c4b8 });
 const trackMesh = new THREE.Mesh(new THREE.PlaneGeometry(10, 600), trackMat);
 trackMesh.rotation.x = -Math.PI / 2;
@@ -348,7 +419,6 @@ trackMesh.position.set(0, 0, 280);
 trackMesh.receiveShadow = true;
 scene.add(trackMesh);
 
-// Lane dividers
 [-1.25, 1.25].forEach(x => {
   const div = new THREE.Mesh(
     new THREE.PlaneGeometry(0.07, 600),
@@ -359,7 +429,6 @@ scene.add(trackMesh);
   scene.add(div);
 });
 
-// Side walls (neon border effect)
 [-5.2, 5.2].forEach(x => {
   const wall = new THREE.Mesh(
     new THREE.PlaneGeometry(0.12, 600),
@@ -369,22 +438,20 @@ scene.add(trackMesh);
   scene.add(wall);
 });
 
-// Background grid (off-track)
 const grid = new THREE.GridHelper(120, 60, 0x22a032, 0x8fbfa0);
 grid.position.y = 0;
 scene.add(grid);
 
-// Scrolling floor tiles with ABAP words
 const FLOOR_WORDS = ['DATA','TYPE','LOOP','SELECT','IF','FORM','CALL','READ','SORT','MOVE','WRITE','CLASS','METHOD','CLEAR','BDEF','CDS'];
 const TILE_W = 9.4, TILE_D = 8, TILE_COUNT = 16;
 const floorTiles = [];
 for (let i = 0; i < TILE_COUNT; i++) {
   const canvas = document.createElement('canvas');
-  canvas.width  = 256; canvas.height = 64;
+  canvas.width = 256; canvas.height = 64;
   const ctx = canvas.getContext('2d');
-ctx.fillStyle = '#b0c4b8';
-ctx.fillRect(0, 0, 256, 64);
-ctx.fillStyle = 'rgba(20,100,40,0.35)';
+  ctx.fillStyle = '#b0c4b8';
+  ctx.fillRect(0, 0, 256, 64);
+  ctx.fillStyle = 'rgba(20,100,40,0.35)';
   ctx.font = 'bold 18px monospace';
   ctx.textAlign = 'center';
   ctx.fillText(FLOOR_WORDS[i % FLOOR_WORDS.length], 128, 42);
@@ -399,69 +466,43 @@ ctx.fillStyle = 'rgba(20,100,40,0.35)';
   floorTiles.push(tile);
 }
 
-// ─── FBX CHARACTER ─────────────────────────────────────────────
-let mixer       = null;
-let idleAction  = null;
-let runAction   = null;
-let charGroup   = new THREE.Group();
+// ─── CHARACTER ─────────────────────────────────────────────────
+let mixer      = null;
+let idleAction = null;
+let runAction  = null;
+let charGroup  = new THREE.Group();
 charGroup.position.set(0, 0, 2);
 scene.add(charGroup);
 
 function loadScene() {
-
   return new Promise((resolve, reject) => {
-
     const loader = new GLTFLoader();
-
     loader.load(MODEL_URL, (gltf) => {
-
       const model = gltf.scene;
-
-      model.scale.set(1.0, 1.0, 1.0);  // Soldier.glb is already unit-scale
-
-      model.rotation.y = Math.PI;      // face forward
-
+      model.scale.set(1.0, 1.0, 1.0);
+      model.rotation.y = Math.PI;
       model.traverse(child => {
-
         if (child.isMesh) { child.castShadow = true; child.receiveShadow = true; }
-
       });
-
       charGroup.add(model);
-
       mixer = new THREE.AnimationMixer(model);
-
-      // Soldier.glb clips: 0=Idle, 1=Run, 2=TPose, 3=Walk
-
-      idleAction = mixer.clipAction(gltf.animations[0]); // Idle
-
-      runAction  = mixer.clipAction(gltf.animations[1]); // Run
-
+      idleAction = mixer.clipAction(gltf.animations[0]);
+      runAction  = mixer.clipAction(gltf.animations[1]);
       runAction.enabled = false;
-
       idleAction.play();
-
       resolve();
-
     }, undefined, (err) => reject(new Error('GLB load failed: ' + err.message)));
-
   });
-
 }
 
-// Smooth crossfade between idle ↔ run
 function playIdle() {
   if (!mixer || !idleAction) return;
-  if (runAction && runAction.isRunning()) {
-    runAction.crossFadeTo(idleAction, 0.3, true);
-  }
+  if (runAction && runAction.isRunning()) runAction.crossFadeTo(idleAction, 0.3, true);
   idleAction.play();
 }
 function playRun() {
   if (!mixer || !runAction) return;
-  if (idleAction && idleAction.isRunning()) {
-    idleAction.crossFadeTo(runAction, 0.3, true);
-  }
+  if (idleAction && idleAction.isRunning()) idleAction.crossFadeTo(runAction, 0.3, true);
   runAction.enabled = true;
   runAction.play();
 }
@@ -475,6 +516,8 @@ const state = {
   correct       : 0,
   gameOver      : false,
   running       : false,
+  paused        : false,       // manual pause
+  choosing      : false,       // waiting for player to pick a lane
   qIndex        : 0,
   speed         : 15,
 };
@@ -484,21 +527,124 @@ let obstacleMeshes  = [];
 let obstacleData    = [];
 let questionPending = false;
 const clock         = new THREE.Clock();
-const projVec       = new THREE.Vector3();
 
-// ─── CONTROLS ──────────────────────────────────────────────────
-window.addEventListener('keydown', e => {
-  if (state.gameOver) return;
-  if (e.key === 'ArrowLeft'  && state.currentLane > 0) { state.currentLane--; state.targetX = LANES[state.currentLane]; }
-  if (e.key === 'ArrowRight' && state.currentLane < 2) { state.currentLane++; state.targetX = LANES[state.currentLane]; }
+// ─── PAUSE / RESUME ────────────────────────────────────────────
+function setPaused(val) {
+  state.paused = val;
+  document.getElementById('pause-overlay').style.display = val ? 'flex' : 'none';
+  document.getElementById('btn-playpause').textContent   = val ? '▶' : '⏸';
+  if (val) {
+    playIdle();
+  } else {
+    // Only resume running animation if we're mid-run (not choosing)
+    if (!state.choosing) playRun();
+    clock.getDelta(); // flush dt so we don't get a huge jump
+  }
+}
+
+document.getElementById('btn-playpause').addEventListener('click', () => {
+  if (state.gameOver || !state.running) return;
+  setPaused(!state.paused);
 });
+document.getElementById('btn-resume-overlay').addEventListener('click', () => {
+  setPaused(false);
+});
+
+// Space bar to pause/resume
+window.addEventListener('keydown', e => {
+  if (e.code === 'Space' && state.running && !state.gameOver) {
+    e.preventDefault();
+    setPaused(!state.paused);
+  }
+});
+
+// ─── LANE SELECTION ────────────────────────────────────────────
+// Highlight which lane button matches current lane
+function updateLaneButtons() {
+  for (let i = 0; i < 3; i++) {
+    const btn = document.getElementById('cl-' + i);
+    if (btn) btn.classList.toggle('selected', i === state.currentLane);
+  }
+}
+
+// Arrow keys / swipe change current lane (only during choosing phase)
+window.addEventListener('keydown', e => {
+  if (state.gameOver || state.paused) return;
+
+  if (state.choosing) {
+    // Fixed: ArrowLeft = lane index DOWN (move left visually)
+    if (e.key === 'ArrowLeft'  && state.currentLane > 0) {
+      state.currentLane--;
+      state.targetX = LANES[state.currentLane];
+      updateLaneButtons();
+    }
+    if (e.key === 'ArrowRight' && state.currentLane < 2) {
+      state.currentLane++;
+      state.targetX = LANES[state.currentLane];
+      updateLaneButtons();
+    }
+    // Enter / Space to confirm lane
+    if (e.key === 'Enter') confirmLane();
+  }
+});
+
 let _tx = 0;
 window.addEventListener('touchstart', e => { _tx = e.changedTouches[0].screenX; }, { passive: true });
-window.addEventListener('touchend',   e => {
+window.addEventListener('touchend', e => {
+  if (state.paused || state.gameOver || !state.choosing) return;
   const dx = e.changedTouches[0].screenX - _tx;
-  if (dx > 30 && state.currentLane > 0) { state.currentLane--; state.targetX = LANES[state.currentLane]; }
-  if (dx < -30 && state.currentLane < 2) { state.currentLane++; state.targetX = LANES[state.currentLane]; }
+  if (dx > 30 && state.currentLane > 0) {
+    state.currentLane--;
+    state.targetX = LANES[state.currentLane];
+    updateLaneButtons();
+  }
+  if (dx < -30 && state.currentLane < 2) {
+    state.currentLane++;
+    state.targetX = LANES[state.currentLane];
+    updateLaneButtons();
+  }
 });
+
+// Called by lane buttons or Enter
+function confirmLane() {
+  if (!state.choosing || state.paused || state.gameOver) return;
+  // Find the obstacle in the current lane and judge
+  const laneX = LANES[state.currentLane];
+  let hit = null;
+  for (const obs of obstacleData) {
+    if (Math.abs(obs.mesh.position.x - laneX) < 0.5) { hit = obs; break; }
+  }
+  if (!hit) return; // shouldn't happen
+  endChoosing();
+  onAnswer(hit.correct);
+}
+
+// Expose to HTML onclick
+window._chooseLane = (laneIdx) => {
+  if (!state.choosing || state.paused || state.gameOver) return;
+  state.currentLane = laneIdx;
+  state.targetX     = LANES[laneIdx];
+  updateLaneButtons();
+  // Small delay so user sees the character move, then confirm
+  setTimeout(confirmLane, 380);
+};
+
+function showChooseUI() {
+  document.getElementById('choose-overlay').style.display = 'flex';
+  const isMobile = window.innerWidth < 600;
+  document.getElementById('mobile-lanes').style.display = isMobile ? 'flex' : 'none';
+  updateLaneButtons();
+}
+function hideChooseUI() {
+  document.getElementById('choose-overlay').style.display = 'none';
+  document.getElementById('mobile-lanes').style.display   = 'none';
+}
+
+function endChoosing() {
+  state.choosing      = false;
+  questionPending     = true;
+  hideChooseUI();
+}
 
 // ─── HUD HELPERS ───────────────────────────────────────────────
 function updateHUD() {
@@ -513,11 +659,12 @@ function updateLives() {
 }
 
 // ─── SPAWN QUESTION ────────────────────────────────────────────
-const LANE_COLORS = [0x2563eb, 0xd97706, 0xc0392b];
+const LANE_COLORS_HEX = ['#2563eb', '#d97706', '#c0392b'];
 
 function spawnNextQuestion() {
   questionPending = false;
   activeQuestion  = null;
+  state.choosing  = false;
   if (quizData.length === 0) return;
   if (state.qIndex >= quizData.length) state.qIndex = 0;
 
@@ -536,27 +683,21 @@ function spawnNextQuestion() {
   obstacleMeshes = [];
   obstacleData   = [];
 
-  const LANE_COLORS_HEX = ['#2563eb', '#d97706', '#c0392b'];
-
   for (let i = 0; i < 3; i++) {
-    // Build canvas texture with answer text
     const canvas = document.createElement('canvas');
     canvas.width  = 512;
     canvas.height = 256;
     const ctx = canvas.getContext('2d');
 
-    // Background
     ctx.fillStyle = 'rgba(0,0,0,0.85)';
     ctx.roundRect(4, 4, 504, 248, 16);
     ctx.fill();
 
-    // Border
     ctx.strokeStyle = LANE_COLORS_HEX[i];
     ctx.lineWidth = 8;
     ctx.roundRect(4, 4, 504, 248, 16);
     ctx.stroke();
 
-    // Text
     ctx.fillStyle = '#ffffff';
     ctx.textAlign = 'center';
     ctx.textBaseline = 'middle';
@@ -570,9 +711,7 @@ function spawnNextQuestion() {
       if (ctx.measureText(test).width > 460 && line) {
         lines.push(line);
         line = w;
-      } else {
-        line = test;
-      }
+      } else { line = test; }
     }
     lines.push(line);
 
@@ -582,16 +721,10 @@ function spawnNextQuestion() {
     lines.forEach((l, li) => ctx.fillText(l, 256, startY + li * lineH));
 
     const tex = new THREE.CanvasTexture(canvas);
-
-    // Front face material with text, sides solid color
     const solidMat = new THREE.MeshLambertMaterial({
-      color: LANE_COLORS_HEX[i],
-      transparent: true,
-      opacity: 0.75,
+      color: LANE_COLORS_HEX[i], transparent: true, opacity: 0.75,
     });
     const textMat = new THREE.MeshLambertMaterial({ map: tex });
-
-    // BoxGeometry face order: +X, -X, +Y, -Y, +Z(front), -Z(back)
     const materials = [solidMat, solidMat, solidMat, solidMat, solidMat, textMat];
 
     const geo = new THREE.BoxGeometry(2.2, 1.6, 0.5);
@@ -599,7 +732,6 @@ function spawnNextQuestion() {
     box.position.set(LANES[i], 1.2, SPAWN_Z);
     box.castShadow = true;
 
-    // Glowing edge outline
     const edges = new THREE.EdgesGeometry(geo);
     box.add(new THREE.LineSegments(edges,
       new THREE.LineBasicMaterial({ color: LANE_COLORS_HEX[i], transparent: true, opacity: 0.95 })
@@ -607,45 +739,45 @@ function spawnNextQuestion() {
 
     scene.add(box);
     obstacleMeshes.push(box);
-    obstacleData.push({ mesh: box, correct: answers[i].correct });
+    obstacleData.push({ mesh: box, correct: answers[i].correct, laneIndex: i });
   }
   questionPending = false;
 }
 
-// ─── OBSTACLE UPDATE & COLLISION ───────────────────────────────
+// ─── OBSTACLE APPROACH — pause & ask ───────────────────────────
+const PAUSE_TRIGGER_Z = 10; // distance at which we pause and ask
+
 function updateObstacles(dt) {
-  if (!activeQuestion || state.gameOver || questionPending) return;
+  if (!activeQuestion || state.gameOver || questionPending || state.choosing) return;
 
-  for (let i = 0; i < obstacleData.length; i++) {
-    const obs = obstacleData[i];
+  for (const obs of obstacleData) {
     obs.mesh.position.z -= state.speed * dt;
+  }
 
-    // Face the camera slightly as it approaches
-    obs.mesh.rotation.y = 0;
-
-    // Collision zone
- if (obs.mesh.position.z < 3.5 && obs.mesh.position.z > 1.5) {
-  if (Math.abs(LANES[state.currentLane] - obs.mesh.position.x) < 0.9) {
-        questionPending = true;
-        onAnswer(obs.correct);
-        return;
-      }
-    }
-
-    // All passed player without collision = missed
-    if (obs.mesh.position.z < -0.5 && !questionPending) {
-      questionPending = true;
-      onAnswer(false);
-      return;
-    }
+  // When first obstacle reaches the trigger distance, pause the run and ask
+  const leadZ = obstacleData[0]?.mesh.position.z ?? 999;
+  if (leadZ <= PAUSE_TRIGGER_Z && !state.choosing) {
+    // Freeze obstacles in place
+    triggerChoosing();
+    return;
   }
 }
 
+function triggerChoosing() {
+  state.choosing = true;
+  // Snap obstacles to a fixed comfortable distance
+  obstacleMeshes.forEach((m, i) => {
+    obstacleData[i].mesh.position.z = PAUSE_TRIGGER_Z;
+  });
+  playIdle();
+  showChooseUI();
+}
+
+// ─── ANSWER HANDLING ───────────────────────────────────────────
 function onAnswer(correct) {
   document.getElementById('question-box').style.display = 'none';
   const flash = document.getElementById('flash');
 
-  // Stop running, do idle for a moment
   playIdle();
 
   if (correct) {
@@ -668,7 +800,6 @@ function onAnswer(correct) {
   }
   updateHUD();
 
-  // Clear obstacles, hide flash, resume running
   obstacleMeshes.forEach(m => scene.remove(m));
   obstacleMeshes = [];
   obstacleData   = [];
@@ -683,6 +814,7 @@ function triggerGameOver() {
   obstacleMeshes.forEach(m => scene.remove(m));
   obstacleMeshes = [];
   obstacleData   = [];
+  hideChooseUI();
   document.getElementById('question-box').style.display = 'none';
   document.getElementById('flash').style.display        = 'none';
   document.getElementById('go-score').textContent  = 'Score: '  + state.score;
@@ -723,15 +855,17 @@ function updateParticles(dt) {
 
 // ─── START GAME ────────────────────────────────────────────────
 function startGame() {
-  state.currentLane   = 1;
-  state.targetX       = 0;
-  state.score         = 0;
-  state.lives         = LIVES;
-  state.correct       = 0;
-  state.gameOver      = false;
-  state.running       = true;
-  state.qIndex        = 0;
-  state.speed         = 15;
+  state.currentLane = 1;
+  state.targetX     = 0;
+  state.score       = 0;
+  state.lives       = LIVES;
+  state.correct     = 0;
+  state.gameOver    = false;
+  state.running     = true;
+  state.paused      = false;
+  state.choosing    = false;
+  state.qIndex      = 0;
+  state.speed       = 15;
 
   updateHUD();
   updateLives();
@@ -739,10 +873,12 @@ function startGame() {
   document.getElementById('hud').style.display         = 'flex';
   document.getElementById('swipe-hint').style.display  = 'block';
   document.getElementById('game-over').style.display   = 'none';
+  document.getElementById('pause-overlay').style.display = 'none';
+  document.getElementById('btn-playpause').textContent  = '⏸';
 
   playRun();
   spawnNextQuestion();
-  clock.getDelta(); // flush clock
+  clock.getDelta();
   requestAnimationFrame(loop);
 }
 
@@ -751,29 +887,31 @@ function loop() {
   requestAnimationFrame(loop);
   const dt = Math.min(clock.getDelta(), 0.05);
 
-  if (!state.gameOver && state.running) {
-    // Smooth lane switch
-   charGroup.position.x = THREE.MathUtils.lerp(charGroup.position.x, state.targetX, 10 * dt);
-charGroup.position.y = 0;
-charGroup.position.z = 2;
+  // Always render and animate the character
+  if (mixer) mixer.update(dt);
 
-    // Scroll floor tiles
-    const TOTAL = TILE_COUNT * TILE_D;
-    floorTiles.forEach(tile => {
-      tile.position.z -= state.speed * dt;
-      if (tile.position.z < -TILE_D * 2) tile.position.z += TOTAL;
-    });
+  if (!state.gameOver && state.running && !state.paused) {
+    // Smooth lane switch (always active so player can see character move while choosing)
+    charGroup.position.x = THREE.MathUtils.lerp(charGroup.position.x, state.targetX, 10 * dt);
+    charGroup.position.y = 0;
+    charGroup.position.z = 2;
 
-    // Scroll grid
-    grid.position.z -= state.speed * dt;
-    if (grid.position.z < -10) grid.position.z = 0;
+    // Only scroll world when NOT choosing
+    if (!state.choosing) {
+      const TOTAL = TILE_COUNT * TILE_D;
+      floorTiles.forEach(tile => {
+        tile.position.z -= state.speed * dt;
+        if (tile.position.z < -TILE_D * 2) tile.position.z += TOTAL;
+      });
 
-    updateObstacles(dt);
+      grid.position.z -= state.speed * dt;
+      if (grid.position.z < -10) grid.position.z = 0;
+
+      updateObstacles(dt);
+    }
+
     updateParticles(dt);
   }
-
-  // Always update mixer (animations)
-  if (mixer) mixer.update(dt);
 
   renderer.render(scene, camera);
 }
