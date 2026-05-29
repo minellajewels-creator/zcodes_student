@@ -251,7 +251,7 @@ import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
 const GAS_URL    = 'https://script.google.com/macros/s/AKfycbwy_yWVkYL6qN_QAokIUMNClWqI96wdiF3qasWVLihOMi9ecH12BSzG6ypSZI1A54VA/exec';
 const API_SECRET = 'SZC-INTERNAL-2025-XK9';
 const LIVES      = 3;
-const SPAWN_Z    = 40;
+const SPAWN_Z    = 35;
 const LANES      = [-2.5, 0, 2.5];
 
   const MODEL_URL = 'https://threejs.org/examples/models/gltf/Soldier.glb';
@@ -306,8 +306,8 @@ scene.background = new THREE.Color(0xe8f4f0);
 scene.fog      = new THREE.FogExp2(0xc8e6d8, 0.018);
 
 const camera   = new THREE.PerspectiveCamera(60, window.innerWidth / window.innerHeight, 0.1, 500);
-camera.position.set(0, 3.5, -6);
-camera.lookAt(0, 1.5, 8);
+camera.position.set(0, 2.8, -4);
+camera.lookAt(0, 1.2, 6);
 
 const renderer = new THREE.WebGLRenderer({ antialias: true });
 renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
@@ -404,7 +404,7 @@ let mixer       = null;
 let idleAction  = null;
 let runAction   = null;
 let charGroup   = new THREE.Group();
-charGroup.position.set(0, 0, 0);
+charGroup.position.set(0, 0, 2);
 scene.add(charGroup);
 
 function loadScene() {
@@ -516,6 +516,8 @@ function updateLives() {
 const LANE_COLORS = [0x2563eb, 0xd97706, 0xc0392b];
 
 function spawnNextQuestion() {
+  questionPending = false;
+  activeQuestion  = null;
   if (quizData.length === 0) return;
   if (state.qIndex >= quizData.length) state.qIndex = 0;
 
@@ -622,8 +624,8 @@ function updateObstacles(dt) {
     obs.mesh.rotation.y = 0;
 
     // Collision zone
-    if (obs.mesh.position.z < 1.0 && obs.mesh.position.z > -1.5) {
-      if (Math.abs(LANES[state.currentLane] - obs.mesh.position.x) < 0.8) {
+ if (obs.mesh.position.z < 3.5 && obs.mesh.position.z > 1.5) {
+  if (Math.abs(LANES[state.currentLane] - obs.mesh.position.x) < 0.9) {
         questionPending = true;
         onAnswer(obs.correct);
         return;
@@ -631,7 +633,7 @@ function updateObstacles(dt) {
     }
 
     // All passed player without collision = missed
-    if (obs.mesh.position.z < -3.5 && !questionPending) {
+    if (obs.mesh.position.z < -0.5 && !questionPending) {
       questionPending = true;
       onAnswer(false);
       return;
@@ -678,7 +680,9 @@ function onAnswer(correct) {
 function triggerGameOver() {
   state.gameOver = true;
   playIdle();
-  obstacleData.forEach(o => { o.label.style.display = 'none'; });
+  obstacleMeshes.forEach(m => scene.remove(m));
+  obstacleMeshes = [];
+  obstacleData   = [];
   document.getElementById('question-box').style.display = 'none';
   document.getElementById('flash').style.display        = 'none';
   document.getElementById('go-score').textContent  = 'Score: '  + state.score;
@@ -749,7 +753,9 @@ function loop() {
 
   if (!state.gameOver && state.running) {
     // Smooth lane switch
-    charGroup.position.x = THREE.MathUtils.lerp(charGroup.position.x, state.targetX, 10 * dt);
+   charGroup.position.x = THREE.MathUtils.lerp(charGroup.position.x, state.targetX, 10 * dt);
+charGroup.position.y = 0;
+charGroup.position.z = 2;
 
     // Scroll floor tiles
     const TOTAL = TILE_COUNT * TILE_D;
