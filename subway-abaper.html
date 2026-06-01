@@ -788,6 +788,7 @@ function triggerGameOver() {
   document.getElementById('go-score').textContent  = 'Score: '  + state.score;
   document.getElementById('go-detail').textContent = state.correct + ' correct answers';
   document.getElementById('game-over').style.display = 'flex';
+  await saveHighScore('abap-runner', state.score); // or 'subway'
 }
 
 // ─── PARTICLES ─────────────────────────────────────────────────
