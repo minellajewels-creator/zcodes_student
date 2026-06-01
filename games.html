@@ -80,10 +80,12 @@ body { cursor: default; overflow-x: hidden; }
 
 .hub-grid { max-width: 1060px; margin: 36px auto 56px; padding: 0 22px; display: grid; grid-template-columns: repeat(auto-fill, minmax(272px, 1fr)); gap: 16px; }
 
+/* ── Game Card ───────────────────────────────────────────────── */
 .game-card {
   background: var(--s1); border: 1px solid var(--bd2);
   border-radius: var(--r); padding: 22px; cursor: pointer;
   transition: all .2s; position: relative; overflow: hidden;
+  display: flex; flex-direction: column;
 }
 .game-card::before {
   content: ''; position: absolute; top: 0; left: 0; right: 0; height: 2px;
@@ -94,18 +96,50 @@ body { cursor: default; overflow-x: hidden; }
 .game-card:hover::before { transform: scaleX(1); }
 .game-card-icon { font-size: 1.8rem; margin-bottom: 12px; display: block; }
 .game-card-title { font-family: var(--fh); font-size: 1.02rem; font-weight: 700; color: var(--text); margin-bottom: 5px; letter-spacing: .03em; }
-.game-card-desc { font-size: .78rem; color: var(--gr); line-height: 1.6; margin-bottom: 14px; }
+.game-card-desc { font-size: .78rem; color: var(--gr); line-height: 1.6; margin-bottom: 14px; flex: 1; }
 .game-card-footer { display: flex; align-items: center; justify-content: space-between; }
 .game-card-tag { font-family: var(--fm); font-size: .58rem; font-weight: 700; letter-spacing: .1em; text-transform: uppercase; padding: 3px 9px; border-radius: 20px; background: rgba(34,160,50,.08); color: var(--g); border: 1px solid rgba(34,160,50,.16); }
 .game-card-play { font-size: .78rem; font-weight: 700; color: var(--g); }
 
+/* ── Mini Leaderboard inside card ───────────────────────────── */
+.card-leaderboard {
+  margin-top: 14px;
+  border-top: 1px solid var(--bd);
+  padding-top: 11px;
+}
+.card-lb-title {
+  font-family: var(--fm); font-size: .55rem; font-weight: 700;
+  letter-spacing: .12em; text-transform: uppercase; color: var(--mu);
+  margin-bottom: 7px;
+}
+.card-lb-row {
+  display: flex; align-items: center; gap: 7px;
+  padding: 4px 0; border-bottom: 1px solid rgba(255,255,255,.03);
+  font-family: var(--fm); font-size: .68rem;
+}
+.card-lb-row:last-child { border-bottom: none; }
+.card-lb-rank {
+  width: 18px; text-align: center; font-size: .6rem; font-weight: 700;
+  flex-shrink: 0;
+}
+.rank-1 { color: #f59e0b; }
+.rank-2 { color: #94a3b8; }
+.rank-3 { color: #cd7c4b; }
+.rank-n { color: var(--mu); }
+.card-lb-name { flex: 1; color: var(--text); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.card-lb-score { font-weight: 700; color: var(--g); flex-shrink: 0; }
+.card-lb-you { color: #2563eb !important; }
+.card-lb-empty { font-size: .68rem; color: var(--mu); font-family: var(--fm); font-style: italic; padding: 2px 0; }
+
+/* ── Runner Card ─────────────────────────────────────────────── */
 .game-card-runner {
   background: var(--text); border: 1px solid rgba(34,160,50,.3);
   border-radius: var(--r); padding: 26px; cursor: pointer;
   transition: all .2s; box-shadow: 0 4px 20px rgba(34,160,50,.1);
   position: relative; overflow: hidden; grid-column: 1 / -1;
-  display: flex; align-items: center; gap: 24px;
+  display: flex; align-items: flex-start; gap: 24px; flex-direction: column;
 }
+.runner-top { display: flex; align-items: center; gap: 24px; width: 100%; }
 .game-card-runner::before { content: ''; position: absolute; inset: 0; background: linear-gradient(135deg, rgba(34,160,50,.07) 0%, transparent 60%); pointer-events: none; }
 .game-card-runner::after { content: '◉ ABAP RUNNER'; position: absolute; top: 14px; right: 18px; font-family: var(--fm); font-size: .58rem; font-weight: 700; letter-spacing: .2em; color: rgba(34,160,50,.35); }
 .game-card-runner:hover { transform: translateY(-2px); box-shadow: 0 10px 36px rgba(34,160,50,.2); border-color: rgba(34,160,50,.5); }
@@ -119,6 +153,31 @@ body { cursor: default; overflow-x: hidden; }
 .runner-play-btn { padding: 8px 20px; background: var(--g); border: none; border-radius: 7px; color: #fff; font-family: var(--fh); font-size: .88rem; font-weight: 700; cursor: pointer; transition: all .18s; display: inline-flex; align-items: center; gap: 6px; box-shadow: 0 3px 12px rgba(34,160,50,.3); }
 .runner-play-btn:hover { background: #1a8028; transform: translateY(-1px); }
 
+/* Runner leaderboard at bottom of runner card */
+.runner-lb-wrap {
+  width: 100%; border-top: 1px solid rgba(255,255,255,.07);
+  padding-top: 14px; display: flex; gap: 24px; flex-wrap: wrap;
+}
+.runner-lb-col { flex: 1; min-width: 200px; }
+.runner-lb-col-title {
+  font-family: var(--fm); font-size: .55rem; font-weight: 700;
+  letter-spacing: .14em; text-transform: uppercase;
+  color: rgba(255,255,255,.28); margin-bottom: 8px;
+  display: flex; align-items: center; gap: 5px;
+}
+.runner-lb-row {
+  display: flex; align-items: center; gap: 7px;
+  padding: 4px 0; border-bottom: 1px solid rgba(255,255,255,.04);
+  font-family: var(--fm); font-size: .7rem;
+}
+.runner-lb-row:last-child { border-bottom: none; }
+.runner-lb-rank { width: 18px; text-align: center; font-size: .62rem; font-weight: 700; flex-shrink: 0; }
+.runner-lb-name { flex: 1; color: rgba(255,255,255,.7); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.runner-lb-score { font-weight: 700; color: var(--g); flex-shrink: 0; }
+.runner-lb-you { color: #60a5fa !important; }
+.runner-lb-empty { font-size: .68rem; color: rgba(255,255,255,.25); font-family: var(--fm); font-style: italic; padding: 2px 0; }
+
+/* ── Game content wrappers ───────────────────────────────────── */
 .game-wrap { flex: 1; overflow-y: auto; padding: 28px 18px; max-width: 840px; margin: 0 auto; width: 100%; }
 .back-btn { display: inline-flex; align-items: center; gap: 6px; padding: 6px 14px; border-radius: 6px; font-size: .75rem; font-weight: 700; font-family: var(--fb); cursor: pointer; border: 1px solid var(--bd); background: var(--bg); color: var(--mu); transition: all .15s; }
 .back-btn:hover { border-color: var(--g); color: var(--g); background: rgba(34,160,50,.06); }
@@ -223,55 +282,27 @@ body { cursor: default; overflow-x: hidden; }
 .result-pct { font-size: .8rem; color: var(--mu); margin-bottom: 24px; font-family: var(--fm); }
 .result-actions { display: flex; gap: 10px; justify-content: center; flex-wrap: wrap; }
 .result-msg { font-size: .85rem; color: var(--gr); margin-bottom: 18px; }
+
+/* ── Save score notice inside result ─────────────────────────── */
+.result-save-notice {
+  margin-top: 12px;
+  font-family: var(--fm); font-size: .68rem; color: var(--mu);
+  display: flex; align-items: center; justify-content: center; gap: 5px;
+}
+.result-save-notice.saving { color: #d97706; }
+.result-save-notice.saved  { color: var(--g); }
+.result-save-notice.failed { color: #c0392b; }
 </style>
 </head>
 <body>
 <div id="cur"></div>
 <div id="root"></div>
 <script type="text/babel">
-  // ── High Score helpers (persistent storage) ──────────────────
-const STUDENT_NAME = sessionStorage.getItem('szc_name') || 'Student';
-
-async function saveHighScore(gameId, score) {
-  try {
-    const personal = await window.storage.get('hs:' + gameId).catch(() => null);
-    const prev = personal ? parseInt(personal.value, 10) : 0;
-    if (score > prev) await window.storage.set('hs:' + gameId, String(score));
-
-    // Shared leaderboard — list of "Name|Score" entries
-    const lbKey = 'hs_lb:' + gameId;
-    let entries = [];
-    try {
-      const lb = await window.storage.get(lbKey, true);
-      entries = lb ? JSON.parse(lb.value) : [];
-    } catch (e) { entries = []; }
-    // Update or insert this student
-    const idx = entries.findIndex(e => e.name === STUDENT_NAME);
-    if (idx >= 0) { if (score > entries[idx].score) entries[idx].score = score; }
-    else entries.push({ name: STUDENT_NAME, score });
-    entries.sort((a, b) => b.score - a.score);
-    await window.storage.set(lbKey, JSON.stringify(entries.slice(0, 10)), true);
-  } catch (e) { /* storage unavailable */ }
-}
-
-async function getPersonalBest(gameId) {
-  try {
-    const r = await window.storage.get('hs:' + gameId);
-    return r ? parseInt(r.value, 10) : null;
-  } catch { return null; }
-}
-
-async function getLeaderboard(gameId) {
-  try {
-    const r = await window.storage.get('hs_lb:' + gameId, true);
-    return r ? JSON.parse(r.value) : [];
-  } catch { return []; }
-}
-  
-const { useState, useEffect, useRef } = React;
+const { useState, useEffect, useRef, useCallback } = React;
 
 if (!sessionStorage.getItem('szc_token')) { window.location.href = 'index'; }
-const STUDENT_NAME = sessionStorage.getItem('szc_name') || 'Student';
+const STUDENT_NAME  = sessionStorage.getItem('szc_name')  || 'Student';
+const STUDENT_EMAIL = sessionStorage.getItem('szc_email') || '';
 
 (function(){
   document.addEventListener('contextmenu', e => e.preventDefault());
@@ -281,8 +312,90 @@ const STUDENT_NAME = sessionStorage.getItem('szc_name') || 'Student';
   document.addEventListener('copy', e => { if (!e.target.matches('input,textarea')) e.preventDefault(); });
 })();
 
-const GAS_URL = 'https://script.google.com/macros/s/AKfycbwy_yWVkYL6qN_QAokIUMNClWqI96wdiF3qasWVLihOMi9ecH12BSzG6ypSZI1A54VA/exec';
+const GAS_URL    = 'https://script.google.com/macros/s/AKfycbwy_yWVkYL6qN_QAokIUMNClWqI96wdiF3qasWVLihOMi9ecH12BSzG6ypSZI1A54VA/exec';
+const API_SECRET = 'SZC-INTERNAL-2025-XK9';
 
+// ─── HIGH SCORE API ─────────────────────────────────────────────
+async function saveHighScore(gameId, score) {
+  try {
+    const res = await fetch(GAS_URL, {
+      method: 'POST',
+      headers: { 'Content-Type': 'text/plain' },
+      body: JSON.stringify({
+        action: 'saveScore',
+        apiKey: API_SECRET,
+        gameId,
+        score,
+        name: STUDENT_NAME,
+        email: STUDENT_EMAIL,
+      }),
+      redirect: 'follow',
+    });
+    const data = await res.json();
+    return data.status === 'ok';
+  } catch { return false; }
+}
+
+async function fetchHighScores() {
+  try {
+    const res  = await fetch(`${GAS_URL}?action=getHighScores&key=${encodeURIComponent(API_SECRET)}`);
+    const data = await res.json();
+    if (data.status === 'ok') return data.scores; // { gameId: [{name,score,email},...] }
+    return {};
+  } catch { return {}; }
+}
+
+// ─── SCORE SAVE STATUS INDICATOR ────────────────────────────────
+function SaveNotice({ status }) {
+  if (!status) return null;
+  const labels = { saving: '⏳ Saving score…', saved: '✅ Score saved to leaderboard!', failed: '⚠️ Could not save score' };
+  return <div className={`result-save-notice ${status}`}>{labels[status]}</div>;
+}
+
+// ─── MINI LEADERBOARD (inside game cards) ────────────────────────
+function MiniLeaderboard({ scores, gameId, dark }) {
+  const list = (scores[gameId] || []).slice(0, 3);
+  const rankIcons = ['🥇','🥈','🥉'];
+  const rankClass = ['rank-1','rank-2','rank-3','rank-n'];
+  const Row = dark
+    ? ({ r, i }) => (
+        <div key={i} className="runner-lb-row">
+          <span className={`runner-lb-rank ${rankClass[i]}`}>{rankIcons[i]||i+1}</span>
+          <span className={`runner-lb-name${r.email===STUDENT_EMAIL?' runner-lb-you':''}`}>{r.name}</span>
+          <span className="runner-lb-score">{r.score.toLocaleString()}</span>
+        </div>
+      )
+    : ({ r, i }) => (
+        <div key={i} className="card-lb-row">
+          <span className={`card-lb-rank ${rankClass[i]}`}>{rankIcons[i]||i+1}</span>
+          <span className={`card-lb-name${r.email===STUDENT_EMAIL?' card-lb-you':''}`}>{r.name}</span>
+          <span className="card-lb-score">{r.score.toLocaleString()}</span>
+        </div>
+      );
+
+  if (dark) {
+    return (
+      <div className="runner-lb-col">
+        <div className="runner-lb-col-title">🏆 Top Scores</div>
+        {list.length === 0
+          ? <div className="runner-lb-empty">No scores yet — be first!</div>
+          : list.map((r,i) => <Row key={i} r={r} i={i}/>)
+        }
+      </div>
+    );
+  }
+  return (
+    <div className="card-leaderboard" onClick={e=>e.stopPropagation()}>
+      <div className="card-lb-title">🏆 Top Scores</div>
+      {list.length === 0
+        ? <div className="card-lb-empty">No scores yet — be first!</div>
+        : list.map((r,i) => <Row key={i} r={r} i={i}/>)
+      }
+    </div>
+  );
+}
+
+// ─── DEBUG CHALLENGES & STATIC DATA ─────────────────────────────
 const DEBUG_CHALLENGES = [
   { title:"SELECT INTO TABLE syntax", buggy:"DATA lt_mat TYPE TABLE OF i_material.\nSELECT * FROM i_material INTO lt_mat.", fixed:"DATA lt_mat TYPE TABLE OF i_material.\nSELECT * FROM i_material INTO TABLE @lt_mat.", hint:"Missing TABLE keyword and @ symbol for host variable", explanation:"In ABAP 7.40+, use INTO TABLE @lt_mat. TABLE is needed for internal tables, and @ marks host variables." },
   { title:"Loop variable typo", buggy:"LOOP AT lt_orders INTO ls_order.\n  WRITE: / ls_orders-salesorder.\nENDLOOP.", fixed:"LOOP AT lt_orders INTO ls_order.\n  WRITE: / ls_order-salesorder.\nENDLOOP.", hint:"Check the variable name inside the loop — singular vs plural", explanation:"ls_orders (plural) doesn't exist. The loop variable is ls_order (singular). A classic ABAP typo." },
@@ -312,24 +425,25 @@ const SPEED_LINES = [
   "MODIFY lt_tab FROM ls_row TRANSPORTING status WHERE matnr = ls_row-matnr.",
 ];
 const GAMES_META = [
-  {id:'quiz',icon:'🧠',title:'ABAP Quiz',desc:'Adaptive quiz with topic filter — choose what you have covered and practice on it.',tag:'Database-Driven',color:'#22a032'},
-  {id:'debug',icon:'🐛',title:'Debug Master',desc:'Find and fix real ABAP bugs in RAP code. Each challenge has a hint (costs 0.5 pts).',tag:'5 Challenges',color:'#c0392b'},
-  {id:'match',icon:'🎯',title:'Annotation Match',desc:'Match CDS annotations to their meanings. Click annotation → its meaning.',tag:'Database-Driven',color:'#2563eb'},
-  {id:'detective',icon:'🕵️',title:'Table Detective',desc:'Identify the SAP table from the clue. Also shows the CDS view equivalent!',tag:'Database-Driven',color:'#d97706'},
-  {id:'sorter',icon:'🗂',title:'RAP Layer Sorter',desc:'Assign each RAP artifact to its correct architectural layer.',tag:'8 Artifacts',color:'#7c3aed'},
-  {id:'speed',icon:'⚡',title:'Speed Coder',desc:'Type ABAP statements as fast and accurately as possible. Race the clock!',tag:'Speed Run',color:'#0891b2'},
-  {id:'inspector',icon:'🔍',title:'Code Inspector',desc:'Paste ABAP/CDS code and get instant static analysis findings — powered by rule engine.',tag:'Rule Engine',color:'#16a34a'},
-  {id:'subway',icon:'🏃',title:'Subway Runner',desc:'Run through an endless ABAP world. Dodge bugs and dumps — each obstacle fires a quiz question. Answer correctly to score!',tag:'3D Runner',color:'#0891b2'},
+  {id:'quiz',     icon:'🧠',title:'ABAP Quiz',      desc:'Adaptive quiz with topic filter — choose what you have covered and practice on it.',     tag:'Database-Driven', color:'#22a032'},
+  {id:'debug',    icon:'🐛',title:'Debug Master',   desc:'Find and fix real ABAP bugs in RAP code. Each challenge has a hint (costs 0.5 pts).',    tag:'5 Challenges',    color:'#c0392b'},
+  {id:'match',    icon:'🎯',title:'Annotation Match',desc:'Match CDS annotations to their meanings. Click annotation → its meaning.',                tag:'Database-Driven', color:'#2563eb'},
+  {id:'detective',icon:'🕵️',title:'Table Detective', desc:'Identify the SAP table from the clue. Also shows the CDS view equivalent!',              tag:'Database-Driven', color:'#d97706'},
+  {id:'sorter',   icon:'🗂',title:'RAP Layer Sorter',desc:'Assign each RAP artifact to its correct architectural layer.',                             tag:'8 Artifacts',     color:'#7c3aed'},
+  {id:'speed',    icon:'⚡',title:'Speed Coder',     desc:'Type ABAP statements as fast and accurately as possible. Race the clock!',                 tag:'Speed Run',       color:'#0891b2'},
+  {id:'inspector',icon:'🔍',title:'Code Inspector',  desc:'Paste ABAP/CDS code and get instant static analysis findings — powered by rule engine.',  tag:'Rule Engine',     color:'#16a34a'},
+  {id:'subway',   icon:'🏃',title:'Subway Runner',   desc:'Run through an endless ABAP world. Dodge bugs and dumps — answer correctly to score!',    tag:'3D Runner',       color:'#0891b2'},
 ];
 
+// ─── GAME DATA HOOK ──────────────────────────────────────────────
 function useGameData() {
-  const [data, setData] = useState(null);
+  const [data, setData]       = useState(null);
   const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
+  const [error, setError]     = useState(null);
   useEffect(() => {
     const cached = sessionStorage.getItem('szc_gamedata');
     if (cached) { try { setData(JSON.parse(cached)); setLoading(false); return; } catch(e){} }
-    fetch(`${GAS_URL}?action=getGameData&key=${encodeURIComponent('SZC-INTERNAL-2025-XK9')}`)
+    fetch(`${GAS_URL}?action=getGameData&key=${encodeURIComponent(API_SECRET)}`)
       .then(r => r.json())
       .then(res => { if(res.status==='ok'){sessionStorage.setItem('szc_gamedata',JSON.stringify(res.data));setData(res.data);}else{setError(res.message||'Failed');} })
       .catch(err => setError('Could not connect: '+err.message))
@@ -338,33 +452,41 @@ function useGameData() {
   return { data, loading, error };
 }
 
+// ─── HIGH SCORES HOOK ────────────────────────────────────────────
+function useHighScores() {
+  const [scores, setScores]   = useState({});
+  const [lbLoading, setLbLoading] = useState(true);
+  const reload = useCallback(() => {
+    setLbLoading(true);
+    fetchHighScores().then(s => { setScores(s); setLbLoading(false); });
+  }, []);
+  useEffect(() => { reload(); }, []);
+  return { scores, lbLoading, reload };
+}
+
+// ─── SHARED UI COMPONENTS ────────────────────────────────────────
 function ScoreBadge({score,total}) { const pct=total>0?Math.round((score/total)*100):0; return <span className="score-badge">{score}/{total} · {pct}%</span>; }
 function ProgressBar({current,total}) { return <div className="progress-bar-wrap"><div className="progress-bar-fill" style={{width:`${(current/total)*100}%`}}/></div>; }
-function GameResult({score, total, gameName, gameId, onBack, onReplay}) {
-  const [saved, setSaved] = React.useState(false);
-  const [pb, setPb] = React.useState(null);
-  React.useEffect(() => {
-    (async () => {
-      const prev = await getPersonalBest(gameId);
-      if (score > 0) await saveHighScore(gameId, score);
-      setPb(prev);
-      setSaved(true);
-    })();
+
+function GameResult({score,total,gameName,gameId,onBack,onReplay}) {
+  const pct   = total>0 ? Math.round((score/total)*100) : 0;
+  const emoji = pct>=80?'🏆':pct>=50?'👍':'📚';
+  const msg   = pct>=80?'Outstanding! You clearly know your ABAP.':pct>=50?'Good effort! Review the tricky ones.':'Keep practicing — ABAP mastery takes repetition!';
+  const [saveStatus, setSaveStatus] = useState(null);
+  useEffect(() => {
+    if (!gameId || score === 0) return;
+    setSaveStatus('saving');
+    saveHighScore(gameId, score).then(ok => setSaveStatus(ok ? 'saved' : 'failed'));
   }, []);
-  const pct = total > 0 ? Math.round((score / total) * 100) : 0;
-  const emoji = pct >= 80 ? '🏆' : pct >= 50 ? '👍' : '📚';
-  const msg = pct >= 80 ? 'Outstanding! You clearly know your ABAP.' : pct >= 50 ? 'Good effort! Review the tricky ones.' : 'Keep practicing — ABAP mastery takes repetition!';
-  const isNewPB = pb !== null && score > pb;
   return (
     <div className="result-wrap">
       <div className="result-emoji">{emoji}</div>
       <div className="result-title">{gameName} — Complete!</div>
       <div className="result-score">{score}/{total}</div>
       <div className="result-pct">{pct}% correct</div>
-      {isNewPB && <div style={{color:'#d97706',fontWeight:700,fontFamily:'var(--fm)',fontSize:'.82rem',marginBottom:8}}>🔥 New Personal Best!</div>}
-      {pb !== null && !isNewPB && <div style={{fontSize:'.72rem',color:'var(--mu)',marginBottom:8,fontFamily:'var(--fm)'}}>Personal best: {pb}/{total}</div>}
       <div className="result-msg">{msg}</div>
-      <div className="result-actions">
+      <SaveNotice status={saveStatus}/>
+      <div className="result-actions" style={{marginTop:16}}>
         <button className="btn-action" onClick={onReplay}>↺ Play Again</button>
         <button className="btn-secondary" onClick={onBack}>← All Games</button>
       </div>
@@ -372,6 +494,7 @@ function GameResult({score, total, gameName, gameId, onBack, onReplay}) {
   );
 }
 
+// ─── QUIZ GAME ───────────────────────────────────────────────────
 function QuizGame({onBack,allQuestions}) {
   const topics=[...new Set(allQuestions.map(q=>q.topic))].sort();
   const [phase,setPhase]=useState('topic');
@@ -383,13 +506,14 @@ function QuizGame({onBack,allQuestions}) {
   const toggleTopic=t=>setSelectedTopics(prev=>{const n=new Set(prev);n.has(t)?n.delete(t):n.add(t);return n;});
   const startQuiz=()=>{const pool=allQuestions.filter(q=>selectedTopics.has(q.topic));const sh=[...pool].sort(()=>Math.random()-.5).slice(0,Math.min(15,pool.length));setQuestions(sh);setIdx(0);setScore(0);setSelected(null);setPhase('playing');};
   if(phase==='topic'){const pool=allQuestions.filter(q=>selectedTopics.has(q.topic));return(<div className="topic-selector"><button className="btn-danger" style={{marginBottom:18}} onClick={onBack}>← Back</button><h2>🧠 ABAP Quiz</h2><p>Select the topics you have covered.</p><div className="topic-chips"><div className="topic-chip active" style={{background:'var(--text)',color:'#fff',borderColor:'var(--text)'}} onClick={()=>setSelectedTopics(new Set(topics))}>All Topics</div><div className="topic-chip" style={{background:'rgba(200,50,50,.06)',color:'#c0392b',borderColor:'rgba(200,50,50,.2)'}} onClick={()=>setSelectedTopics(new Set())}>Clear All</div>{topics.map(t=><div key={t} className={`topic-chip${selectedTopics.has(t)?' active':''}`} onClick={()=>toggleTopic(t)}>{t}</div>)}</div><div className="topic-count">{pool.length} questions available</div><button className="btn-action" onClick={startQuiz} disabled={pool.length===0}>Start Quiz ({Math.min(15,pool.length)} Questions) →</button></div>);}
-  if(phase==='done') return <GameResult score={score} total={questions.length} gameName="ABAP Quiz" onBack={onBack} onReplay={()=>setPhase('topic')}/>;
+  if(phase==='done') return <GameResult score={score} total={questions.length} gameName="ABAP Quiz" gameId="quiz" onBack={onBack} onReplay={()=>setPhase('topic')}/>;
   const q=questions[idx];
   const choose=i=>{if(selected!==null)return;setSelected(i);if(i===q.ans)setScore(s=>s+1);};
   const next=()=>{if(idx+1>=questions.length){setPhase('done');return;}setIdx(i=>i+1);setSelected(null);};
   return(<div className="game-wrap"><div className="game-header"><div><div className="game-title">🧠 ABAP Quiz</div><div className="game-subtitle">Q {idx+1} of {questions.length} · {q.topic}</div></div><ScoreBadge score={score} total={idx+(selected!==null?1:0)}/><button className="btn-danger" onClick={()=>setPhase('topic')}>← Topics</button></div><ProgressBar current={idx+1} total={questions.length}/><div className="panel-card"><div className="panel-card-head"><span className="panel-tag tag-green">Question</span><span className="panel-card-title" style={{flex:1}}>{q.q}</span></div><div className="panel-card-body"><div className="option-grid">{q.opts.map((opt,i)=>{let cls='option-btn';if(selected!==null){if(i===q.ans)cls+=' correct';else if(i===selected&&i!==q.ans)cls+=' wrong';}return<button key={i} className={cls} onClick={()=>choose(i)} disabled={selected!==null}><span className="option-letter">{'ABCD'[i]}.</span>{opt}</button>;})}</div>{selected!==null&&<div className={`feedback-box${selected===q.ans?' correct':' wrong'}`}><div className="feedback-title">{selected===q.ans?'✅ Correct!':`❌ Wrong — Answer: ${q.opts[q.ans]}`}</div><div className="feedback-text">{q.exp}</div></div>}{selected!==null&&<div style={{textAlign:'right',marginTop:12}}><button className="btn-action" onClick={next}>{idx+1>=questions.length?'See Results →':'Next →'}</button></div>}</div></div></div>);
 }
 
+// ─── DEBUG GAME ──────────────────────────────────────────────────
 function DebugGame({onBack}) {
   const [idx,setIdx]=useState(0);
   const [code,setCode]=useState(DEBUG_CHALLENGES[0].buggy);
@@ -402,10 +526,11 @@ function DebugGame({onBack}) {
   const check=()=>{const norm=s=>s.replace(/\s+/g,' ').trim().toLowerCase();const correct=norm(code)===norm(ch.fixed);setResult(correct?'correct':'wrong');if(correct)setScore(s=>s+(hintUsed?.5:1));};
   const next=()=>{const ni=idx+1;if(ni>=DEBUG_CHALLENGES.length){setDone(true);return;}setIdx(ni);setCode(DEBUG_CHALLENGES[ni].buggy);setResult(null);setHintShown(false);setHintUsed(false);};
   const reset=()=>{setIdx(0);setCode(DEBUG_CHALLENGES[0].buggy);setResult(null);setScore(0);setDone(false);setHintShown(false);setHintUsed(false);};
-  if(done) return <GameResult score={Math.round(score)} total={DEBUG_CHALLENGES.length} gameName="Debug Master" onBack={onBack} onReplay={reset}/>;
+  if(done) return <GameResult score={Math.round(score)} total={DEBUG_CHALLENGES.length} gameName="Debug Master" gameId="debug" onBack={onBack} onReplay={reset}/>;
   return(<div className="game-wrap"><div className="game-header"><div><div className="game-title">🐛 Debug Master</div><div className="game-subtitle">Bug {idx+1} of {DEBUG_CHALLENGES.length} — {score} pts</div></div><button className="btn-danger" onClick={onBack}>← Back</button></div><ProgressBar current={idx+1} total={DEBUG_CHALLENGES.length}/><div className="panel-card"><div className="panel-card-head"><span className="panel-tag tag-red">🐛 Bug #{idx+1}</span><span className="panel-card-title">{ch.title}</span><button className="btn-secondary" style={{marginLeft:'auto',fontSize:'.72rem',padding:'4px 10px'}} onClick={()=>{setHintShown(true);setHintUsed(true);}} disabled={hintShown}>{hintShown?'Hint used (−0.5)':'💡 Hint (−0.5)'}</button></div><div className="panel-card-body">{hintShown&&<div className="feedback-box" style={{background:'rgba(217,119,6,.07)',border:'1px solid rgba(217,119,6,.18)',color:'#d97706',marginBottom:10}}>💡 {ch.hint}</div>}<textarea className="code-textarea-dark" value={code} onChange={e=>setCode(e.target.value)}/>{result==='correct'&&<div className="feedback-box correct" style={{marginTop:10}}><div className="feedback-title">✅ Fixed! +{hintUsed?.5:1} point</div><div className="feedback-text">{ch.explanation}</div></div>}{result==='wrong'&&<div className="feedback-box wrong" style={{marginTop:10}}><div className="feedback-title">❌ Not quite — compare carefully</div></div>}<div style={{display:'flex',gap:8,marginTop:14,flexWrap:'wrap'}}>{!result&&<button className="btn-action" onClick={check}>🔍 Check Fix</button>}{result==='correct'&&<button className="btn-action" onClick={next}>{idx+1>=DEBUG_CHALLENGES.length?'Results →':'Next Bug →'}</button>}{result==='wrong'&&<><button className="btn-action" onClick={()=>setResult(null)}>Try Again</button><button className="btn-secondary" onClick={()=>{setCode(ch.fixed);setResult(null);}}>Show Solution</button></>}</div></div></div></div>);
 }
 
+// ─── ANNOTATION MATCH ────────────────────────────────────────────
 function AnnotationMatch({onBack,allPairs}) {
   const [pairs]=useState(()=>[...allPairs].sort(()=>Math.random()-.5).slice(0,8));
   const [meanings]=useState(()=>pairs.map(p=>p.meaning).sort(()=>Math.random()-.5));
@@ -416,10 +541,11 @@ function AnnotationMatch({onBack,allPairs}) {
   const [done,setDone]=useState(false);
   const pickAnnotation=ann=>{if(matched.includes(ann))return;setSelected(ann);};
   const pickMeaning=meaning=>{if(!selected)return;const correct=pairs.find(p=>p.annotation===selected)?.meaning===meaning;if(correct){const newM=[...matched,selected];setMatched(newM);setScore(s=>s+1);setSelected(null);if(newM.length>=pairs.length)setTimeout(()=>setDone(true),500);}else{setWrongFlash({ann:selected,meaning});setTimeout(()=>{setWrongFlash(null);setSelected(null);},800);}};
-  if(done) return <GameResult score={score} total={pairs.length} gameName="Annotation Match" onBack={onBack} onReplay={()=>window.location.reload()}/>;
+  if(done) return <GameResult score={score} total={pairs.length} gameName="Annotation Match" gameId="match" onBack={onBack} onReplay={()=>window.location.reload()}/>;
   return(<div className="game-wrap"><div className="game-header"><div><div className="game-title">🎯 Annotation Match</div><div className="game-subtitle">Click annotation → then its meaning</div></div><ScoreBadge score={score} total={pairs.length}/><button className="btn-danger" onClick={onBack}>← Back</button></div><div className="match-grid"><div><div className="match-col-label">CDS Annotations</div>{pairs.map(p=>{const isM=matched.includes(p.annotation),isSel=selected===p.annotation,isW=wrongFlash?.ann===p.annotation;let cls='match-item';if(isM)cls+=' matched';else if(isW)cls+=' wrong-flash';else if(isSel)cls+=' selected';return<button key={p.annotation} className={cls} onClick={()=>pickAnnotation(p.annotation)} disabled={isM} style={{marginBottom:7}}>{isM?'✓ ':''}{p.annotation}</button>;})}</div><div><div className="match-col-label">Meanings</div>{meanings.map(m=>{const isUsed=matched.some(ann=>pairs.find(p=>p.annotation===ann)?.meaning===m),isW=wrongFlash?.meaning===m;let cls='match-item match-meaning';if(isUsed)cls+=' matched';else if(isW)cls+=' wrong-flash';return<button key={m} className={cls} onClick={()=>pickMeaning(m)} disabled={isUsed} style={{marginBottom:7}}>{isUsed?'✓ ':''}{m}</button>;})}</div></div></div>);
 }
 
+// ─── TABLE DETECTIVE ─────────────────────────────────────────────
 function TableDetective({onBack,allTables}) {
   const [cases]=useState(()=>[...allTables].sort(()=>Math.random()-.5));
   const [idx,setIdx]=useState(0);
@@ -429,10 +555,11 @@ function TableDetective({onBack,allTables}) {
   const q=cases[idx];
   const choose=opt=>{if(selected)return;setSelected(opt);if(opt===q.answer)setScore(s=>s+1);};
   const next=()=>{if(idx+1>=cases.length){setDone(true);return;}setIdx(i=>i+1);setSelected(null);};
-  if(done) return <GameResult score={score} total={cases.length} gameName="Table Detective" onBack={onBack} onReplay={()=>{setIdx(0);setSelected(null);setScore(0);setDone(false);}}/>;
+  if(done) return <GameResult score={score} total={cases.length} gameName="Table Detective" gameId="detective" onBack={onBack} onReplay={()=>{setIdx(0);setSelected(null);setScore(0);setDone(false);}}/>;
   return(<div className="game-wrap"><div className="game-header"><div><div className="game-title">🕵️ Table Detective</div><div className="game-subtitle">Case {idx+1} of {cases.length}</div></div><ScoreBadge score={score} total={idx+(selected?1:0)}/><button className="btn-danger" onClick={onBack}>← Back</button></div><ProgressBar current={idx+1} total={cases.length}/><div className="panel-card"><div className="panel-card-head"><span className="panel-tag tag-warn">🕵️ Identify the Table</span></div><div className="panel-card-body"><div style={{fontSize:'.95rem',fontStyle:'italic',color:'var(--text)',lineHeight:1.7,marginBottom:18,padding:'12px 16px',background:'rgba(217,119,6,.06)',border:'1px solid rgba(217,119,6,.16)',borderRadius:8}}>"{q.clue}"</div>{selected&&<div style={{fontSize:'.75rem',color:'var(--mu)',marginBottom:14}}>CDS equivalent: <span style={{fontFamily:'var(--fm)',color:'#2563eb',fontWeight:700}}>{q.cds}</span></div>}<div className="option-grid" style={{gridTemplateColumns:'repeat(4,1fr)'}}>{q.options.map(opt=>{let cls='option-btn';if(selected){if(opt===q.answer)cls+=' correct';else if(opt===selected&&opt!==q.answer)cls+=' wrong';}return<button key={opt} className={cls} onClick={()=>choose(opt)} disabled={!!selected} style={{textAlign:'center',fontFamily:'var(--fm)',fontWeight:700,fontSize:'.88rem',padding:'16px 8px'}}>{opt}</button>;})}</div>{selected&&<div style={{textAlign:'right',marginTop:14}}><div style={{fontSize:'.82rem',color:selected===q.answer?'var(--g)':'#c0392b',fontWeight:700,marginBottom:8}}>{selected===q.answer?'🎯 Correct!':`❌ Wrong — it was ${q.answer}`}</div><button className="btn-action" onClick={next}>{idx+1>=cases.length?'Results →':'Next Case →'}</button></div>}</div></div></div>);
 }
 
+// ─── RAP SORTER ──────────────────────────────────────────────────
 function RAPSorter({onBack}) {
   const [items]=useState(()=>[...RAP_ITEMS].sort(()=>Math.random()-.5));
   const [assignments,setAssignments]=useState({});
@@ -441,9 +568,13 @@ function RAPSorter({onBack}) {
   const assign=(id,layer)=>{if(checked)return;setAssignments(a=>({...a,[id]:layer}));};
   const checkAll=()=>{let s=0;items.forEach(item=>{if(assignments[item.id]===item.layer)s++;});setScore(s);setChecked(true);};
   const allAssigned=items.every(item=>assignments[item.id]);
-  return(<div className="game-wrap"><div className="game-header"><div><div className="game-title">🗂 RAP Layer Sorter</div><div className="game-subtitle">Assign each artifact to its correct layer</div></div>{checked&&<ScoreBadge score={score} total={items.length}/>}<button className="btn-danger" onClick={onBack}>← Back</button></div><div className="sorter-grid">{items.map(item=>{const chosen=assignments[item.id],correct=checked&&chosen===item.layer,wrong=checked&&chosen&&chosen!==item.layer;let cls='sorter-card';if(chosen&&!checked)cls+=' assigned';else if(correct)cls+=' correct';else if(wrong)cls+=' wrong-ans';return<div key={item.id} className={cls}><div className="sorter-card-text">{item.text}</div>{checked&&<div style={{fontSize:'.72rem',fontWeight:700,color:correct?'var(--g)':'#c0392b',marginBottom:7}}>{correct?`✓ ${item.layer}`:`✗ → ${item.layer}`}</div>}{!checked&&RAP_LAYERS.map(layer=><button key={layer} className={`sorter-layer-btn${chosen===layer?' chosen':''}`} onClick={()=>assign(item.id,layer)}>{chosen===layer?'● ':''}{layer}</button>)}</div>;})} </div><div style={{textAlign:'center',marginTop:24}}>{!checked?<button className="btn-action" onClick={checkAll} disabled={!allAssigned} style={{opacity:allAssigned?1:.5}}>✓ Check All Answers</button>:<div><div style={{fontSize:'1.1rem',fontWeight:700,fontFamily:'var(--fh)',color:score>=6?'var(--g)':score>=4?'#d97706':'#c0392b',marginBottom:14}}>{score}/{items.length} Correct!</div><div style={{display:'flex',gap:8,justifyContent:'center'}}><button className="btn-action" onClick={()=>window.location.reload()}>↺ Retry</button><button className="btn-secondary" onClick={onBack}>← All Games</button></div></div>}</div></div>);
+  const [saveStatus, setSaveStatus]=useState(null);
+  const handleSave=useCallback(async(finalScore)=>{setSaveStatus('saving');const ok=await saveHighScore('sorter',finalScore);setSaveStatus(ok?'saved':'failed');},[]);
+  useEffect(()=>{if(checked&&score>0)handleSave(score);},[checked]);
+  return(<div className="game-wrap"><div className="game-header"><div><div className="game-title">🗂 RAP Layer Sorter</div><div className="game-subtitle">Assign each artifact to its correct layer</div></div>{checked&&<ScoreBadge score={score} total={items.length}/>}<button className="btn-danger" onClick={onBack}>← Back</button></div><div className="sorter-grid">{items.map(item=>{const chosen=assignments[item.id],correct=checked&&chosen===item.layer,wrong=checked&&chosen&&chosen!==item.layer;let cls='sorter-card';if(chosen&&!checked)cls+=' assigned';else if(correct)cls+=' correct';else if(wrong)cls+=' wrong-ans';return<div key={item.id} className={cls}><div className="sorter-card-text">{item.text}</div>{checked&&<div style={{fontSize:'.72rem',fontWeight:700,color:correct?'var(--g)':'#c0392b',marginBottom:7}}>{correct?`✓ ${item.layer}`:`✗ → ${item.layer}`}</div>}{!checked&&RAP_LAYERS.map(layer=><button key={layer} className={`sorter-layer-btn${chosen===layer?' chosen':''}`} onClick={()=>assign(item.id,layer)}>{chosen===layer?'● ':''}{layer}</button>)}</div>;})} </div><div style={{textAlign:'center',marginTop:24}}>{!checked?<button className="btn-action" onClick={checkAll} disabled={!allAssigned} style={{opacity:allAssigned?1:.5}}>✓ Check All Answers</button>:<div><div style={{fontSize:'1.1rem',fontWeight:700,fontFamily:'var(--fh)',color:score>=6?'var(--g)':score>=4?'#d97706':'#c0392b',marginBottom:8}}>{score}/{items.length} Correct!</div><SaveNotice status={saveStatus}/><div style={{display:'flex',gap:8,justifyContent:'center',marginTop:12}}><button className="btn-action" onClick={()=>window.location.reload()}>↺ Retry</button><button className="btn-secondary" onClick={onBack}>← All Games</button></div></div>}</div></div>);
 }
 
+// ─── SPEED CODER ─────────────────────────────────────────────────
 function SpeedCoder({onBack}) {
   const [challenges]=useState(()=>[...SPEED_LINES].sort(()=>Math.random()-.5));
   const [idx,setIdx]=useState(0);
@@ -457,11 +588,19 @@ function SpeedCoder({onBack}) {
   const target=challenges[idx];
   useEffect(()=>{inputRef.current?.focus();setStartTime(Date.now());},[idx]);
   const handleInput=e=>{const val=e.target.value;setInput(val);if(val===target){setTimes(t=>[...t,Date.now()-startTime]);setScore(s=>s+1);setFlash('correct');setTimeout(()=>{setFlash(null);setInput('');if(idx+1>=challenges.length)setDone(true);else setIdx(i=>i+1);},600);}};
-  if(done){const totalMs=times.reduce((a,b)=>a+b,0);return<div className="result-wrap"><div className="result-emoji">⚡</div><div className="result-title">Speed Coder — Done!</div><div className="result-score">{score}/{challenges.length}</div><div className="result-pct">Total: {(totalMs/1000).toFixed(1)}s{score>0&&` · Avg: ${(totalMs/score/1000).toFixed(1)}s/line`}</div><div className="result-actions"><button className="btn-action" onClick={()=>{setIdx(0);setScore(0);setDone(false);setInput('');setTimes([]);}}>↺ Play Again</button><button className="btn-secondary" onClick={onBack}>← All Games</button></div></div>;}
+  if(done){const totalMs=times.reduce((a,b)=>a+b,0);return(<div className="result-wrap"><div className="result-emoji">⚡</div><div className="result-title">Speed Coder — Done!</div><div className="result-score">{score}/{challenges.length}</div><div className="result-pct">Total: {(totalMs/1000).toFixed(1)}s{score>0&&` · Avg: ${(totalMs/score/1000).toFixed(1)}s/line`}</div><SaveScoreOnMount gameId="speed" score={score}/><div className="result-actions" style={{marginTop:16}}><button className="btn-action" onClick={()=>{setIdx(0);setScore(0);setDone(false);setInput('');setTimes([]);}}>↺ Play Again</button><button className="btn-secondary" onClick={onBack}>← All Games</button></div></div>);}
   const matched=target.split('').map((ch,i)=>({ch,typed:i<input.length,ok:input[i]===ch}));
   return(<div className="game-wrap"><div className="game-header"><div><div className="game-title">⚡ Speed Coder</div><div className="game-subtitle">Line {idx+1} of {challenges.length} · Score: {score}</div></div><button className="btn-danger" onClick={onBack}>← Back</button></div><ProgressBar current={idx+1} total={challenges.length}/><div className="panel-card"><div className="panel-card-head"><span className="panel-tag tag-blue">⚡ Type This Exactly</span></div><div className="panel-card-body"><div className="speed-target">{matched.map((m,i)=>{let cls='speed-char-wait';if(m.typed)cls=m.ok?'speed-char-done':'speed-char-error';return<span key={i} className={cls}>{m.ch}</span>;})}</div><input ref={inputRef} value={input} onChange={handleInput} style={{width:'100%',padding:'10px 14px',fontFamily:'var(--fm)',fontSize:'.82rem',background:'var(--s1)',border:`1.5px solid ${input.length>0&&input===target.slice(0,input.length)?'var(--g)':'var(--bd2)'}`,borderRadius:7,color:'var(--text)',outline:'none',marginBottom:12}} placeholder="Start typing..." spellCheck={false} autoCorrect="off" autoCapitalize="off"/>{flash==='correct'&&<div style={{fontSize:'.82rem',color:'var(--g)',fontWeight:700}}>✅ Correct! Moving on...</div>}<div style={{textAlign:'right',marginTop:7}}><button className="btn-secondary" onClick={()=>{setInput('');if(idx+1>=challenges.length)setDone(true);else setIdx(i=>i+1);}} style={{fontSize:'.72rem',padding:'5px 12px'}}>Skip →</button></div></div></div></div>);
 }
 
+// Helper: save-on-mount for games that don't use GameResult
+function SaveScoreOnMount({gameId, score}) {
+  const [status, setStatus] = useState(null);
+  useEffect(()=>{if(score===0)return;setStatus('saving');saveHighScore(gameId,score).then(ok=>setStatus(ok?'saved':'failed'));},[]);
+  return <SaveNotice status={status}/>;
+}
+
+// ─── CODE INSPECTOR ──────────────────────────────────────────────
 const ABAP_RULES = [
   {id:'R001',severity:'ERROR',category:'RAP',check:code=>/COMMIT\s+WORK/.test(code)&&/save_modified|RAP|bdef/i.test(code),msg:'COMMIT WORK inside RAP implementation',detail:'RAP controls the LUW — manual COMMIT WORK causes runtime error.',fix:'Remove COMMIT WORK. The framework commits automatically after save_modified.'},
   {id:'R002',severity:'ERROR',category:'ABAP Syntax',check:code=>/SELECT\s+\*\s+FROM\s+\w+\s+INTO\s+TABLE\s+\w+[^@]/.test(code.replace(/\n/g,' ')),msg:'Missing @ symbol for host variable in INTO TABLE',detail:'ABAP 7.40+ syntax requires @ before host variables.',fix:'Change INTO TABLE lt_tab → INTO TABLE @lt_tab'},
@@ -484,26 +623,119 @@ function CodeInspector({onBack}) {
   return(<div className="game-wrap" style={{maxWidth:880}}><div className="game-header"><div><div className="game-title">🔍 Code Inspector</div><div className="game-subtitle">Static ABAP/CDS rule engine</div></div><button className="btn-danger" onClick={onBack}>← Back</button></div><div className="panel-card"><div className="panel-card-head"><span className="panel-tag tag-green">Paste Code</span></div><div className="panel-card-body"><textarea className="code-textarea-dark" style={{minHeight:190}} value={code} onChange={e=>setCode(e.target.value)} placeholder="Paste ABAP, CDS, or BDEF code here..."/></div></div><div style={{textAlign:'center',marginBottom:22}}><button className="btn-action" onClick={analyze} disabled={!code.trim()||analyzing} style={{fontSize:'.95rem',padding:'11px 28px'}}>{analyzing?'⏳ Analyzing...':'🔍 Run Inspector'}</button></div>{findings!==null&&<div className="panel-card"><div className="panel-card-head"><span className="panel-tag tag-purple">Results</span><span className="panel-card-title">{sorted.length} finding{sorted.length!==1?'s':''}</span>{sorted.length>0&&<div style={{display:'flex',gap:5,marginLeft:'auto'}}>{counts.ERROR>0&&<span className="finding-sev sev-error">{counts.ERROR} Error{counts.ERROR!==1?'s':''}</span>}{counts.WARNING>0&&<span className="finding-sev sev-warning">{counts.WARNING} Warn</span>}{counts.INFO>0&&<span className="finding-sev sev-info">{counts.INFO} Info</span>}</div>}</div><div className="panel-card-body">{sorted.length===0?<div className="no-issues">✅ No issues found — clean code!</div>:sorted.map((f,i)=><div key={i} className="finding-row"><span className={`finding-sev ${f.severity==='ERROR'?'sev-error':f.severity==='WARNING'?'sev-warning':'sev-info'}`}>{f.severity}</span><div className="finding-body"><div className="finding-msg">{f.msg}</div><div className="finding-detail">{f.id} · {f.category}</div>{f.detail&&<div style={{fontSize:'.72rem',color:'var(--gr)',marginTop:2}}>{f.detail}</div>}{f.fix&&<div className="finding-fix">💡 Fix: {f.fix}</div>}</div></div>)}</div></div>}</div>);
 }
 
-function Hub({onSelect,gameData}) {
+// ─── HUB ─────────────────────────────────────────────────────────
+function Hub({onSelect, gameData, scores, lbLoading}) {
   const totalQ=gameData?.quiz?.length||0;
   const totalT=gameData?.tables?.length||0;
   const totalA=gameData?.annotations?.length||0;
-  return(<><div className="hub-hero"><div className="hub-badge">🎮 Learning Arena</div><h1>ABAP <span>Learning Games</span></h1><p>Eight games — quiz driven by your Google Sheet. Add questions, tables, annotations directly in the sheet.</p></div><div className="hub-stats"><div className="hub-stat"><div className="hub-stat-val">8</div><div className="hub-stat-lbl">Games</div></div><div className="hub-stat"><div className="hub-stat-val">{totalQ}</div><div className="hub-stat-lbl">Questions</div></div><div className="hub-stat"><div className="hub-stat-val">{totalT}</div><div className="hub-stat-lbl">Table Cases</div></div><div className="hub-stat"><div className="hub-stat-val">{totalA}</div><div className="hub-stat-lbl">Annotations</div></div></div><div className="hub-grid"><div className="game-card-runner" onClick={()=>window.open('abap-runner','_blank')}><div className="runner-icon-wrap">🏃</div><div className="runner-content"><div className="runner-title">SAPZCODES <span>Runner</span></div><div className="runner-desc">Run through an endless ABAP world. Jump over bugs and dumps — each obstacle fires a fill-in-the-blank question from your sheet.</div><div className="runner-meta"><span className="runner-badge">🏃 Endless Runner</span><span className="runner-badge">❤️ 5 Lives</span><span className="runner-badge">🎓 Certificate</span><button className="runner-play-btn" onClick={e=>{e.stopPropagation();window.open('abap-runner','_blank');}}>▶ Play Now</button></div></div></div>{GAMES_META.map(g=><div key={g.id} className="game-card" style={{'--card-color':g.color}} onClick={()=>onSelect(g.id)}><span className="game-card-icon">{g.icon}</span><div className="game-card-title">{g.title}</div><div className="game-card-desc">{g.desc}</div><div className="game-card-footer"><span className="game-card-tag">{g.tag}</span><span className="game-card-play">Play →</span></div></div>)}</div></>);
+  return (
+    <>
+      <div className="hub-hero">
+        <div className="hub-badge">🎮 Learning Arena</div>
+        <h1>ABAP <span>Learning Games</span></h1>
+        <p>Eight games — quiz driven by your Google Sheet. Add questions, tables, annotations directly in the sheet.</p>
+      </div>
+      <div className="hub-stats">
+        <div className="hub-stat"><div className="hub-stat-val">8</div><div className="hub-stat-lbl">Games</div></div>
+        <div className="hub-stat"><div className="hub-stat-val">{totalQ}</div><div className="hub-stat-lbl">Questions</div></div>
+        <div className="hub-stat"><div className="hub-stat-val">{totalT}</div><div className="hub-stat-lbl">Table Cases</div></div>
+        <div className="hub-stat"><div className="hub-stat-val">{totalA}</div><div className="hub-stat-lbl">Annotations</div></div>
+      </div>
+      <div className="hub-grid">
+        {/* ── Runner card (full width) ── */}
+        <div className="game-card-runner" onClick={()=>window.open('abap-runner','_blank')}>
+          <div className="runner-top">
+            <div className="runner-icon-wrap">🏃</div>
+            <div className="runner-content">
+              <div className="runner-title">SAPZCODES <span>Runner</span></div>
+              <div className="runner-desc">Run through an endless ABAP world. Jump over bugs and dumps — each obstacle fires a fill-in-the-blank question from your sheet.</div>
+              <div className="runner-meta">
+                <span className="runner-badge">🏃 Endless Runner</span>
+                <span className="runner-badge">❤️ 5 Lives</span>
+                <span className="runner-badge">🎓 Certificate</span>
+                <button className="runner-play-btn" onClick={e=>{e.stopPropagation();window.open('abap-runner','_blank');}}>▶ Play Now</button>
+              </div>
+            </div>
+          </div>
+          {/* Leaderboard section at the bottom of runner card */}
+          <div className="runner-lb-wrap">
+            <MiniLeaderboard scores={scores} gameId="abap-runner" dark={true}/>
+            <MiniLeaderboard scores={scores} gameId="subway" dark={true}/>
+          </div>
+        </div>
+
+        {/* ── Regular game cards ── */}
+        {GAMES_META.map(g => (
+          <div key={g.id} className="game-card" style={{'--card-color':g.color}}
+               onClick={()=>onSelect(g.id)}>
+            <span className="game-card-icon">{g.icon}</span>
+            <div className="game-card-title">{g.title}</div>
+            <div className="game-card-desc">{g.desc}</div>
+            <div className="game-card-footer">
+              <span className="game-card-tag">{g.tag}</span>
+              <span className="game-card-play">Play →</span>
+            </div>
+            {/* Per-card leaderboard */}
+            {g.id !== 'inspector' && (
+              <MiniLeaderboard scores={scores} gameId={g.id} dark={false}/>
+            )}
+          </div>
+        ))}
+      </div>
+    </>
+  );
 }
 
+// ─── APP ─────────────────────────────────────────────────────────
 function App() {
-  const [activeGame,setActiveGame]=useState(null);
-  const {data,loading,error}=useGameData();
-  const topbar=(<div className="topbar"><a className="topbar-logo" href="#"><img src="logo.png" alt=""/><span className="topbar-logo-text">SAPZ<span>CODES</span></span></a><span className="topbar-sep">/</span><span className="topbar-page">Learning Games</span><div className="topbar-right"><span className="topbar-user">👤 {STUDENT_NAME}</span><a className="topbar-btn" href="abap-runner" target="_blank">🏃 Runner</a><a className="topbar-btn" href="executor">🖥️ Executor</a><button className="topbar-btn" onClick={()=>{sessionStorage.removeItem('szc_gamedata');window.location.reload();}}>↺ Refresh</button><a className="topbar-btn danger" href="index" onClick={()=>sessionStorage.clear()}>Sign Out</a></div></div>);
-  if(loading) return<>{topbar}<div className="main-body"><div className="loading-screen"><div className="spinner"/><div className="loading-text">Loading game data…</div></div></div></>;
-  if(error) return<>{topbar}<div className="main-body"><div className="loading-screen"><div style={{fontSize:'2rem'}}>⚠️</div><div style={{fontWeight:700,color:'#c0392b',fontFamily:'var(--fh)'}}>Could not load game data</div><div style={{fontSize:'.78rem',color:'var(--mu)',maxWidth:380,textAlign:'center'}}>{error}</div><button className="btn-secondary" onClick={()=>{sessionStorage.removeItem('szc_gamedata');window.location.reload();}}>↺ Retry</button></div></div></>;
-  return<><div className="topbar"><a className="topbar-logo" href="#"><img src="logo.png" alt=""/><span className="topbar-logo-text">SAPZ<span>CODES</span></span></a><span className="topbar-sep">/</span><span className="topbar-page">Learning Games</span><div className="topbar-right"><span className="topbar-user">👤 {STUDENT_NAME}</span><a className="topbar-btn" href="abap-runner" target="_blank">🏃 Runner</a><a className="topbar-btn" href="executor">🖥️ Executor</a><button className="topbar-btn" onClick={()=>{sessionStorage.removeItem('szc_gamedata');window.location.reload();}}>↺ Refresh</button><a className="topbar-btn danger" href="index" onClick={()=>sessionStorage.clear()}>Sign Out</a></div></div><div className="main-body">{!activeGame&&<Hub // Replace: onSelect={setActiveGame}
+  const [activeGame, setActiveGame] = useState(null);
+  const { data, loading, error }    = useGameData();
+  const { scores, lbLoading, reload } = useHighScores();
 
-onSelect={id => {
-  if (id === 'subway') { window.open('subway-abaper', '_blank'); return; }
-  setActiveGame(id);
-}} gameData={data}/>}{activeGame==='quiz'&&<QuizGame onBack={()=>setActiveGame(null)} allQuestions={data.quiz}/>}{activeGame==='debug'&&<DebugGame onBack={()=>setActiveGame(null)}/>}{activeGame==='match'&&<AnnotationMatch onBack={()=>setActiveGame(null)} allPairs={data.annotations}/>}{activeGame==='detective'&&<TableDetective onBack={()=>setActiveGame(null)} allTables={data.tables}/>}{activeGame==='sorter'&&<RAPSorter onBack={()=>setActiveGame(null)}/>}{activeGame==='speed'&&<SpeedCoder onBack={()=>setActiveGame(null)}/>}{activeGame==='inspector'&&<CodeInspector onBack={()=>setActiveGame(null)}/>}</div></>;
+  // Reload leaderboard when returning to hub
+  const goBack = useCallback(() => { setActiveGame(null); reload(); }, [reload]);
+
+  const topbar = (
+    <div className="topbar">
+      <a className="topbar-logo" href="#">
+        <img src="logo.png" alt=""/>
+        <span className="topbar-logo-text">SAPZ<span>CODES</span></span>
+      </a>
+      <span className="topbar-sep">/</span>
+      <span className="topbar-page">Learning Games</span>
+      <div className="topbar-right">
+        <span className="topbar-user">👤 {STUDENT_NAME}</span>
+        <a className="topbar-btn" href="abap-runner" target="_blank">🏃 Runner</a>
+        <a className="topbar-btn" href="executor">🖥️ Executor</a>
+        <button className="topbar-btn" onClick={()=>{sessionStorage.removeItem('szc_gamedata');window.location.reload();}}>↺ Refresh</button>
+        <a className="topbar-btn danger" href="index" onClick={()=>sessionStorage.clear()}>Sign Out</a>
+      </div>
+    </div>
+  );
+
+  if (loading) return <>{topbar}<div className="main-body"><div className="loading-screen"><div className="spinner"/><div className="loading-text">Loading game data…</div></div></div></>;
+  if (error)   return <>{topbar}<div className="main-body"><div className="loading-screen"><div style={{fontSize:'2rem'}}>⚠️</div><div style={{fontWeight:700,color:'#c0392b',fontFamily:'var(--fh)'}}>Could not load game data</div><div style={{fontSize:'.78rem',color:'var(--mu)',maxWidth:380,textAlign:'center'}}>{error}</div><button className="btn-secondary" onClick={()=>{sessionStorage.removeItem('szc_gamedata');window.location.reload();}}>↺ Retry</button></div></div></>;
+
+  return (
+    <>
+      {topbar}
+      <div className="main-body">
+        {!activeGame && <Hub onSelect={id=>{
+          if (id==='subway') { window.open('subway-abaper','_blank'); return; }
+          setActiveGame(id);
+        }} gameData={data} scores={scores} lbLoading={lbLoading}/>}
+        {activeGame==='quiz'      && <QuizGame       onBack={goBack} allQuestions={data.quiz}/>}
+        {activeGame==='debug'     && <DebugGame       onBack={goBack}/>}
+        {activeGame==='match'     && <AnnotationMatch onBack={goBack} allPairs={data.annotations}/>}
+        {activeGame==='detective' && <TableDetective  onBack={goBack} allTables={data.tables}/>}
+        {activeGame==='sorter'    && <RAPSorter       onBack={goBack}/>}
+        {activeGame==='speed'     && <SpeedCoder      onBack={goBack}/>}
+        {activeGame==='inspector' && <CodeInspector   onBack={goBack}/>}
+      </div>
+    </>
+  );
 }
+
 ReactDOM.createRoot(document.getElementById('root')).render(<App/>);
 </script>
 </body>
