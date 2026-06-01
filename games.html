@@ -229,6 +229,45 @@ body { cursor: default; overflow-x: hidden; }
 <div id="cur"></div>
 <div id="root"></div>
 <script type="text/babel">
+  // ── High Score helpers (persistent storage) ──────────────────
+const STUDENT_NAME = sessionStorage.getItem('szc_name') || 'Student';
+
+async function saveHighScore(gameId, score) {
+  try {
+    const personal = await window.storage.get('hs:' + gameId).catch(() => null);
+    const prev = personal ? parseInt(personal.value, 10) : 0;
+    if (score > prev) await window.storage.set('hs:' + gameId, String(score));
+
+    // Shared leaderboard — list of "Name|Score" entries
+    const lbKey = 'hs_lb:' + gameId;
+    let entries = [];
+    try {
+      const lb = await window.storage.get(lbKey, true);
+      entries = lb ? JSON.parse(lb.value) : [];
+    } catch (e) { entries = []; }
+    // Update or insert this student
+    const idx = entries.findIndex(e => e.name === STUDENT_NAME);
+    if (idx >= 0) { if (score > entries[idx].score) entries[idx].score = score; }
+    else entries.push({ name: STUDENT_NAME, score });
+    entries.sort((a, b) => b.score - a.score);
+    await window.storage.set(lbKey, JSON.stringify(entries.slice(0, 10)), true);
+  } catch (e) { /* storage unavailable */ }
+}
+
+async function getPersonalBest(gameId) {
+  try {
+    const r = await window.storage.get('hs:' + gameId);
+    return r ? parseInt(r.value, 10) : null;
+  } catch { return null; }
+}
+
+async function getLeaderboard(gameId) {
+  try {
+    const r = await window.storage.get('hs_lb:' + gameId, true);
+    return r ? JSON.parse(r.value) : [];
+  } catch { return []; }
+}
+  
 const { useState, useEffect, useRef } = React;
 
 if (!sessionStorage.getItem('szc_token')) { window.location.href = 'index'; }
@@ -301,11 +340,36 @@ function useGameData() {
 
 function ScoreBadge({score,total}) { const pct=total>0?Math.round((score/total)*100):0; return <span className="score-badge">{score}/{total} · {pct}%</span>; }
 function ProgressBar({current,total}) { return <div className="progress-bar-wrap"><div className="progress-bar-fill" style={{width:`${(current/total)*100}%`}}/></div>; }
-function GameResult({score,total,gameName,onBack,onReplay}) {
-  const pct=total>0?Math.round((score/total)*100):0;
-  const emoji=pct>=80?'🏆':pct>=50?'👍':'📚';
-  const msg=pct>=80?'Outstanding! You clearly know your ABAP.':pct>=50?'Good effort! Review the tricky ones.':'Keep practicing — ABAP mastery takes repetition!';
-  return <div className="result-wrap"><div className="result-emoji">{emoji}</div><div className="result-title">{gameName} — Complete!</div><div className="result-score">{score}/{total}</div><div className="result-pct">{pct}% correct</div><div className="result-msg">{msg}</div><div className="result-actions"><button className="btn-action" onClick={onReplay}>↺ Play Again</button><button className="btn-secondary" onClick={onBack}>← All Games</button></div></div>;
+function GameResult({score, total, gameName, gameId, onBack, onReplay}) {
+  const [saved, setSaved] = React.useState(false);
+  const [pb, setPb] = React.useState(null);
+  React.useEffect(() => {
+    (async () => {
+      const prev = await getPersonalBest(gameId);
+      if (score > 0) await saveHighScore(gameId, score);
+      setPb(prev);
+      setSaved(true);
+    })();
+  }, []);
+  const pct = total > 0 ? Math.round((score / total) * 100) : 0;
+  const emoji = pct >= 80 ? '🏆' : pct >= 50 ? '👍' : '📚';
+  const msg = pct >= 80 ? 'Outstanding! You clearly know your ABAP.' : pct >= 50 ? 'Good effort! Review the tricky ones.' : 'Keep practicing — ABAP mastery takes repetition!';
+  const isNewPB = pb !== null && score > pb;
+  return (
+    <div className="result-wrap">
+      <div className="result-emoji">{emoji}</div>
+      <div className="result-title">{gameName} — Complete!</div>
+      <div className="result-score">{score}/{total}</div>
+      <div className="result-pct">{pct}% correct</div>
+      {isNewPB && <div style={{color:'#d97706',fontWeight:700,fontFamily:'var(--fm)',fontSize:'.82rem',marginBottom:8}}>🔥 New Personal Best!</div>}
+      {pb !== null && !isNewPB && <div style={{fontSize:'.72rem',color:'var(--mu)',marginBottom:8,fontFamily:'var(--fm)'}}>Personal best: {pb}/{total}</div>}
+      <div className="result-msg">{msg}</div>
+      <div className="result-actions">
+        <button className="btn-action" onClick={onReplay}>↺ Play Again</button>
+        <button className="btn-secondary" onClick={onBack}>← All Games</button>
+      </div>
+    </div>
+  );
 }
 
 function QuizGame({onBack,allQuestions}) {
