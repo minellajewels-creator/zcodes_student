@@ -542,20 +542,6 @@
     obstacleData.forEach(o => { o.uiElement.style.display = 'none'; });
     document.getElementById('final-score').textContent  = 'Score: ' + state.score;
     document.getElementById('final-detail').textContent = state.correct + ' correct answers';
-    // Save score to sheet
-fetch(GAS_URL, {
-  method: 'POST',
-  headers: { 'Content-Type': 'text/plain' },
-  body: JSON.stringify({
-    action:  'saveScore',
-    apiKey:  API_SECRET,
-    gameId:  'abap-runner',   // use 'subway' for subway-abaper.html
-    score:   state.score,
-    name:    sessionStorage.getItem('szc_name')  || localStorage.getItem('szc_name')  || 'Student',
-    email:   sessionStorage.getItem('szc_email') || localStorage.getItem('szc_email') || '',
-  }),
-  redirect: 'follow',
-}).catch(() => {});
     document.getElementById('game-over-screen').style.display = 'flex';
   }
 
