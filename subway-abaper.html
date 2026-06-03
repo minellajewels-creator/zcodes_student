@@ -144,29 +144,15 @@
     }
     #btn-playpause:hover { background: rgba(34,160,50,.25); }
 
-    /* ── Lane click zones (always visible during game) ── */
-    #lane-zones {
+    /* ── Lane click overlay SVG (drawn by JS over actual projected lanes) ── */
+    #lane-overlay {
       position: absolute;
-      bottom: 0; left: 50%; transform: translateX(-50%);
+      top: 0; left: 0;
       width: 100%; height: 100%;
       z-index: 15;
       display: none;
-      pointer-events: none;
+      /* pointer-events enabled so clicks + hover work */
     }
-    .lane-zone {
-      position: absolute;
-      bottom: 0;
-      width: 33.33%;
-      height: 100%;
-      cursor: pointer;
-      pointer-events: all;
-      transition: background .15s;
-    }
-    .lane-zone:hover { background: rgba(34,160,50,.05); }
-    .lane-zone:active { background: rgba(34,160,50,.1); }
-    #lane-left   { left: 0; }
-    #lane-center { left: 33.33%; }
-    #lane-right  { right: 0; }
 
     /* Lane click indicators (shown at bottom) */
     #lane-indicators {
@@ -285,15 +271,17 @@
     }
     .btn-s:hover { border-color: var(--g); color: var(--g); background: rgba(34,160,50,.08); }
 
-    /* ── Speed line (current lane indicator) ── */
-    .lane-highlight {
+    /* ── Lane highlight bar — width set by JS to match projected lane ── */
+    #lane-highlight {
       position: absolute; bottom: 0;
-      width: 33.33%; height: 6px;
-      background: var(--g);
+      height: 5px; background: var(--g);
       border-radius: 4px 4px 0 0;
-      transition: left .2s cubic-bezier(.34,1.56,.64,1);
+      transition: left .22s cubic-bezier(.34,1.56,.64,1),
+                  width .22s cubic-bezier(.34,1.56,.64,1);
       z-index: 25;
-      box-shadow: 0 0 12px rgba(34,160,50,.6);
+      box-shadow: 0 0 14px rgba(34,160,50,.7);
+      pointer-events: none;
+      display: none;
     }
   </style>
 
@@ -354,12 +342,8 @@
     </div>
   </div>
 
-  <!-- Lane click zones (always active during game) -->
-  <div id="lane-zones">
-    <div class="lane-zone" id="lane-left"   onclick="clickLane(0)"></div>
-    <div class="lane-zone" id="lane-center" onclick="clickLane(1)"></div>
-    <div class="lane-zone" id="lane-right"  onclick="clickLane(2)"></div>
-  </div>
+  <!-- Lane click overlay — SVG polygons drawn over actual projected lane positions -->
+  <canvas id="lane-overlay"></canvas>
 
   <!-- Lane indicators at bottom -->
   <div id="lane-indicators">
@@ -375,8 +359,9 @@
       <span class="lane-ind-icon">▶</span>
       <span class="lane-ind-label">Right</span>
     </div>
-    <div class="lane-highlight" id="lane-highlight" style="left:33.33%"></div>
   </div>
+  <!-- Lane highlight bar — positioned by JS to match projected lane width -->
+  <div id="lane-highlight"></div>
 
   <!-- Pause overlay -->
   <div id="pause-overlay">
@@ -453,26 +438,35 @@
   }
 })();
 
-// Global lane click handler (accessible from HTML onclick)
+// ── Lane click — driven by projection computed in the module ──
+// window._laneScreenBounds is set each frame by the module:
+//   [{ x1, x2 }, { x1, x2 }, { x1, x2 }]  (left/right px edges per lane, at HUD bottom)
+
 window.clickLane = function(laneIndex) {
-  if (window._gameState && !window._gameState.gameOver && window._gameState.running && !window._gameState.paused) {
-    window._gameState.currentLane = laneIndex;
-    window._gameState.targetX     = window._LANES[laneIndex];
-    updateLaneIndicators(laneIndex);
-    if (window._gameState.choosing) {
-      scheduleConfirm();
-    }
-  }
+  const gs = window._gameState;
+  if (!gs || gs.gameOver || !gs.running || gs.paused) return;
+  gs.currentLane = laneIndex;
+  gs.targetX     = window._LANES[laneIndex];
+  window._updateLaneUI(laneIndex);
+  if (gs.choosing) window._scheduleConfirm();
 };
 
-function updateLaneIndicators(laneIndex) {
+// Called from module to keep UI in sync
+window._updateLaneUI = function(laneIndex) {
   [0,1,2].forEach(i => {
     const el = document.getElementById('lind-' + i);
     if (el) el.className = 'lane-ind' + (i === laneIndex ? ' active' : '');
   });
+  // Move the highlight bar to match the projected lane bounds
   const hl = document.getElementById('lane-highlight');
-  if (hl) hl.style.left = (laneIndex * 33.33) + '%';
-}
+  const bounds = window._laneScreenBounds;
+  if (hl && bounds && bounds[laneIndex]) {
+    const b = bounds[laneIndex];
+    hl.style.left  = b.x1 + 'px';
+    hl.style.width = (b.x2 - b.x1) + 'px';
+    hl.style.display = 'block';
+  }
+};
 </script>
 
 <!-- ── Main game module ── -->
@@ -808,7 +802,8 @@ function scheduleConfirm() {
 }
 
 // Make scheduleConfirm globally accessible
-window.scheduleConfirm = scheduleConfirm;
+window.scheduleConfirm  = scheduleConfirm;
+window._scheduleConfirm = scheduleConfirm;
 
 function confirmLane() {
   if (!state.choosing || state.paused || state.gameOver) return;
@@ -823,17 +818,158 @@ function confirmLane() {
   onAnswer(hit.correct);
 }
 
-// ─── LANE INDICATOR UPDATE ─────────────────────────────────────
-// Make globally accessible (called from non-module script)
-window.updateLaneIndicators = updateLaneIndicators;
-function updateLaneIndicators(laneIndex) {
-  [0,1,2].forEach(i => {
-    const el = document.getElementById('lind-' + i);
-    if (el) el.className = 'lane-ind' + (i === laneIndex ? ' active' : '');
-  });
-  const hl = document.getElementById('lane-highlight');
-  if (hl) hl.style.left = (laneIndex * 33.33) + '%';
+// ─── PROJECTED LANE BOUNDS ────────────────────────────────────
+// Computes the screen-space X extents of each lane at a given world Z.
+// We sample at Z=PAUSE_TRIGGER_Z (where obstacles stop) and the track near-plane.
+// Returns [{ x1, x2 }, ...] for lanes [left, centre, right] = LANES[0..2]
+
+const _vec3 = new THREE.Vector3();
+function projectWorldX(worldX, worldZ) {
+  _vec3.set(worldX, 1.2, worldZ);
+  _vec3.project(camera);
+  return (_vec3.x * 0.5 + 0.5) * window.innerWidth;
 }
+
+// Lane boundary X values in world space (halfway between lane centres)
+// LANES = [2.5, 0, -2.5]
+// Boundaries: leftEdge=-5.2  |  b01=1.25  |  b12=-1.25  |  rightEdge=5.2
+function computeLaneScreenBounds() {
+  const Z  = PAUSE_TRIGGER_Z;           // where obstacles sit when choosing
+  const ZN = 3;                         // near-plane sample (bottom of screen)
+
+  // Project the three divider lines at near-plane to get approximate bottom widths
+  // We use the track outer edges and lane-divider positions
+  const worldBoundaries = [-5.2, 1.25, -1.25, 5.2]; // outer-left, div1, div2, outer-right
+  const nearXs = worldBoundaries.map(x => projectWorldX(x, ZN));
+
+  // Near-plane spans per lane (for hit-testing at bottom half)
+  const lanesNear = [
+    { x1: nearXs[0], x2: nearXs[1] },   // lane 0 (LANES[0]=2.5, leftmost on screen)
+    { x1: nearXs[1], x2: nearXs[2] },   // lane 1 (centre)
+    { x1: nearXs[2], x2: nearXs[3] },   // lane 2 (rightmost)
+  ];
+
+  // Also project obstacle Z for upper-half hit testing
+  const farXs = worldBoundaries.map(x => projectWorldX(x, Z));
+  const lanesFar = [
+    { x1: farXs[0], x2: farXs[1] },
+    { x1: farXs[1], x2: farXs[2] },
+    { x1: farXs[2], x2: farXs[3] },
+  ];
+
+  return { near: lanesNear, far: lanesFar };
+}
+
+// Pick lane index (0-2) from screen click coords, or -1 if outside track
+function laneFromClick(clientX, clientY) {
+  const H  = window.innerHeight;
+  const bounds = computeLaneScreenBounds();
+
+  // Interpolation factor: 0 = at far (top, obstacle level), 1 = at near (bottom of screen)
+  const farY  = H * 0.25;
+  const nearY = H;
+  const t = Math.max(0, Math.min(1, (clientY - farY) / (nearY - farY)));
+
+  // Lerp each lane boundary at the clicked Y
+  for (let i = 0; i < 3; i++) {
+    const x1 = bounds.far[i].x1 + (bounds.near[i].x1 - bounds.far[i].x1) * t;
+    const x2 = bounds.far[i].x2 + (bounds.near[i].x2 - bounds.far[i].x2) * t;
+    if (clientX >= x1 && clientX <= x2) return i;
+  }
+  return -1; // outside track
+}
+
+// Expose lane bounds for the non-module script's highlight bar
+function publishLaneBounds() {
+  const bounds = computeLaneScreenBounds();
+  // Expose bottom-of-screen widths for the highlight bar
+  window._laneScreenBounds = bounds.near;
+}
+
+// ─── OVERLAY CANVAS — visual lane hit-areas ───────────────────
+const overlayCanvas = document.getElementById('lane-overlay');
+const overlayCtx    = overlayCanvas.getContext('2d');
+
+function resizeOverlay() {
+  overlayCanvas.width  = window.innerWidth;
+  overlayCanvas.height = window.innerHeight;
+}
+resizeOverlay();
+window.addEventListener('resize', resizeOverlay);
+
+function drawLaneOverlay(hoveredLane) {
+  const W = window.innerWidth, H = window.innerHeight;
+  overlayCtx.clearRect(0, 0, W, H);
+  if (!window._gameState?.running || window._gameState.paused || window._gameState.gameOver) return;
+
+  const bounds = computeLaneScreenBounds();
+  const farY   = H * 0.25;   // top of hit-area (matches laneFromClick)
+  const nearY  = H;           // bottom
+
+  for (let i = 0; i < 3; i++) {
+    const near = bounds.near[i];
+    const far  = bounds.far[i];
+
+    // Trapezoid for this lane
+    overlayCtx.beginPath();
+    overlayCtx.moveTo(far.x1,  farY);
+    overlayCtx.lineTo(far.x2,  farY);
+    overlayCtx.lineTo(near.x2, nearY);
+    overlayCtx.lineTo(near.x1, nearY);
+    overlayCtx.closePath();
+
+    if (i === hoveredLane) {
+      overlayCtx.fillStyle = 'rgba(34,160,50,0.09)';
+      overlayCtx.fill();
+    }
+    overlayCtx.strokeStyle = 'rgba(34,160,50,0.07)';
+    overlayCtx.lineWidth   = 1;
+    overlayCtx.stroke();
+  }
+
+  // Active lane — slightly brighter tint
+  const active = window._gameState?.currentLane ?? 1;
+  const near   = bounds.near[active];
+  const far    = bounds.far[active];
+  overlayCtx.beginPath();
+  overlayCtx.moveTo(far.x1,  farY);
+  overlayCtx.lineTo(far.x2,  farY);
+  overlayCtx.lineTo(near.x2, nearY);
+  overlayCtx.lineTo(near.x1, nearY);
+  overlayCtx.closePath();
+  overlayCtx.fillStyle = 'rgba(34,160,50,0.05)';
+  overlayCtx.fill();
+}
+
+// Mouse hover + click on overlay canvas
+let _hoveredLane = -1;
+
+overlayCanvas.addEventListener('mousemove', e => {
+  if (!window._gameState?.running || window._gameState.paused) return;
+  _hoveredLane = laneFromClick(e.clientX, e.clientY);
+  overlayCanvas.style.cursor = _hoveredLane >= 0 ? 'pointer' : 'default';
+});
+
+overlayCanvas.addEventListener('mouseleave', () => { _hoveredLane = -1; });
+
+overlayCanvas.addEventListener('click', e => {
+  const gs = window._gameState;
+  if (!gs || gs.gameOver || !gs.running || gs.paused) return;
+
+  const lane = laneFromClick(e.clientX, e.clientY);
+  if (lane < 0) return;
+
+  gs.currentLane = lane;
+  gs.targetX     = LANES[lane];
+  window._updateLaneUI(lane);
+  publishLaneBounds();
+  if (gs.choosing) scheduleConfirm();
+});
+
+// ─── LANE INDICATOR UPDATE ────────────────────────────────────
+// (replaces old updateLaneIndicators — bridges to non-module script)
+window.updateLaneIndicators = function(laneIndex) { window._updateLaneUI(laneIndex); };
+function updateLaneIndicators(laneIndex) { window._updateLaneUI(laneIndex); }
 
 // ─── HUD HELPERS ───────────────────────────────────────────────
 function updateHUD() {
@@ -1007,7 +1143,8 @@ async function triggerGameOver() {
   document.getElementById('question-box').style.display = 'none';
   document.getElementById('flash').style.display        = 'none';
   document.getElementById('lane-indicators').style.display = 'none';
-  document.getElementById('lane-zones').style.display      = 'none';
+  document.getElementById('lane-overlay').style.display    = 'none';
+  document.getElementById('lane-highlight').style.display  = 'none';
   document.getElementById('go-score').textContent  = 'Score: '  + state.score;
   document.getElementById('go-detail').textContent = state.correct + ' correct answers';
 
@@ -1079,9 +1216,11 @@ function startGame() {
   updateHUD();
   updateLives();
   updateLaneIndicators(1);
+  // Initial highlight bar position (will be corrected on first frame)
+  setTimeout(publishLaneBounds, 100);
 
   document.getElementById('hud').style.display              = 'flex';
-  document.getElementById('lane-zones').style.display       = 'block';
+  document.getElementById('lane-overlay').style.display     = 'block';
   document.getElementById('lane-indicators').style.display  = 'flex';
   document.getElementById('click-hint').style.display       = 'block';
   document.getElementById('game-over').style.display        = 'none';
@@ -1127,6 +1266,10 @@ function loop() {
   }
 
   renderer.render(scene, camera);
+
+  // Update projected lane bounds & draw overlay every frame
+  publishLaneBounds();
+  drawLaneOverlay(_hoveredLane);
 }
 
 // ─── KICK OFF ──────────────────────────────────────────────────
