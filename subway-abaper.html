@@ -5,141 +5,296 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
   <title>SAPZCodes 3D Endless Runner</title>
   <link rel="icon" type="image/png" href="favicon.png">
+  <link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@500;600;700&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
   <style>
-    :root { --g:#22a032; --fm:'JetBrains Mono',monospace; }
-    * { box-sizing:border-box; margin:0; padding:0; }
-    body { overflow:hidden; background:#0d1117; color:#f0f4f0; font-family:var(--fm); }
+    :root {
+      --g: #22a032;
+      --g2: #1a8028;
+      --bg: #0a0f0a;
+      --s1: #0d1410;
+      --text: #e8f0e8;
+      --mu: rgba(232,240,232,0.4);
+      --bd: rgba(34,160,50,0.15);
+      --fm: 'JetBrains Mono', monospace;
+      --fh: 'Rajdhani', sans-serif;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    html, body { width: 100%; height: 100%; overflow: hidden; }
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: var(--fm);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
 
-    /* ── Auth Screen ─────────────────────────────────────── */
+    /* ── GAME VIEWPORT — always centred ── */
+    #game-root {
+      position: relative;
+      width: 100vw;
+      height: 100vh;
+      overflow: hidden;
+    }
+
+    /* ── Auth Screen ── */
     #auth-screen {
-      position:fixed; inset:0; background:#0d1117; z-index:999;
-      display:none; flex-direction:column; align-items:center;
-      justify-content:center; gap:14px;
+      position: absolute; inset: 0;
+      background: var(--bg); z-index: 999;
+      display: none; flex-direction: column; align-items: center;
+      justify-content: center; gap: 14px;
     }
-    .auth-icon  { font-size:3rem; }
-    .auth-title { font-size:1.5rem; font-weight:700; color:#c0392b; }
-    .auth-sub   { font-size:.82rem; color:rgba(240,244,240,.4); text-align:center; max-width:340px; }
-    .auth-btn   { padding:10px 26px; border:none; border-radius:8px; background:var(--g);
-                  color:#fff; font-size:.95rem; font-weight:700; cursor:pointer; margin-top:8px; }
-    .auth-btn:hover { background:#1a8028; }
+    .auth-icon  { font-size: 3rem; }
+    .auth-title { font-family: var(--fh); font-size: 1.6rem; font-weight: 700; color: #c0392b; }
+    .auth-sub   { font-size: .82rem; color: var(--mu); text-align: center; max-width: 340px; }
+    .auth-btn   {
+      padding: 11px 28px; border: none; border-radius: 8px;
+      background: var(--g); color: #fff;
+      font-family: var(--fh); font-size: 1rem; font-weight: 700;
+      cursor: pointer; margin-top: 8px; letter-spacing: .05em;
+    }
+    .auth-btn:hover { background: var(--g2); }
 
-    /* ── Loading Screen ──────────────────────────────────── */
+    /* ── Loading Screen ── */
     #loading-screen {
-      position:fixed; inset:0; background:#0d1117; z-index:90;
-      display:flex; flex-direction:column; align-items:center;
-      justify-content:center; gap:10px;
+      position: absolute; inset: 0;
+      background: var(--bg); z-index: 90;
+      display: flex; flex-direction: column; align-items: center;
+      justify-content: center; gap: 12px;
     }
-    .ld-brand { font-size:.65rem; letter-spacing:.22em; text-transform:uppercase;
-                color:var(--g); margin-bottom:6px; }
-    .ld-title { font-size:1.6rem; font-weight:700; color:#f0f4f0; }
-    .ld-title span { color:var(--g); }
-    .ld-bar-wrap { width:300px; max-width:88vw; background:rgba(255,255,255,.06);
-                   border:1px solid rgba(255,255,255,.08); border-radius:20px;
-                   height:5px; overflow:hidden; margin-top:6px; }
-    .ld-bar-fill { height:100%; background:linear-gradient(90deg,var(--g),#58a6ff);
-                   border-radius:20px; width:0%; transition:width .35s ease; }
-    .ld-status { font-size:.63rem; color:rgba(240,244,240,.3); letter-spacing:.05em;
-                 min-height:16px; margin-top:2px; }
-    .ld-err { margin-top:14px; padding:10px 18px; background:rgba(192,57,43,.1);
-              border:1px solid rgba(192,57,43,.25); border-radius:8px; color:#c0392b;
-              font-size:.78rem; text-align:center; display:none; max-width:360px; line-height:1.5; }
-    .ld-err.show { display:block; }
-    .ld-retry { margin-top:10px; padding:7px 20px; border-radius:7px;
-                background:rgba(255,255,255,.06); border:1px solid rgba(255,255,255,.1);
-                color:rgba(240,244,240,.6); font-size:.78rem; font-weight:600;
-                cursor:pointer; display:none; }
-    .ld-retry.show { display:inline-block; }
-    .ld-retry:hover { border-color:var(--g); color:var(--g); }
+    .ld-logo { height: 48px; width: auto; margin-bottom: 8px; filter: drop-shadow(0 0 12px rgba(34,160,50,.5)); }
+    .ld-brand {
+      font-family: var(--fh); font-size: .65rem; letter-spacing: .3em;
+      text-transform: uppercase; color: var(--g); margin-bottom: 4px;
+    }
+    .ld-title { font-family: var(--fh); font-size: 1.8rem; font-weight: 700; color: var(--text); }
+    .ld-title span { color: var(--g); }
+    .ld-bar-wrap {
+      width: 320px; max-width: 88vw;
+      background: rgba(255,255,255,.05);
+      border: 1px solid var(--bd); border-radius: 20px;
+      height: 4px; overflow: hidden; margin-top: 8px;
+    }
+    .ld-bar-fill {
+      height: 100%;
+      background: linear-gradient(90deg, var(--g), #58ff80);
+      border-radius: 20px; width: 0%; transition: width .35s ease;
+    }
+    .ld-status {
+      font-size: .62rem; color: var(--mu); letter-spacing: .06em;
+      min-height: 16px; margin-top: 2px;
+    }
+    .ld-err {
+      margin-top: 14px; padding: 10px 18px;
+      background: rgba(192,57,43,.1); border: 1px solid rgba(192,57,43,.25);
+      border-radius: 8px; color: #c0392b;
+      font-size: .78rem; text-align: center; display: none;
+      max-width: 360px; line-height: 1.5;
+    }
+    .ld-err.show { display: block; }
+    .ld-retry {
+      margin-top: 10px; padding: 7px 20px; border-radius: 7px;
+      background: rgba(255,255,255,.06); border: 1px solid rgba(255,255,255,.1);
+      color: var(--mu); font-size: .78rem; font-weight: 600;
+      cursor: pointer; display: none;
+    }
+    .ld-retry.show { display: inline-block; }
+    .ld-retry:hover { border-color: var(--g); color: var(--g); }
 
-    /* ── HUD ─────────────────────────────────────────────── */
+    /* ── HUD ── */
     #hud {
-      position:fixed; top:0; left:0; right:0; height:52px; z-index:20;
-      background:rgba(13,17,23,.88); backdrop-filter:blur(8px);
-      border-bottom:1px solid rgba(255,255,255,.06);
-      display:none; align-items:center; justify-content:space-between; padding:0 22px;
+      position: absolute; top: 0; left: 0; right: 0; height: 56px;
+      z-index: 20;
+      background: linear-gradient(180deg, rgba(10,15,10,.95) 0%, rgba(10,15,10,.6) 100%);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--bd);
+      display: none; align-items: center;
+      justify-content: space-between; padding: 0 20px;
+      gap: 12px;
     }
-    .hud-brand { font-size:.62rem; letter-spacing:.2em; text-transform:uppercase; color:var(--g); }
-    .hud-stats { display:flex; gap:22px; align-items:center; }
-    .hud-stat  { display:flex; flex-direction:column; align-items:center; }
-    .hud-lbl   { font-size:.5rem; letter-spacing:.1em; text-transform:uppercase;
-                 color:rgba(240,244,240,.3); }
-    .hud-val   { font-size:.92rem; font-weight:700; color:#f0f4f0; line-height:1; }
-    .hud-val.green { color:var(--g); }
-    .hud-lives { display:flex; gap:3px; align-items:center; }
-    .heart { font-size:.8rem; transition:all .2s; }
-    .heart.lost { opacity:.18; filter:grayscale(1); transform:scale(.8); }
+    .hud-left { display: flex; align-items: center; gap: 10px; }
+    .hud-logo { height: 28px; width: auto; filter: drop-shadow(0 0 6px rgba(34,160,50,.4)); flex-shrink: 0; }
+    .hud-brand {
+      font-family: var(--fh); font-size: .72rem; font-weight: 700;
+      letter-spacing: .2em; text-transform: uppercase; color: var(--g);
+    }
+    .hud-divider { width: 1px; height: 20px; background: var(--bd); }
+    .hud-stats { display: flex; gap: 18px; align-items: center; }
+    .hud-stat  { display: flex; flex-direction: column; align-items: center; }
+    .hud-lbl   {
+      font-size: .48rem; letter-spacing: .12em;
+      text-transform: uppercase; color: var(--mu); margin-bottom: 1px;
+    }
+    .hud-val   {
+      font-family: var(--fh); font-size: 1.1rem;
+      font-weight: 700; color: var(--text); line-height: 1;
+    }
+    .hud-val.green { color: var(--g); }
+    .hud-lives { display: flex; gap: 4px; align-items: center; }
+    .heart { font-size: .85rem; transition: all .2s; }
+    .heart.lost { opacity: .15; filter: grayscale(1); transform: scale(.75); }
 
-    /* Play/Pause button */
     #btn-playpause {
-      background: rgba(34,160,50,0.15);
-      border: 1px solid rgba(34,160,50,0.4);
-      border-radius: 7px;
-      color: var(--g);
-      font-size: 1.1rem;
-      width: 34px; height: 34px;
+      background: rgba(34,160,50,.12);
+      border: 1px solid rgba(34,160,50,.35);
+      border-radius: 8px; color: var(--g);
+      font-size: 1rem; width: 36px; height: 36px;
+      cursor: pointer; display: flex; align-items: center; justify-content: center;
+      transition: all .18s; flex-shrink: 0;
+    }
+    #btn-playpause:hover { background: rgba(34,160,50,.25); }
+
+    /* ── Lane click zones (always visible during game) ── */
+    #lane-zones {
+      position: absolute;
+      bottom: 0; left: 50%; transform: translateX(-50%);
+      width: 100%; height: 100%;
+      z-index: 15;
+      display: none;
+      pointer-events: none;
+    }
+    .lane-zone {
+      position: absolute;
+      bottom: 0;
+      width: 33.33%;
+      height: 100%;
       cursor: pointer;
-      display: flex; align-items: center; justify-content: center;
-      transition: all .18s;
-      flex-shrink: 0;
+      pointer-events: all;
+      transition: background .15s;
     }
-    #btn-playpause:hover { background: rgba(34,160,50,0.28); border-color: var(--g); }
+    .lane-zone:hover { background: rgba(34,160,50,.05); }
+    .lane-zone:active { background: rgba(34,160,50,.1); }
+    #lane-left   { left: 0; }
+    #lane-center { left: 33.33%; }
+    #lane-right  { right: 0; }
 
-    /* ── Pause overlay ───────────────────────────────────── */
+    /* Lane click indicators (shown at bottom) */
+    #lane-indicators {
+      position: absolute; bottom: 18px;
+      left: 50%; transform: translateX(-50%);
+      display: none; gap: 10px; z-index: 25;
+    }
+    .lane-ind {
+      width: 44px; height: 44px; border-radius: 12px;
+      border: 2px solid rgba(255,255,255,.12);
+      background: rgba(0,0,0,.4); backdrop-filter: blur(8px);
+      display: flex; flex-direction: column;
+      align-items: center; justify-content: center;
+      cursor: pointer; transition: all .18s;
+      gap: 3px;
+    }
+    .lane-ind:hover { border-color: var(--g); background: rgba(34,160,50,.15); transform: translateY(-2px); }
+    .lane-ind.active { border-color: var(--g); background: rgba(34,160,50,.2); }
+    .lane-ind-icon { font-size: .85rem; }
+    .lane-ind-label { font-size: .45rem; letter-spacing: .1em; text-transform: uppercase; color: var(--mu); }
+
+    /* ── Pause overlay ── */
     #pause-overlay {
-      position:fixed; inset:0; background:rgba(0,0,0,.75); z-index:35;
-      display:none; flex-direction:column; align-items:center;
-      justify-content:center; gap:14px; backdrop-filter:blur(4px);
+      position: absolute; inset: 0;
+      background: rgba(0,0,0,.8); z-index: 35;
+      display: none; flex-direction: column; align-items: center;
+      justify-content: center; gap: 16px; backdrop-filter: blur(6px);
     }
-    #pause-overlay h2 { font-size:2.8rem; color:var(--g); letter-spacing:.1em; }
-    #pause-overlay p  { font-size:.82rem; color:rgba(240,244,240,.4); }
+    .pause-icon { font-size: 3rem; opacity: .6; }
+    #pause-overlay h2 {
+      font-family: var(--fh); font-size: 3rem; font-weight: 700;
+      color: var(--g); letter-spacing: .2em;
+    }
+    #pause-overlay p  { font-size: .78rem; color: var(--mu); }
     .btn-resume {
-      padding:12px 34px; border:none; border-radius:8px;
-      background:var(--g); color:#fff; font-size:1rem;
-      font-weight:700; cursor:pointer; margin-top:8px;
+      padding: 12px 36px; border: 2px solid var(--g);
+      border-radius: 10px; background: rgba(34,160,50,.12);
+      color: var(--g); font-family: var(--fh); font-size: 1.1rem;
+      font-weight: 700; cursor: pointer; letter-spacing: .08em;
+      transition: all .2s;
     }
-    .btn-resume:hover { background:#1a8028; }
+    .btn-resume:hover { background: var(--g); color: #fff; }
 
-    /* ── Question box ────────────────────────────────────── */
+    /* ── Question box ── */
     #question-box {
-      position:fixed; top:66px; left:50%; transform:translateX(-50%);
-      background:rgba(13,17,23,.9); border:1px solid var(--g); border-radius:10px;
-      padding:14px 26px; text-align:center; max-width:62%;
-      font-size:1.05rem; line-height:1.6; display:none; z-index:20;
-      box-shadow:0 4px 28px rgba(34,160,50,.18);
+      position: absolute; top: 68px; left: 50%; transform: translateX(-50%);
+      background: rgba(10,15,10,.92); border: 1px solid var(--g);
+      border-radius: 12px; padding: 14px 28px;
+      text-align: center; max-width: 64%; min-width: 320px;
+      display: none; z-index: 20;
+      box-shadow: 0 4px 32px rgba(34,160,50,.2), 0 0 0 1px rgba(34,160,50,.08);
     }
-    .q-lbl { font-size:.55rem; letter-spacing:.14em; text-transform:uppercase;
-             color:rgba(240,244,240,.3); margin-bottom:5px; }
+    .q-lbl {
+      font-size: .52rem; letter-spacing: .16em; text-transform: uppercase;
+      color: var(--mu); margin-bottom: 6px;
+    }
+    #q-text { font-family: var(--fh); font-size: 1.05rem; font-weight: 600; line-height: 1.5; color: var(--text); }
 
-    /* ── Feedback flash ──────────────────────────────────── */
+    /* ── Feedback flash ── */
     #flash {
-      position:fixed; top:50%; left:50%; transform:translate(-50%,-50%);
-      font-size:1.8rem; font-weight:900; padding:12px 28px; border-radius:10px;
-      pointer-events:none; display:none; z-index:30;
+      position: absolute; top: 50%; left: 50%;
+      transform: translate(-50%, -50%);
+      font-family: var(--fh); font-size: 1.6rem; font-weight: 700;
+      padding: 14px 30px; border-radius: 12px;
+      pointer-events: none; display: none; z-index: 30;
+      letter-spacing: .05em;
     }
-    #flash.ok  { background:rgba(34,160,50,.14); color:var(--g); border:2px solid rgba(34,160,50,.35); }
-    #flash.bad { background:rgba(192,57,43,.13); color:#ef4444; border:2px solid rgba(192,57,43,.35); }
-
-    /* ── Mobile swipe hint ───────────────────────────────── */
-    #swipe-hint {
-      position:fixed; bottom:22px; left:50%; transform:translateX(-50%);
-      font-size:.65rem; color:rgba(240,244,240,.22); z-index:20; display:none;
+    #flash.ok  {
+      background: rgba(34,160,50,.15); color: var(--g);
+      border: 2px solid rgba(34,160,50,.4);
+      box-shadow: 0 0 40px rgba(34,160,50,.2);
+    }
+    #flash.bad {
+      background: rgba(192,57,43,.12); color: #ef4444;
+      border: 2px solid rgba(192,57,43,.4);
+      box-shadow: 0 0 40px rgba(192,57,43,.15);
     }
 
-    /* ── Game Over ───────────────────────────────────────── */
+    /* ── Click hint ── */
+    #click-hint {
+      position: absolute; bottom: 72px; left: 50%; transform: translateX(-50%);
+      font-size: .62rem; color: var(--mu); z-index: 20; display: none;
+      letter-spacing: .08em; text-transform: uppercase;
+      background: rgba(0,0,0,.4); padding: 5px 12px; border-radius: 20px;
+      border: 1px solid var(--bd); backdrop-filter: blur(4px);
+    }
+
+    /* ── Game Over ── */
     #game-over {
-      position:fixed; inset:0; background:rgba(0,0,0,.88); z-index:40;
-      display:none; flex-direction:column; align-items:center;
-      justify-content:center; gap:10px;
+      position: absolute; inset: 0;
+      background: rgba(0,0,0,.92); z-index: 40;
+      display: none; flex-direction: column; align-items: center;
+      justify-content: center; gap: 12px;
+      backdrop-filter: blur(8px);
     }
-    #game-over h1  { color:#c0392b; font-size:3.8rem; }
-    #go-score      { font-size:2rem; color:var(--g); }
-    #go-detail     { font-size:.82rem; color:rgba(240,244,240,.4); margin-bottom:16px; }
-    .btn { padding:11px 28px; border:none; border-radius:8px; color:#fff;
-           font-size:1rem; font-weight:700; cursor:pointer; transition:all .18s; margin:4px; }
-    .btn-p { background:var(--g); }
-    .btn-p:hover { background:#1a8028; transform:translateY(-2px); }
-    .btn-s { background:rgba(255,255,255,.07); border:1px solid rgba(255,255,255,.12); color:rgba(240,244,240,.6); }
-    .btn-s:hover { border-color:var(--g); color:var(--g); background:rgba(34,160,50,.08); }
+    .go-logo { height: 44px; width: auto; margin-bottom: 8px; filter: drop-shadow(0 0 12px rgba(34,160,50,.4)); opacity: .7; }
+    #game-over h1 {
+      font-family: var(--fh); color: #c0392b;
+      font-size: 4rem; font-weight: 700; letter-spacing: .1em;
+    }
+    .go-divider { width: 60px; height: 2px; background: var(--bd); border-radius: 2px; }
+    #go-score { font-family: var(--fh); font-size: 2.5rem; font-weight: 700; color: var(--g); }
+    #go-detail { font-size: .78rem; color: var(--mu); margin-bottom: 8px; }
+    .go-btns { display: flex; gap: 10px; flex-wrap: wrap; justify-content: center; }
+    .btn {
+      padding: 11px 28px; border-radius: 9px;
+      font-family: var(--fh); font-size: 1rem; font-weight: 700;
+      cursor: pointer; transition: all .18s; letter-spacing: .04em;
+    }
+    .btn-p { background: var(--g); border: none; color: #fff; }
+    .btn-p:hover { background: var(--g2); transform: translateY(-2px); }
+    .btn-s {
+      background: transparent;
+      border: 1px solid rgba(255,255,255,.12);
+      color: var(--mu);
+    }
+    .btn-s:hover { border-color: var(--g); color: var(--g); background: rgba(34,160,50,.08); }
+
+    /* ── Speed line (current lane indicator) ── */
+    .lane-highlight {
+      position: absolute; bottom: 0;
+      width: 33.33%; height: 6px;
+      background: var(--g);
+      border-radius: 4px 4px 0 0;
+      transition: left .2s cubic-bezier(.34,1.56,.64,1);
+      z-index: 25;
+      box-shadow: 0 0 12px rgba(34,160,50,.6);
+    }
   </style>
 
   <script type="importmap">
@@ -153,75 +308,112 @@
 </head>
 <body>
 
-<!-- Auth Screen -->
-<div id="auth-screen">
-  <div class="auth-icon">🔒</div>
-  <div class="auth-title">Access Required</div>
-  <div class="auth-sub">You need to be logged in to play the Runner. Please enter the platform first.</div>
-  <button class="auth-btn" onclick="window.location.href='index.html'">→ Login / Get Access</button>
-</div>
+<div id="game-root">
 
-<!-- Loading Screen -->
-<div id="loading-screen">
-  <div class="ld-brand">SAPZCODES</div>
-  <div class="ld-title">3D <span>Runner</span></div>
-  <div class="ld-bar-wrap"><div class="ld-bar-fill" id="ld-bar"></div></div>
-  <div class="ld-status" id="ld-status">Initialising…</div>
-  <div class="ld-err"   id="ld-err"></div>
-  <button class="ld-retry" id="ld-retry" onclick="window._retryFetch()">↩ Retry</button>
-</div>
-
-<!-- HUD -->
-<div id="hud">
-  <div class="hud-brand">◉ ABAP Runner</div>
-  <div class="hud-stats">
-    <div class="hud-stat">
-      <span class="hud-lbl">Score</span>
-      <span class="hud-val green" id="hud-score">0</span>
-    </div>
-    <div class="hud-stat">
-      <span class="hud-lbl">Correct</span>
-      <span class="hud-val" id="hud-correct">0</span>
-    </div>
-    <div class="hud-lives">
-      <span class="heart" id="h1">❤️</span>
-      <span class="heart" id="h2">❤️</span>
-      <span class="heart" id="h3">❤️</span>
-    </div>
-    <!-- Play / Pause button -->
-    <button id="btn-playpause" title="Pause / Resume">⏸</button>
+  <!-- Auth Screen -->
+  <div id="auth-screen">
+    <div class="auth-icon">🔒</div>
+    <div class="auth-title">Access Required</div>
+    <div class="auth-sub">You need to be logged in to play the Runner. Please enter the platform first.</div>
+    <button class="auth-btn" onclick="window.location.href='index.html'">→ Login / Get Access</button>
   </div>
-</div>
 
-<!-- Pause overlay -->
-<div id="pause-overlay">
-  <h2>PAUSED</h2>
-  <p>Game is paused</p>
-  <button class="btn-resume" id="btn-resume-overlay">▶ Resume</button>
-</div>
+  <!-- Loading Screen -->
+  <div id="loading-screen">
+    <img class="ld-logo" src="logo.png" alt="SAPZCodes" onerror="this.style.display='none'">
+    <div class="ld-brand">SAPZCODES</div>
+    <div class="ld-title">ABAP <span>Runner</span></div>
+    <div class="ld-bar-wrap"><div class="ld-bar-fill" id="ld-bar"></div></div>
+    <div class="ld-status" id="ld-status">Initialising…</div>
+    <div class="ld-err"   id="ld-err"></div>
+    <button class="ld-retry" id="ld-retry" onclick="window._retryFetch()">↩ Retry</button>
+  </div>
 
-<!-- Question -->
-<div id="question-box">
-  <div class="q-lbl">Question — Move to the correct lane</div>
-  <span id="q-text"></span>
-</div>
+  <!-- HUD -->
+  <div id="hud">
+    <div class="hud-left">
+      <img class="hud-logo" src="logo.png" alt="" onerror="this.style.display='none'">
+      <div class="hud-divider"></div>
+      <div class="hud-brand">◉ ABAP Runner</div>
+    </div>
+    <div class="hud-stats">
+      <div class="hud-stat">
+        <span class="hud-lbl">Score</span>
+        <span class="hud-val green" id="hud-score">0</span>
+      </div>
+      <div class="hud-stat">
+        <span class="hud-lbl">Correct</span>
+        <span class="hud-val" id="hud-correct">0</span>
+      </div>
+      <div class="hud-lives">
+        <span class="heart" id="h1">❤️</span>
+        <span class="heart" id="h2">❤️</span>
+        <span class="heart" id="h3">❤️</span>
+      </div>
+      <button id="btn-playpause" title="Pause / Resume (Space)">⏸</button>
+    </div>
+  </div>
 
-<!-- Feedback -->
-<div id="flash"></div>
+  <!-- Lane click zones (always active during game) -->
+  <div id="lane-zones">
+    <div class="lane-zone" id="lane-left"   onclick="clickLane(0)"></div>
+    <div class="lane-zone" id="lane-center" onclick="clickLane(1)"></div>
+    <div class="lane-zone" id="lane-right"  onclick="clickLane(2)"></div>
+  </div>
 
-<!-- Mobile swipe hint -->
-<div id="swipe-hint">← → Arrow keys or swipe to choose a lane →</div>
+  <!-- Lane indicators at bottom -->
+  <div id="lane-indicators">
+    <div class="lane-ind" id="lind-0" onclick="clickLane(0)">
+      <span class="lane-ind-icon">◀</span>
+      <span class="lane-ind-label">Left</span>
+    </div>
+    <div class="lane-ind active" id="lind-1" onclick="clickLane(1)">
+      <span class="lane-ind-icon">▲</span>
+      <span class="lane-ind-label">Centre</span>
+    </div>
+    <div class="lane-ind" id="lind-2" onclick="clickLane(2)">
+      <span class="lane-ind-icon">▶</span>
+      <span class="lane-ind-label">Right</span>
+    </div>
+    <div class="lane-highlight" id="lane-highlight" style="left:33.33%"></div>
+  </div>
 
-<!-- Game Over -->
-<div id="game-over">
-  <h1>GAME OVER</h1>
-  <div id="go-score">Score: 0</div>
-  <div id="go-detail">0 correct answers</div>
-  <button class="btn btn-p" onclick="location.reload()">↩ Play Again</button>
-  <button class="btn btn-s" onclick="window.location.href='games.html'">← Games Hub</button>
-</div>
+  <!-- Pause overlay -->
+  <div id="pause-overlay">
+    <div class="pause-icon">⏸</div>
+    <h2>PAUSED</h2>
+    <p>Game is paused — take a breath</p>
+    <button class="btn-resume" id="btn-resume-overlay">▶ Resume</button>
+  </div>
 
-<!-- ── Security block ─────────────────────────────────────────── -->
+  <!-- Question -->
+  <div id="question-box">
+    <div class="q-lbl">◉ Question — Move to the correct lane</div>
+    <span id="q-text"></span>
+  </div>
+
+  <!-- Feedback -->
+  <div id="flash"></div>
+
+  <!-- Click hint -->
+  <div id="click-hint">Click a lane or use ← → arrows</div>
+
+  <!-- Game Over -->
+  <div id="game-over">
+    <img class="go-logo" src="logo.png" alt="" onerror="this.style.display='none'">
+    <h1>GAME OVER</h1>
+    <div class="go-divider"></div>
+    <div id="go-score">Score: 0</div>
+    <div id="go-detail">0 correct answers</div>
+    <div class="go-btns">
+      <button class="btn btn-p" onclick="location.reload()">↩ Play Again</button>
+      <button class="btn btn-s" onclick="window.location.href='games.html'">← Games Hub</button>
+    </div>
+  </div>
+
+</div><!-- #game-root -->
+
+<!-- ── Security block ── -->
 <script>
 (function () {
   document.addEventListener('contextmenu', e => e.preventDefault());
@@ -237,7 +429,7 @@
         window.outerHeight - window.innerHeight > 160) {
       document.body.innerHTML =
         '<div style="display:flex;align-items:center;justify-content:center;height:100vh;' +
-        'background:#0d1117;color:#c0392b;font-family:monospace;font-size:1.1rem;' +
+        'background:#0a0f0a;color:#c0392b;font-family:monospace;font-size:1.1rem;' +
         'text-align:center;padding:20px;">⛔ DevTools detected. Close DevTools to continue.</div>';
     }
   }, 1200);
@@ -249,7 +441,7 @@
   })) {
     document.body.innerHTML =
       '<div style="display:flex;align-items:center;justify-content:center;height:100vh;' +
-      'background:#0d1117;color:#c0392b;font-family:monospace;font-size:1.1rem;' +
+      'background:#0a0f0a;color:#c0392b;font-family:monospace;font-size:1.1rem;' +
       'text-align:center;padding:20px;">⛔ This content is only available on the official SAPZCodes platform.</div>';
     throw new Error('Domain lock');
   }
@@ -260,20 +452,44 @@
     throw new Error('Not authenticated');
   }
 })();
+
+// Global lane click handler (accessible from HTML onclick)
+window.clickLane = function(laneIndex) {
+  if (window._gameState && !window._gameState.gameOver && window._gameState.running && !window._gameState.paused) {
+    window._gameState.currentLane = laneIndex;
+    window._gameState.targetX     = window._LANES[laneIndex];
+    updateLaneIndicators(laneIndex);
+    if (window._gameState.choosing) {
+      scheduleConfirm();
+    }
+  }
+};
+
+function updateLaneIndicators(laneIndex) {
+  [0,1,2].forEach(i => {
+    const el = document.getElementById('lind-' + i);
+    if (el) el.className = 'lane-ind' + (i === laneIndex ? ' active' : '');
+  });
+  const hl = document.getElementById('lane-highlight');
+  if (hl) hl.style.left = (laneIndex * 33.33) + '%';
+}
 </script>
 
-<!-- ── Main game module ─────────────────────────────────────────── -->
+<!-- ── Main game module ── -->
 <script type="module">
 import * as THREE from 'three';
 import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
 
 // ─── CONFIG ────────────────────────────────────────────────────
-const GAS_URL    = 'https://script.google.com/macros/s/AKfycbx4H_6v2nNH_Xa0FajhKQKCZgHgwuupi2CD6NdC4YuatcE0f451IFgXbNES-7sYRF4Hog/exec;
+const GAS_URL    = 'https://script.google.com/macros/s/AKfycbx4H_6v2nNH_Xa0FajhKQKCZgHgwuupi2CD6NdC4YuatcE0f451IFgXbNES-7sYRF4Hog/exec';
 const API_SECRET = 'SZC-INTERNAL-2025-XK9';
 const LIVES      = 3;
 const SPAWN_Z    = 35;
-const LANES      = [2.5, 0, -2.5]; // index 0=left, 1=centre, 2=right on screen
+const LANES      = [2.5, 0, -2.5];
 const MODEL_URL  = 'https://threejs.org/examples/models/gltf/Soldier.glb';
+
+// Expose LANES globally for the onclick handler
+window._LANES = LANES;
 
 // ─── LOADING UI ────────────────────────────────────────────────
 function setBar(pct, msg) {
@@ -296,7 +512,7 @@ let quizData = [];
 async function fetchQuestions() {
   hideErr(); setBar(10, 'Connecting to question bank…');
   try {
-    setBar(35, 'Fetching subway questions…');
+    setBar(35, 'Fetching questions…');
     const url = `${GAS_URL}?action=getSubwayData&key=${encodeURIComponent(API_SECRET)}`;
     const res  = await fetch(url, { redirect: 'follow' });
     setBar(65, 'Parsing…');
@@ -305,7 +521,7 @@ async function fetchQuestions() {
     if (json.status !== 'ok' || !json.data || json.data.length === 0)
       throw new Error('No questions returned — check the "subway" tab in your sheet.');
     quizData = json.data;
-    setBar(85, 'Loading 3D assets & city…');
+    setBar(85, 'Loading 3D assets…');
     await Promise.all([loadScene(), loadCity()]);
     setBar(100, '✓ Ready!');
     await new Promise(r => setTimeout(r, 400));
@@ -321,7 +537,7 @@ window._retryFetch = fetchQuestions;
 
 // ─── SCENE ─────────────────────────────────────────────────────
 const scene    = new THREE.Scene();
-scene.background = new THREE.Color(0x87ceeb); // sky blue
+scene.background = new THREE.Color(0x87ceeb);
 scene.fog        = new THREE.FogExp2(0xb0d0e8, 0.012);
 
 const camera   = new THREE.PerspectiveCamera(60, window.innerWidth / window.innerHeight, 0.1, 500);
@@ -333,8 +549,10 @@ renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
 renderer.setSize(window.innerWidth, window.innerHeight);
 renderer.setClearColor(0x87ceeb);
 renderer.shadowMap.enabled = true;
-renderer.domElement.style.cssText = 'position:fixed;inset:0;z-index:1;';
-document.body.appendChild(renderer.domElement);
+
+// Critical: ensure canvas is absolutely positioned and centred
+renderer.domElement.style.cssText = 'position:absolute;top:0;left:0;width:100%;height:100%;z-index:1;';
+document.getElementById('game-root').appendChild(renderer.domElement);
 
 window.addEventListener('resize', () => {
   camera.aspect = window.innerWidth / window.innerHeight;
@@ -384,7 +602,7 @@ scene.add(trackMesh);
   scene.add(wall);
 });
 
-// ─── CITY BACKGROUND (LittlestTokyo) ──────────────────────────
+// ─── CITY ──────────────────────────────────────────────────────
 const CITY_URL = 'https://threejs.org/examples/models/gltf/LittlestTokyo.glb';
 let cityMixer  = null;
 
@@ -393,38 +611,23 @@ function loadCity() {
     const loader = new GLTFLoader();
     loader.load(CITY_URL, (gltf) => {
       const city = gltf.scene;
-
-      // Scale and position: large, centred, pushed back so it wraps around track
       city.scale.set(0.012, 0.012, 0.012);
       city.position.set(0, -0.5, 30);
-      city.rotation.y = Math.PI; // face forward
-
-      // Make every mesh receive/cast shadows but don't interfere with gameplay
+      city.rotation.y = Math.PI;
       city.traverse(child => {
-        if (child.isMesh) {
-          child.receiveShadow = true;
-          child.castShadow    = false; // keep perf reasonable
-        }
+        if (child.isMesh) { child.receiveShadow = true; child.castShadow = false; }
       });
-
       scene.add(city);
-
-      // Play the built-in city animation (lights, trams, people)
       if (gltf.animations.length > 0) {
         cityMixer = new THREE.AnimationMixer(city);
         gltf.animations.forEach(clip => cityMixer.clipAction(clip).play());
       }
-
       resolve();
-    }, undefined, () => {
-      // City failed to load — not a blocker, game still works
-      console.warn('City model failed to load, continuing without it.');
-      resolve();
-    });
+    }, undefined, () => { console.warn('City model failed, continuing.'); resolve(); });
   });
 }
 
-// Scrolling floor tiles with ABAP words (keep the track surface)
+// ─── FLOOR TILES ───────────────────────────────────────────────
 const FLOOR_WORDS = ['DATA','TYPE','LOOP','SELECT','IF','FORM','CALL','READ','SORT','MOVE','WRITE','CLASS','METHOD','CLEAR','BDEF','CDS'];
 const TILE_W = 9.4, TILE_D = 8, TILE_COUNT = 16;
 const floorTiles = [];
@@ -454,7 +657,7 @@ let mixer      = null;
 let idleAction = null;
 let runAction  = null;
 let walkAction = null;
-let charGroup  = new THREE.Group();
+const charGroup  = new THREE.Group();
 charGroup.position.set(0, 0, 2);
 scene.add(charGroup);
 
@@ -470,10 +673,9 @@ function loadScene() {
       });
       charGroup.add(model);
       mixer = new THREE.AnimationMixer(model);
-      // Soldier.glb: 0=Idle, 1=Run, 2=TPose, 3=Walk
-      idleAction = mixer.clipAction(gltf.animations[0]); // Idle
-      runAction  = mixer.clipAction(gltf.animations[1]); // Run
-      walkAction = mixer.clipAction(gltf.animations[3]); // Walk — used while choosing
+      idleAction = mixer.clipAction(gltf.animations[0]);
+      runAction  = mixer.clipAction(gltf.animations[1]);
+      walkAction = mixer.clipAction(gltf.animations[3]);
       runAction.enabled  = false;
       walkAction.enabled = false;
       idleAction.play();
@@ -509,11 +711,14 @@ const state = {
   correct       : 0,
   gameOver      : false,
   running       : false,
-  paused        : false,       // manual pause
-  choosing      : false,       // waiting for player to pick a lane
+  paused        : false,
+  choosing      : false,
   qIndex        : 0,
   speed         : 15,
 };
+
+// Expose state globally for the click handler
+window._gameState = state;
 
 let activeQuestion  = null;
 let obstacleMeshes  = [];
@@ -543,7 +748,6 @@ document.getElementById('btn-resume-overlay').addEventListener('click', () => {
   setPaused(false);
 });
 
-// Space bar to pause/resume
 window.addEventListener('keydown', e => {
   if (e.code === 'Space' && state.running && !state.gameOver) {
     e.preventDefault();
@@ -552,54 +756,59 @@ window.addEventListener('keydown', e => {
 });
 
 // ─── LANE SELECTION ────────────────────────────────────────────
-// Arrow keys: Left = move left (lane--), Right = move right (lane++)
-// Up / Down = confirm current lane (stay in same lane)
+// Arrow keys still work anytime during game (not just when choosing)
 window.addEventListener('keydown', e => {
-  if (state.gameOver || state.paused || !state.choosing) return;
+  if (state.gameOver || state.paused || !state.running) return;
 
   if (e.key === 'ArrowLeft' && state.currentLane > 0) {
     state.currentLane--;
     state.targetX = LANES[state.currentLane];
+    updateLaneIndicators(state.currentLane);
     playWalk();
-    scheduleConfirm();
+    if (state.choosing) scheduleConfirm();
   }
   if (e.key === 'ArrowRight' && state.currentLane < 2) {
     state.currentLane++;
     state.targetX = LANES[state.currentLane];
+    updateLaneIndicators(state.currentLane);
     playWalk();
-    scheduleConfirm();
+    if (state.choosing) scheduleConfirm();
   }
-  if (e.key === 'ArrowUp' || e.key === 'ArrowDown' || e.key === 'Enter') {
+  if ((e.key === 'ArrowUp' || e.key === 'ArrowDown' || e.key === 'Enter') && state.choosing) {
     e.preventDefault();
     clearTimeout(_confirmTimer);
     confirmLane();
   }
 });
 
-// Touch swipe: swipe right = move right (lane++), swipe left = move left (lane--)
+// Touch swipe
 let _tx = 0;
 window.addEventListener('touchstart', e => { _tx = e.changedTouches[0].screenX; }, { passive: true });
 window.addEventListener('touchend', e => {
-  if (state.paused || state.gameOver || !state.choosing) return;
+  if (state.paused || state.gameOver || !state.running) return;
   const dx = e.changedTouches[0].screenX - _tx;
   if (dx > 30 && state.currentLane < 2) {
     state.currentLane++;
     state.targetX = LANES[state.currentLane];
-    scheduleConfirm();
+    updateLaneIndicators(state.currentLane);
+    if (state.choosing) scheduleConfirm();
   }
   if (dx < -30 && state.currentLane > 0) {
     state.currentLane--;
     state.targetX = LANES[state.currentLane];
-    scheduleConfirm();
+    updateLaneIndicators(state.currentLane);
+    if (state.choosing) scheduleConfirm();
   }
 });
 
-// Wait for character to visually reach the lane (~300ms lerp), then judge
 let _confirmTimer = null;
 function scheduleConfirm() {
   clearTimeout(_confirmTimer);
   _confirmTimer = setTimeout(confirmLane, 320);
 }
+
+// Make scheduleConfirm globally accessible
+window.scheduleConfirm = scheduleConfirm;
 
 function confirmLane() {
   if (!state.choosing || state.paused || state.gameOver) return;
@@ -614,7 +823,17 @@ function confirmLane() {
   onAnswer(hit.correct);
 }
 
-function hideChooseUI() { /* no overlay to hide */ }
+// ─── LANE INDICATOR UPDATE ─────────────────────────────────────
+// Make globally accessible (called from non-module script)
+window.updateLaneIndicators = updateLaneIndicators;
+function updateLaneIndicators(laneIndex) {
+  [0,1,2].forEach(i => {
+    const el = document.getElementById('lind-' + i);
+    if (el) el.className = 'lane-ind' + (i === laneIndex ? ' active' : '');
+  });
+  const hl = document.getElementById('lane-highlight');
+  if (hl) hl.style.left = (laneIndex * 33.33) + '%';
+}
 
 // ─── HUD HELPERS ───────────────────────────────────────────────
 function updateHUD() {
@@ -659,14 +878,24 @@ function spawnNextQuestion() {
     canvas.height = 256;
     const ctx = canvas.getContext('2d');
 
-    ctx.fillStyle = 'rgba(0,0,0,0.85)';
-    ctx.roundRect(4, 4, 504, 248, 16);
+    // Modern glassmorphism style obstacle
+    ctx.fillStyle = 'rgba(0,0,0,0.88)';
+    ctx.roundRect(4, 4, 504, 248, 18);
     ctx.fill();
 
-    ctx.strokeStyle = LANE_COLORS_HEX[i];
-    ctx.lineWidth = 8;
-    ctx.roundRect(4, 4, 504, 248, 16);
+    // Glow border
+    const grd = ctx.createLinearGradient(0, 0, 0, 256);
+    grd.addColorStop(0, LANE_COLORS_HEX[i]);
+    grd.addColorStop(1, LANE_COLORS_HEX[i] + '44');
+    ctx.strokeStyle = grd;
+    ctx.lineWidth = 6;
+    ctx.roundRect(4, 4, 504, 248, 18);
     ctx.stroke();
+
+    // Inner glow top
+    ctx.fillStyle = LANE_COLORS_HEX[i] + '22';
+    ctx.roundRect(4, 4, 504, 80, [18, 18, 0, 0]);
+    ctx.fill();
 
     ctx.fillStyle = '#ffffff';
     ctx.textAlign = 'center';
@@ -677,24 +906,21 @@ function spawnNextQuestion() {
     let line = '';
     for (const w of words) {
       const test = line ? line + ' ' + w : w;
-      ctx.font = 'bold 44px monospace';
+      ctx.font = 'bold 42px monospace';
       if (ctx.measureText(test).width > 460 && line) {
-        lines.push(line);
-        line = w;
+        lines.push(line); line = w;
       } else { line = test; }
     }
     lines.push(line);
 
-    const lineH = 54;
+    const lineH = 52;
     const startY = 128 - ((lines.length - 1) * lineH) / 2;
-    ctx.font = 'bold 44px monospace';
+    ctx.font = 'bold 42px monospace';
     lines.forEach((l, li) => ctx.fillText(l, 256, startY + li * lineH));
 
-    const tex = new THREE.CanvasTexture(canvas);
-    const solidMat = new THREE.MeshLambertMaterial({
-      color: LANE_COLORS_HEX[i], transparent: true, opacity: 0.75,
-    });
-    const textMat = new THREE.MeshLambertMaterial({ map: tex });
+    const tex      = new THREE.CanvasTexture(canvas);
+    const solidMat = new THREE.MeshLambertMaterial({ color: LANE_COLORS_HEX[i], transparent: true, opacity: 0.7 });
+    const textMat  = new THREE.MeshLambertMaterial({ map: tex });
     const materials = [solidMat, solidMat, solidMat, solidMat, solidMat, textMat];
 
     const geo = new THREE.BoxGeometry(2.2, 1.6, 0.5);
@@ -704,9 +930,8 @@ function spawnNextQuestion() {
 
     const edges = new THREE.EdgesGeometry(geo);
     box.add(new THREE.LineSegments(edges,
-      new THREE.LineBasicMaterial({ color: LANE_COLORS_HEX[i], transparent: true, opacity: 0.95 })
+      new THREE.LineBasicMaterial({ color: LANE_COLORS_HEX[i], transparent: true, opacity: 0.9 })
     ));
-
     scene.add(box);
     obstacleMeshes.push(box);
     obstacleData.push({ mesh: box, correct: answers[i].correct, laneIndex: i });
@@ -714,22 +939,19 @@ function spawnNextQuestion() {
   questionPending = false;
 }
 
-// ─── OBSTACLE APPROACH — pause & ask ───────────────────────────
-const PAUSE_TRIGGER_Z = 10; // distance at which we pause and ask
+// ─── OBSTACLE APPROACH ─────────────────────────────────────────
+const PAUSE_TRIGGER_Z = 10;
 
 function updateObstacles(dt) {
   if (!activeQuestion || state.gameOver || questionPending || state.choosing) return;
-
   for (const obs of obstacleData) {
     obs.mesh.position.z -= state.speed * dt;
+    // Subtle float animation
+    obs.mesh.position.y = 1.2 + Math.sin(Date.now() * 0.003 + obs.laneIndex) * 0.05;
   }
-
-  // When first obstacle reaches the trigger distance, pause the run and ask
   const leadZ = obstacleData[0]?.mesh.position.z ?? 999;
   if (leadZ <= PAUSE_TRIGGER_Z && !state.choosing) {
-    // Freeze obstacles in place
     triggerChoosing();
-    return;
   }
 }
 
@@ -738,14 +960,13 @@ function triggerChoosing() {
   obstacleMeshes.forEach((m, i) => {
     obstacleData[i].mesh.position.z = PAUSE_TRIGGER_Z;
   });
-  playWalk(); // walk-in-place looks much better than idle while waiting for input
+  playWalk();
 }
 
 // ─── ANSWER HANDLING ───────────────────────────────────────────
-function onAnswer(correct) {
+async function onAnswer(correct) {
   document.getElementById('question-box').style.display = 'none';
   const flash = document.getElementById('flash');
-
   playIdle();
 
   if (correct) {
@@ -755,6 +976,7 @@ function onAnswer(correct) {
     flash.textContent = '✓ CORRECT! +100';
     flash.className   = 'ok';
     flash.style.display = 'block';
+    spawnParticles(0x22a032);
   } else {
     state.lives--;
     updateLives();
@@ -776,30 +998,36 @@ function onAnswer(correct) {
   setTimeout(() => { playRun(); spawnNextQuestion(); }, 1300);
 }
 
-function triggerGameOver() {
+async function triggerGameOver() {
   state.gameOver = true;
   playIdle();
   obstacleMeshes.forEach(m => scene.remove(m));
   obstacleMeshes = [];
   obstacleData   = [];
-  hideChooseUI();
   document.getElementById('question-box').style.display = 'none';
   document.getElementById('flash').style.display        = 'none';
+  document.getElementById('lane-indicators').style.display = 'none';
+  document.getElementById('lane-zones').style.display      = 'none';
   document.getElementById('go-score').textContent  = 'Score: '  + state.score;
   document.getElementById('go-detail').textContent = state.correct + ' correct answers';
-fetch(GAS_URL, {
-  method: 'POST',
-  headers: { 'Content-Type': 'text/plain' },
-  body: JSON.stringify({
-    action:  'saveScore',
-    apiKey:  API_SECRET,
-    gameId:  'abap-runner',   // use 'subway' for subway-abaper.html
-    score:   state.score,
-    name:    sessionStorage.getItem('szc_name')  || localStorage.getItem('szc_name')  || 'Student',
-    email:   sessionStorage.getItem('szc_email') || localStorage.getItem('szc_email') || '',
-  }),
-  redirect: 'follow',
-}).catch(() => {});
+
+  // ── Save score to sheet ──
+  try {
+    await fetch(GAS_URL, {
+      method: 'POST',
+      headers: { 'Content-Type': 'text/plain' },
+      body: JSON.stringify({
+        action: 'saveScore',
+        apiKey:  API_SECRET,
+        gameId:  'abap-runner',
+        score:   state.score,
+        name:    sessionStorage.getItem('szc_name')  || localStorage.getItem('szc_name')  || 'Student',
+        email:   sessionStorage.getItem('szc_email') || localStorage.getItem('szc_email') || '',
+      }),
+      redirect: 'follow',
+    });
+  } catch(e) { /* silent fail */ }
+
   document.getElementById('game-over').style.display = 'flex';
 }
 
@@ -850,12 +1078,22 @@ function startGame() {
 
   updateHUD();
   updateLives();
+  updateLaneIndicators(1);
 
-  document.getElementById('hud').style.display         = 'flex';
-  document.getElementById('swipe-hint').style.display  = 'block';
-  document.getElementById('game-over').style.display   = 'none';
-  document.getElementById('pause-overlay').style.display = 'none';
-  document.getElementById('btn-playpause').textContent  = '⏸';
+  document.getElementById('hud').style.display              = 'flex';
+  document.getElementById('lane-zones').style.display       = 'block';
+  document.getElementById('lane-indicators').style.display  = 'flex';
+  document.getElementById('click-hint').style.display       = 'block';
+  document.getElementById('game-over').style.display        = 'none';
+  document.getElementById('pause-overlay').style.display    = 'none';
+  document.getElementById('btn-playpause').textContent      = '⏸';
+
+  // Hide click hint after 5 seconds
+  setTimeout(() => {
+    const hint = document.getElementById('click-hint');
+    if (hint) hint.style.opacity = '0';
+    setTimeout(() => { if (hint) hint.style.display = 'none'; }, 500);
+  }, 5000);
 
   playRun();
   spawnNextQuestion();
@@ -868,24 +1106,20 @@ function loop() {
   requestAnimationFrame(loop);
   const dt = Math.min(clock.getDelta(), 0.05);
 
-  // Always render and animate the character + city
   if (mixer) mixer.update(dt);
   if (cityMixer) cityMixer.update(dt);
 
   if (!state.gameOver && state.running && !state.paused) {
-    // Smooth lane switch (always active so player can see character move while choosing)
     charGroup.position.x = THREE.MathUtils.lerp(charGroup.position.x, state.targetX, 10 * dt);
     charGroup.position.y = 0;
     charGroup.position.z = 2;
 
-    // Only scroll world when NOT choosing
     if (!state.choosing) {
       const TOTAL = TILE_COUNT * TILE_D;
       floorTiles.forEach(tile => {
         tile.position.z -= state.speed * dt;
         if (tile.position.z < -TILE_D * 2) tile.position.z += TOTAL;
       });
-
       updateObstacles(dt);
     }
 
