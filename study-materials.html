@@ -8,16 +8,10 @@
 <link rel="preconnect" href="https://fonts.googleapis.com"/>
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
 <link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@500;600;700&family=Exo+2:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet"/>
+<link rel="stylesheet" href="style.css"/>
 <style>
-:root {
-  --g:#22a032; --g2:#1a8028; --bg:#0a0f0a; --s1:#0d1410; --s2:#111a13;
-  --text:#e8f0e8; --mu:rgba(232,240,232,.4); --gr:rgba(232,240,232,.65);
-  --bd:rgba(34,160,50,.15); --bd2:rgba(34,160,50,.28);
-  --fh:'Rajdhani',sans-serif; --fb:'Exo 2',sans-serif; --fm:'JetBrains Mono',monospace;
-  --r:14px; --shadow:0 4px 20px rgba(0,0,0,.25);
-}
-* { box-sizing:border-box; margin:0; padding:0; }
-body { background:var(--bg); color:var(--text); font-family:var(--fb); min-height:100vh; }
+body { cursor: default; overflow-x: hidden; background: var(--bg); color: var(--text); }
+#cur, #ring { display: none; }
 
 .topbar {
   height: 58px; background: var(--s1); border-bottom: 1px solid var(--bd);
@@ -39,7 +33,7 @@ body { background:var(--bg); color:var(--text); font-family:var(--fb); min-heigh
 
 .wrap { max-width: 920px; margin: 0 auto; padding: 34px 20px 60px; }
 .hdr { margin-bottom: 26px; }
-.hdr h1 { font-family: var(--fh); font-size: 1.7rem; font-weight: 700; margin-bottom: 6px; }
+.hdr h1 { font-family: var(--fh); font-size: 1.7rem; font-weight: 700; margin-bottom: 6px; color: var(--text); }
 .hdr h1 span { color: var(--g); }
 .hdr p { font-size: .84rem; color: var(--mu); }
 
@@ -50,15 +44,15 @@ body { background:var(--bg); color:var(--text); font-family:var(--fb); min-heigh
 
 .mat-list { display:flex; flex-direction:column; gap:14px; }
 .mat-card { background: var(--s1); border:1px solid var(--bd); border-radius: var(--r); padding: 20px 22px; transition: all .2s; }
-.mat-card:hover { border-color: rgba(34,160,50,.35); box-shadow: 0 8px 24px rgba(0,0,0,.2); }
+.mat-card:hover { border-color: rgba(34,160,50,.35); box-shadow: 0 8px 24px rgba(0,0,0,.1); }
 .mat-top { display:flex; align-items:flex-start; justify-content:space-between; gap:10px; margin-bottom:8px; flex-wrap:wrap; }
-.mat-title { font-family: var(--fh); font-size: 1.08rem; font-weight: 700; }
-.mat-cat { font-family: var(--fm); font-size: .58rem; font-weight:700; letter-spacing:.1em; text-transform:uppercase; padding:3px 9px; border-radius:20px; background: rgba(37,99,235,.08); color:#60a5fa; border:1px solid rgba(37,99,235,.2); white-space:nowrap; }
+.mat-title { font-family: var(--fh); font-size: 1.08rem; font-weight: 700; color: var(--text); }
+.mat-cat { font-family: var(--fm); font-size: .58rem; font-weight:700; letter-spacing:.1em; text-transform:uppercase; padding:3px 9px; border-radius:20px; background: rgba(37,99,235,.08); color:#2563eb; border:1px solid rgba(37,99,235,.2); white-space:nowrap; }
 .mat-desc { font-size: .84rem; color: var(--gr); line-height: 1.65; margin-bottom: 12px; white-space: pre-wrap; }
 .mat-links { display:flex; gap:10px; flex-wrap:wrap; }
 .mat-link { font-size:.78rem; font-weight:700; padding:7px 14px; border-radius:7px; text-decoration:none; display:inline-flex; align-items:center; gap:6px; }
 .mat-link.primary { background: var(--g); color:#fff; }
-.mat-link.primary:hover { background: var(--g2); }
+.mat-link.primary:hover { background: #1a8028; }
 .mat-link.secondary { background: var(--bg); border:1px solid var(--bd2); color: var(--mu); }
 .mat-link.secondary:hover { border-color: var(--g); color: var(--g); }
 .mat-date { font-family: var(--fm); font-size:.62rem; color: var(--mu); margin-top: 10px; }
@@ -66,9 +60,33 @@ body { background:var(--bg); color:var(--text); font-family:var(--fb); min-heigh
 .empty, .loading-state { text-align:center; padding: 60px 20px; color: var(--mu); font-family: var(--fm); font-size:.82rem; }
 .spinner { width:30px; height:30px; border:2.5px solid var(--bd); border-top-color: var(--g); border-radius:50%; animation: spin .7s linear infinite; margin: 0 auto 14px; }
 @keyframes spin { to { transform: rotate(360deg); } }
+
+/* ── EMAIL PANEL ── */
+.email-panel {
+  background: var(--s1); border: 1px solid var(--bd); border-radius: var(--r);
+  padding: 22px 24px; margin-bottom: 28px;
+}
+.email-panel-title { font-family: var(--fh); font-size: 1rem; font-weight: 700; color: var(--text); margin-bottom: 6px; }
+.email-panel-sub { font-size: .78rem; color: var(--mu); margin-bottom: 16px; }
+.batch-chips { display:flex; flex-wrap:wrap; gap:8px; margin-bottom:14px; }
+.batch-chip { padding:6px 14px; border-radius:20px; font-size:.76rem; font-weight:600; border:1.5px solid var(--bd2); background:var(--bg); color:var(--mu); cursor:pointer; transition:all .15s; user-select:none; }
+.batch-chip:hover { border-color: var(--g); color: var(--g); }
+.batch-chip.selected { border-color: var(--g); background: rgba(34,160,50,.1); color: var(--g); }
+
+.email-material-select { width:100%; padding:9px 12px; background:var(--bg); border:1.5px solid var(--bd2); border-radius:8px; color:var(--text); font-family:var(--fb); font-size:.85rem; outline:none; margin-bottom:14px; }
+.email-material-select:focus { border-color: var(--g); }
+
+.email-btn { padding:10px 22px; background:var(--g); border:none; border-radius:8px; color:#fff; font-family:var(--fh); font-size:.92rem; font-weight:700; cursor:pointer; transition:all .18s; }
+.email-btn:hover:not(:disabled) { background:#1a8028; transform:translateY(-1px); }
+.email-btn:disabled { opacity:.5; cursor:not-allowed; transform:none; }
+.email-status { margin-top:10px; font-size:.78rem; padding:8px 12px; border-radius:7px; display:none; }
+.email-status.ok { background:rgba(34,160,50,.08); border:1px solid rgba(34,160,50,.2); color:var(--g); display:block; }
+.email-status.err { background:rgba(200,50,50,.06); border:1px solid rgba(200,50,50,.2); color:#c0392b; display:block; }
+.email-status.sending { background:rgba(217,119,6,.07); border:1px solid rgba(217,119,6,.18); color:#d97706; display:block; }
 </style>
 </head>
 <body>
+<div id="cur"></div>
 
 <div class="topbar">
   <span class="topbar-logo-text">SAPZ<span>CODES</span></span>
@@ -85,11 +103,34 @@ body { background:var(--bg); color:var(--text); font-family:var(--fb); min-heigh
     <h1>Study <span>Materials</span></h1>
     <p>Notes, references and links from your trainer.</p>
   </div>
+
+  <!-- Email batch panel (visible to admin / trainer) -->
+  <div class="email-panel" id="email-panel" style="display:none">
+    <div class="email-panel-title">📧 Send Material to Batches</div>
+    <div class="email-panel-sub">Select one or more batches, choose the material, and send. CC is automatically sent to hr@sapzcodes.com.</div>
+
+    <div style="font-family:var(--fm);font-size:.6rem;letter-spacing:.1em;text-transform:uppercase;color:var(--mu);margin-bottom:8px;">Select Batches (multi-select)</div>
+    <div class="batch-chips" id="batch-chips">
+      <div style="font-size:.78rem;color:var(--mu);">Loading batches…</div>
+    </div>
+
+    <div style="font-family:var(--fm);font-size:.6rem;letter-spacing:.1em;text-transform:uppercase;color:var(--mu);margin-bottom:6px;">Select Material</div>
+    <select class="email-material-select" id="email-material-select">
+      <option value="">— Select a material to send —</option>
+    </select>
+
+    <button class="email-btn" id="email-send-btn" onclick="sendBatchEmail()" disabled>Send Email →</button>
+    <div class="email-status" id="email-status"></div>
+  </div>
+
   <div class="chips" id="chips"></div>
   <div id="content" class="loading-state"><div class="spinner"></div>Loading materials…</div>
 </div>
 
 <script>
+const isAdmin = (sessionStorage.getItem('szc_token') && sessionStorage.getItem('szc_email') === 'hr@sapzcodes.com') ||
+                localStorage.getItem('szc_token');
+
 if (!sessionStorage.getItem('szc_token') && !localStorage.getItem('szc_token')) {
   window.location.href = 'index.html';
 }
@@ -99,59 +140,157 @@ const API_SECRET = 'SZC-INTERNAL-2025-XK9';
 
 let ALL = [];
 let activeCat = 'All';
+let selectedBatches = new Set();
 
 function fmtDate(iso) {
-  try { const d = new Date(iso); return d.toLocaleDateString('en-IN',{day:'numeric',month:'short',year:'numeric'}); }
+  try { return new Date(iso).toLocaleDateString('en-IN',{day:'numeric',month:'short',year:'numeric'}); }
   catch(e){ return ''; }
 }
+function esc(s) { return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
+window.setCat = function(c) { activeCat=c; render(); };
 
 function render() {
   const chipsEl = document.getElementById('chips');
-  const cats = ['All', ...new Set(ALL.map(m => m.category).filter(Boolean))];
+  const cats = ['All', ...new Set(ALL.map(m=>m.category).filter(Boolean))];
   chipsEl.innerHTML = cats.map(c =>
     `<button class="chip${c===activeCat?' active':''}" onclick="setCat('${c.replace(/'/g,"\\'")}')">${c}</button>`
   ).join('');
 
-  const list = activeCat === 'All' ? ALL : ALL.filter(m => m.category === activeCat);
-  const contentEl = document.getElementById('content');
+  const list = activeCat==='All' ? ALL : ALL.filter(m=>m.category===activeCat);
+  const el = document.getElementById('content');
 
-  if (list.length === 0) {
-    contentEl.className = 'empty';
-    contentEl.innerHTML = '📭 No study materials posted yet. Check back soon!';
-    return;
-  }
+  if (list.length===0) { el.className='empty'; el.innerHTML='📭 No materials posted yet. Check back soon!'; return; }
 
-  contentEl.className = 'mat-list';
-  contentEl.innerHTML = list.map(m => `
+  el.className='mat-list';
+  el.innerHTML = list.map(m=>`
     <div class="mat-card">
       <div class="mat-top">
         <span class="mat-title">${esc(m.title)}</span>
-        ${m.category ? `<span class="mat-cat">${esc(m.category)}</span>` : ''}
+        ${m.category?`<span class="mat-cat">${esc(m.category)}</span>`:''}
       </div>
-      ${m.description ? `<div class="mat-desc">${esc(m.description)}</div>` : ''}
+      ${m.description?`<div class="mat-desc">${esc(m.description)}</div>`:''}
       <div class="mat-links">
-        ${m.linkUrl ? `<a class="mat-link primary" href="${esc(m.linkUrl)}" target="_blank" rel="noopener">🔗 Open Link</a>` : ''}
-        ${m.fileUrl ? `<a class="mat-link secondary" href="${esc(m.fileUrl)}" target="_blank" rel="noopener">📄 Open File</a>` : ''}
+        ${m.linkUrl?`<a class="mat-link primary" href="${esc(m.linkUrl)}" target="_blank" rel="noopener">🔗 Open Link</a>`:''}
+        ${m.fileUrl?`<a class="mat-link secondary" href="${esc(m.fileUrl)}" target="_blank" rel="noopener">📄 Open File</a>`:''}
       </div>
-      ${m.postedOn ? `<div class="mat-date">Posted ${fmtDate(m.postedOn)}</div>` : ''}
+      ${m.postedOn?`<div class="mat-date">Posted ${fmtDate(m.postedOn)}</div>`:''}
     </div>
   `).join('');
+
+  // Update material dropdown in email panel
+  const sel = document.getElementById('email-material-select');
+  if (sel) {
+    sel.innerHTML = '<option value="">— Select a material to send —</option>' +
+      ALL.map(m => `<option value="${esc(m.id)}">${esc(m.title)}</option>`).join('');
+    sel.onchange = () => updateSendBtn();
+  }
 }
 
-function setCat(c) { activeCat = c; render(); }
-function esc(s) { return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
-window.setCat = setCat;
+// ── BATCH EMAIL ──────────────────────────────────────────────────
+async function loadBatches() {
+  try {
+    const url=`${GAS_URL}?action=getBatches&key=${encodeURIComponent(API_SECRET)}`;
+    const res=await fetch(url);
+    const data=await res.json();
+    if (data.status==='ok' && data.batches) {
+      renderBatchChips(data.batches);
+    } else {
+      // Fallback: get batches from students list via admin
+      document.getElementById('batch-chips').innerHTML='<div style="font-size:.78rem;color:var(--mu);">Could not load batches — check sheet.</div>';
+    }
+  } catch(e) {
+    document.getElementById('batch-chips').innerHTML='<div style="font-size:.78rem;color:#c0392b;">Error loading batches.</div>';
+  }
+}
+
+function renderBatchChips(batches) {
+  const el = document.getElementById('batch-chips');
+  if (!batches || batches.length===0) {
+    el.innerHTML='<div style="font-size:.78rem;color:var(--mu);">No batches found in student sheet.</div>';
+    return;
+  }
+  el.innerHTML = batches.map(b =>
+    `<div class="batch-chip" data-batch="${esc(b)}" onclick="toggleBatch(this,'${b.replace(/'/g,"\\'")}')">
+      ${esc(b)}
+    </div>`
+  ).join('');
+}
+
+window.toggleBatch = function(el, batch) {
+  if (selectedBatches.has(batch)) { selectedBatches.delete(batch); el.classList.remove('selected'); }
+  else { selectedBatches.add(batch); el.classList.add('selected'); }
+  updateSendBtn();
+};
+
+function updateSendBtn() {
+  const matId = document.getElementById('email-material-select')?.value;
+  const btn = document.getElementById('email-send-btn');
+  if (btn) btn.disabled = (selectedBatches.size===0 || !matId);
+}
+
+async function sendBatchEmail() {
+  const matId = document.getElementById('email-material-select').value;
+  const material = ALL.find(m=>m.id===matId);
+  if (!material || selectedBatches.size===0) return;
+
+  const btn = document.getElementById('email-send-btn');
+  const statusEl = document.getElementById('email-status');
+  btn.disabled = true;
+  statusEl.className='email-status sending';
+  statusEl.textContent=`⏳ Sending to ${selectedBatches.size} batch(es)…`;
+
+  try {
+    const res = await fetch(GAS_URL, {
+      method:'POST', headers:{'Content-Type':'text/plain'},
+      body: JSON.stringify({
+        action: 'sendMaterialEmail',
+        apiKey: API_SECRET,
+        batches: [...selectedBatches],
+        material: {
+          id: material.id,
+          title: material.title,
+          description: material.description,
+          linkUrl: material.linkUrl,
+          fileUrl: material.fileUrl,
+          category: material.category,
+        }
+      }),
+      redirect:'follow',
+    });
+    const data = await res.json();
+    if (data.status==='ok') {
+      statusEl.className='email-status ok';
+      statusEl.textContent=`✅ Email sent to ${data.sent||selectedBatches.size} batch(es) (${data.recipients||'?'} students). CC: hr@sapzcodes.com`;
+    } else {
+      statusEl.className='email-status err';
+      statusEl.textContent='❌ Failed: '+(data.message||'Unknown error');
+    }
+  } catch(e) {
+    statusEl.className='email-status err';
+    statusEl.textContent='❌ Connection error: '+e.message;
+  } finally {
+    btn.disabled = false;
+    updateSendBtn();
+  }
+}
 
 async function load() {
   try {
-    const url = `${GAS_URL}?action=getStudyMaterials&key=${encodeURIComponent(API_SECRET)}`;
-    const res = await fetch(url);
-    const data = await res.json();
-    if (data.status === 'ok') { ALL = data.data || []; render(); }
-    else throw new Error(data.message || 'Failed to load');
-  } catch (err) {
-    document.getElementById('content').className = 'empty';
-    document.getElementById('content').textContent = '⚠️ Could not load study materials: ' + err.message;
+    const res=await fetch(`${GAS_URL}?action=getStudyMaterials&key=${encodeURIComponent(API_SECRET)}`);
+    const data=await res.json();
+    if (data.status==='ok') {
+      ALL = data.data||[];
+      render();
+      // Show email panel for admin (HR email or anyone with admin token in localStorage)
+      const emailPanel = document.getElementById('email-panel');
+      if (emailPanel && (sessionStorage.getItem('szc_email')||localStorage.getItem('szc_email'))) {
+        emailPanel.style.display='block';
+        loadBatches();
+      }
+    } else throw new Error(data.message||'Failed to load');
+  } catch(err) {
+    document.getElementById('content').className='empty';
+    document.getElementById('content').textContent='⚠️ Could not load study materials: '+err.message;
   }
 }
 load();
