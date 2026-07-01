@@ -5,331 +5,127 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
   <title>SAPZCodes 3D Endless Runner</title>
   <link rel="icon" type="image/png" href="favicon.png">
+  <link rel="stylesheet" href="style.css"/>
   <link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@500;600;700&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
   <style>
-    :root {
-      --g: #22a032;
-      --g2: #1a8028;
-      --bg: #0a0f0a;
-      --s1: #0d1410;
-      --text: #e8f0e8;
-      --mu: rgba(232,240,232,0.4);
-      --bd: rgba(34,160,50,0.15);
-      --fm: 'JetBrains Mono', monospace;
-      --fh: 'Rajdhani', sans-serif;
-    }
-    * { box-sizing: border-box; margin: 0; padding: 0; }
-    html, body { width: 100%; height: 100%; overflow: hidden; }
-    body {
-      background: var(--bg);
-      color: var(--text);
-      font-family: var(--fm);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-    }
+    /* Override style.css bg for this full-screen game page */
+    body { background: #0a0f0a; color: #e8f0e8; overflow: hidden; cursor: default; }
+    #cur, #ring { display: none; }
 
-    /* ── GAME VIEWPORT — always centred ── */
-    #game-root {
-      position: relative;
-      width: 100vw;
-      height: 100vh;
-      overflow: hidden;
-    }
+    #game-root { position: relative; width: 100vw; height: 100vh; overflow: hidden; }
 
-    /* ── Auth Screen ── */
-    #auth-screen {
-      position: absolute; inset: 0;
-      background: var(--bg); z-index: 999;
-      display: none; flex-direction: column; align-items: center;
-      justify-content: center; gap: 14px;
-    }
-    .auth-icon  { font-size: 3rem; }
-    .auth-title { font-family: var(--fh); font-size: 1.6rem; font-weight: 700; color: #c0392b; }
-    .auth-sub   { font-size: .82rem; color: var(--mu); text-align: center; max-width: 340px; }
-    .auth-btn   {
-      padding: 11px 28px; border: none; border-radius: 8px;
-      background: var(--g); color: #fff;
-      font-family: var(--fh); font-size: 1rem; font-weight: 700;
-      cursor: pointer; margin-top: 8px; letter-spacing: .05em;
-    }
-    .auth-btn:hover { background: var(--g2); }
+    #auth-screen { position:absolute;inset:0;background:#0a0f0a;z-index:999;display:none;flex-direction:column;align-items:center;justify-content:center;gap:14px; }
+    .auth-icon  { font-size:3rem; }
+    .auth-title { font-family:var(--fh);font-size:1.6rem;font-weight:700;color:#c0392b; }
+    .auth-sub   { font-size:.82rem;color:rgba(232,240,232,.4);text-align:center;max-width:340px; }
+    .auth-btn   { padding:11px 28px;border:none;border-radius:8px;background:var(--g);color:#fff;font-family:var(--fh);font-size:1rem;font-weight:700;cursor:pointer;margin-top:8px; }
+    .auth-btn:hover { background:#1a8028; }
 
-    /* ── Loading Screen ── */
-    #loading-screen {
-      position: absolute; inset: 0;
-      background: var(--bg); z-index: 90;
-      display: flex; flex-direction: column; align-items: center;
-      justify-content: center; gap: 12px;
-    }
-    .ld-logo { height: 48px; width: auto; margin-bottom: 8px; filter: drop-shadow(0 0 12px rgba(34,160,50,.5)); }
-    .ld-brand {
-      font-family: var(--fh); font-size: .65rem; letter-spacing: .3em;
-      text-transform: uppercase; color: var(--g); margin-bottom: 4px;
-    }
-    .ld-title { font-family: var(--fh); font-size: 1.8rem; font-weight: 700; color: var(--text); }
-    .ld-title span { color: var(--g); }
-    .ld-bar-wrap {
-      width: 320px; max-width: 88vw;
-      background: rgba(255,255,255,.05);
-      border: 1px solid var(--bd); border-radius: 20px;
-      height: 4px; overflow: hidden; margin-top: 8px;
-    }
-    .ld-bar-fill {
-      height: 100%;
-      background: linear-gradient(90deg, var(--g), #58ff80);
-      border-radius: 20px; width: 0%; transition: width .35s ease;
-    }
-    .ld-status {
-      font-size: .62rem; color: var(--mu); letter-spacing: .06em;
-      min-height: 16px; margin-top: 2px;
-    }
-    .ld-err {
-      margin-top: 14px; padding: 10px 18px;
-      background: rgba(192,57,43,.1); border: 1px solid rgba(192,57,43,.25);
-      border-radius: 8px; color: #c0392b;
-      font-size: .78rem; text-align: center; display: none;
-      max-width: 360px; line-height: 1.5;
-    }
-    .ld-err.show { display: block; }
-    .ld-retry {
-      margin-top: 10px; padding: 7px 20px; border-radius: 7px;
-      background: rgba(255,255,255,.06); border: 1px solid rgba(255,255,255,.1);
-      color: var(--mu); font-size: .78rem; font-weight: 600;
-      cursor: pointer; display: none;
-    }
-    .ld-retry.show { display: inline-block; }
-    .ld-retry:hover { border-color: var(--g); color: var(--g); }
+    #loading-screen { position:absolute;inset:0;background:#0a0f0a;z-index:90;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:12px; }
+    .ld-logo { height:48px;width:auto;margin-bottom:8px; }
+    .ld-brand { font-family:var(--fh);font-size:.65rem;letter-spacing:.3em;text-transform:uppercase;color:var(--g);margin-bottom:4px; }
+    .ld-title { font-family:var(--fh);font-size:1.8rem;font-weight:700;color:#e8f0e8; }
+    .ld-title span { color:var(--g); }
+    .ld-bar-wrap { width:320px;max-width:88vw;background:rgba(255,255,255,.05);border:1px solid rgba(34,160,50,.15);border-radius:20px;height:4px;overflow:hidden;margin-top:8px; }
+    .ld-bar-fill { height:100%;background:linear-gradient(90deg,var(--g),#58ff80);border-radius:20px;width:0%;transition:width .35s ease; }
+    .ld-status { font-size:.62rem;color:rgba(232,240,232,.4);letter-spacing:.06em;min-height:16px;margin-top:2px; }
+    .ld-err { margin-top:14px;padding:10px 18px;background:rgba(192,57,43,.1);border:1px solid rgba(192,57,43,.25);border-radius:8px;color:#c0392b;font-size:.78rem;text-align:center;display:none;max-width:360px;line-height:1.5; }
+    .ld-err.show { display:block; }
+    .ld-retry { margin-top:10px;padding:7px 20px;border-radius:7px;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.1);color:rgba(232,240,232,.4);font-size:.78rem;font-weight:600;cursor:pointer;display:none; }
+    .ld-retry.show { display:inline-block; }
+    .ld-retry:hover { border-color:var(--g);color:var(--g); }
 
-    /* ── HUD ── */
-    #hud {
-      position: absolute; top: 0; left: 0; right: 0; height: 56px;
-      z-index: 20;
-      background: linear-gradient(180deg, rgba(10,15,10,.95) 0%, rgba(10,15,10,.6) 100%);
-      backdrop-filter: blur(12px);
-      border-bottom: 1px solid var(--bd);
-      display: none; align-items: center;
-      justify-content: space-between; padding: 0 20px;
-      gap: 12px;
-    }
-    .hud-left { display: flex; align-items: center; gap: 10px; }
-    .hud-logo { height: 28px; width: auto; filter: drop-shadow(0 0 6px rgba(34,160,50,.4)); flex-shrink: 0; }
-    .hud-brand {
-      font-family: var(--fh); font-size: .72rem; font-weight: 700;
-      letter-spacing: .2em; text-transform: uppercase; color: var(--g);
-    }
-    .hud-divider { width: 1px; height: 20px; background: var(--bd); }
-    .hud-stats { display: flex; gap: 18px; align-items: center; }
-    .hud-stat  { display: flex; flex-direction: column; align-items: center; }
-    .hud-lbl   {
-      font-size: .48rem; letter-spacing: .12em;
-      text-transform: uppercase; color: var(--mu); margin-bottom: 1px;
-    }
-    .hud-val   {
-      font-family: var(--fh); font-size: 1.1rem;
-      font-weight: 700; color: var(--text); line-height: 1;
-    }
-    .hud-val.green { color: var(--g); }
-    .hud-lives { display: flex; gap: 4px; align-items: center; }
-    .heart { font-size: .85rem; transition: all .2s; }
-    .heart.lost { opacity: .15; filter: grayscale(1); transform: scale(.75); }
+    #hud { position:absolute;top:0;left:0;right:0;height:56px;z-index:20;background:linear-gradient(180deg,rgba(10,15,10,.95),rgba(10,15,10,.6));backdrop-filter:blur(12px);border-bottom:1px solid rgba(34,160,50,.15);display:none;align-items:center;justify-content:space-between;padding:0 20px;gap:12px; }
+    .hud-left { display:flex;align-items:center;gap:10px; }
+    .hud-logo { height:28px;width:auto;flex-shrink:0; }
+    .hud-brand { font-family:var(--fh);font-size:.72rem;font-weight:700;letter-spacing:.2em;text-transform:uppercase;color:var(--g); }
+    .hud-divider { width:1px;height:20px;background:rgba(34,160,50,.15); }
+    .hud-stats { display:flex;gap:18px;align-items:center; }
+    .hud-stat { display:flex;flex-direction:column;align-items:center; }
+    .hud-lbl { font-size:.48rem;letter-spacing:.12em;text-transform:uppercase;color:rgba(232,240,232,.4);margin-bottom:1px; }
+    .hud-val { font-family:var(--fh);font-size:1.1rem;font-weight:700;color:#e8f0e8;line-height:1; }
+    .hud-val.green { color:var(--g); }
+    .hud-lives { display:flex;gap:4px;align-items:center; }
+    .heart { font-size:.85rem;transition:all .2s; }
+    .heart.lost { opacity:.15;filter:grayscale(1);transform:scale(.75); }
+    #btn-playpause { background:rgba(34,160,50,.12);border:1px solid rgba(34,160,50,.35);border-radius:8px;color:var(--g);font-size:1rem;width:36px;height:36px;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all .18s;flex-shrink:0; }
+    #btn-playpause:hover { background:rgba(34,160,50,.25); }
 
-    #btn-playpause {
-      background: rgba(34,160,50,.12);
-      border: 1px solid rgba(34,160,50,.35);
-      border-radius: 8px; color: var(--g);
-      font-size: 1rem; width: 36px; height: 36px;
-      cursor: pointer; display: flex; align-items: center; justify-content: center;
-      transition: all .18s; flex-shrink: 0;
-    }
-    #btn-playpause:hover { background: rgba(34,160,50,.25); }
+    #lane-zones { position:absolute;bottom:0;left:50%;transform:translateX(-50%);width:100%;height:100%;z-index:15;display:none;pointer-events:none; }
+    .lane-zone { position:absolute;bottom:0;width:33.33%;height:100%;cursor:pointer;pointer-events:all;transition:background .15s; }
+    .lane-zone:hover { background:rgba(34,160,50,.05); }
+    .lane-zone:active { background:rgba(34,160,50,.1); }
+    #lane-left { left:0; } #lane-center { left:33.33%; } #lane-right { right:0; }
 
-    /* ── Lane click zones (always visible during game) ── */
-    #lane-zones {
-      position: absolute;
-      bottom: 0; left: 50%; transform: translateX(-50%);
-      width: 100%; height: 100%;
-      z-index: 15;
-      display: none;
-      pointer-events: none;
-    }
-    .lane-zone {
-      position: absolute;
-      bottom: 0;
-      width: 33.33%;
-      height: 100%;
-      cursor: pointer;
-      pointer-events: all;
-      transition: background .15s;
-    }
-    .lane-zone:hover { background: rgba(34,160,50,.05); }
-    .lane-zone:active { background: rgba(34,160,50,.1); }
-    #lane-left   { left: 0; }
-    #lane-center { left: 33.33%; }
-    #lane-right  { right: 0; }
+    #lane-indicators { position:absolute;bottom:18px;left:50%;transform:translateX(-50%);display:none;gap:10px;z-index:25; }
+    .lane-ind { width:44px;height:44px;border-radius:12px;border:2px solid rgba(255,255,255,.12);background:rgba(0,0,0,.4);backdrop-filter:blur(8px);display:flex;flex-direction:column;align-items:center;justify-content:center;cursor:pointer;transition:all .18s;gap:3px; }
+    .lane-ind:hover { border-color:var(--g);background:rgba(34,160,50,.15);transform:translateY(-2px); }
+    .lane-ind.active { border-color:var(--g);background:rgba(34,160,50,.2); }
+    .lane-ind-icon { font-size:.85rem; }
+    .lane-ind-label { font-size:.45rem;letter-spacing:.1em;text-transform:uppercase;color:rgba(232,240,232,.4); }
 
-    /* Lane click indicators (shown at bottom) */
-    #lane-indicators {
-      position: absolute; bottom: 18px;
-      left: 50%; transform: translateX(-50%);
-      display: none; gap: 10px; z-index: 25;
-    }
-    .lane-ind {
-      width: 44px; height: 44px; border-radius: 12px;
-      border: 2px solid rgba(255,255,255,.12);
-      background: rgba(0,0,0,.4); backdrop-filter: blur(8px);
-      display: flex; flex-direction: column;
-      align-items: center; justify-content: center;
-      cursor: pointer; transition: all .18s;
-      gap: 3px;
-    }
-    .lane-ind:hover { border-color: var(--g); background: rgba(34,160,50,.15); transform: translateY(-2px); }
-    .lane-ind.active { border-color: var(--g); background: rgba(34,160,50,.2); }
-    .lane-ind-icon { font-size: .85rem; }
-    .lane-ind-label { font-size: .45rem; letter-spacing: .1em; text-transform: uppercase; color: var(--mu); }
+    /* PAUSE overlay — now includes Return to Main Menu + Restart */
+    #pause-overlay { position:absolute;inset:0;background:rgba(0,0,0,.8);z-index:35;display:none;flex-direction:column;align-items:center;justify-content:center;gap:16px;backdrop-filter:blur(6px); }
+    .pause-icon { font-size:3rem;opacity:.6; }
+    #pause-overlay h2 { font-family:var(--fh);font-size:3rem;font-weight:700;color:var(--g);letter-spacing:.2em; }
+    #pause-overlay p { font-size:.78rem;color:rgba(232,240,232,.4); }
+    .pause-btns { display:flex;gap:12px;flex-wrap:wrap;justify-content:center;margin-top:8px; }
+    .btn-resume { padding:12px 36px;border:2px solid var(--g);border-radius:10px;background:rgba(34,160,50,.12);color:var(--g);font-family:var(--fh);font-size:1.1rem;font-weight:700;cursor:pointer;letter-spacing:.08em;transition:all .2s; }
+    .btn-resume:hover { background:var(--g);color:#fff; }
+    .btn-restart { padding:12px 28px;border:2px solid rgba(255,255,255,.2);border-radius:10px;background:rgba(255,255,255,.06);color:rgba(232,240,232,.7);font-family:var(--fh);font-size:1rem;font-weight:700;cursor:pointer;letter-spacing:.06em;transition:all .2s; }
+    .btn-restart:hover { border-color:var(--g);color:var(--g);background:rgba(34,160,50,.08); }
+    .btn-mainmenu { padding:12px 28px;border:2px solid rgba(255,255,255,.15);border-radius:10px;background:transparent;color:rgba(232,240,232,.5);font-family:var(--fh);font-size:.9rem;font-weight:700;cursor:pointer;letter-spacing:.06em;transition:all .2s; }
+    .btn-mainmenu:hover { border-color:rgba(192,57,43,.5);color:#c0392b; }
 
-    /* ── Pause overlay ── */
-    #pause-overlay {
-      position: absolute; inset: 0;
-      background: rgba(0,0,0,.8); z-index: 35;
-      display: none; flex-direction: column; align-items: center;
-      justify-content: center; gap: 16px; backdrop-filter: blur(6px);
-    }
-    .pause-icon { font-size: 3rem; opacity: .6; }
-    #pause-overlay h2 {
-      font-family: var(--fh); font-size: 3rem; font-weight: 700;
-      color: var(--g); letter-spacing: .2em;
-    }
-    #pause-overlay p  { font-size: .78rem; color: var(--mu); }
-    .btn-resume {
-      padding: 12px 36px; border: 2px solid var(--g);
-      border-radius: 10px; background: rgba(34,160,50,.12);
-      color: var(--g); font-family: var(--fh); font-size: 1.1rem;
-      font-weight: 700; cursor: pointer; letter-spacing: .08em;
-      transition: all .2s;
-    }
-    .btn-resume:hover { background: var(--g); color: #fff; }
+    #question-box { position:absolute;top:68px;left:50%;transform:translateX(-50%);background:rgba(10,15,10,.92);border:1px solid var(--g);border-radius:12px;padding:14px 28px;text-align:center;max-width:64%;min-width:320px;display:none;z-index:20;box-shadow:0 4px 32px rgba(34,160,50,.2); }
+    .q-lbl { font-size:.52rem;letter-spacing:.16em;text-transform:uppercase;color:rgba(232,240,232,.4);margin-bottom:6px; }
+    #q-text { font-family:var(--fh);font-size:1.05rem;font-weight:600;line-height:1.5;color:#e8f0e8; }
 
-    /* ── Question box ── */
-    #question-box {
-      position: absolute; top: 68px; left: 50%; transform: translateX(-50%);
-      background: rgba(10,15,10,.92); border: 1px solid var(--g);
-      border-radius: 12px; padding: 14px 28px;
-      text-align: center; max-width: 64%; min-width: 320px;
-      display: none; z-index: 20;
-      box-shadow: 0 4px 32px rgba(34,160,50,.2), 0 0 0 1px rgba(34,160,50,.08);
-    }
-    .q-lbl {
-      font-size: .52rem; letter-spacing: .16em; text-transform: uppercase;
-      color: var(--mu); margin-bottom: 6px;
-    }
-    #q-text { font-family: var(--fh); font-size: 1.05rem; font-weight: 600; line-height: 1.5; color: var(--text); }
+    #flash { position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);font-family:var(--fh);font-size:1.6rem;font-weight:700;padding:14px 30px;border-radius:12px;pointer-events:none;display:none;z-index:30;letter-spacing:.05em; }
+    #flash.ok  { background:rgba(34,160,50,.15);color:var(--g);border:2px solid rgba(34,160,50,.4);box-shadow:0 0 40px rgba(34,160,50,.2); }
+    #flash.bad { background:rgba(192,57,43,.12);color:#ef4444;border:2px solid rgba(192,57,43,.4);box-shadow:0 0 40px rgba(192,57,43,.15); }
 
-    /* ── Feedback flash ── */
-    #flash {
-      position: absolute; top: 50%; left: 50%;
-      transform: translate(-50%, -50%);
-      font-family: var(--fh); font-size: 1.6rem; font-weight: 700;
-      padding: 14px 30px; border-radius: 12px;
-      pointer-events: none; display: none; z-index: 30;
-      letter-spacing: .05em;
-    }
-    #flash.ok  {
-      background: rgba(34,160,50,.15); color: var(--g);
-      border: 2px solid rgba(34,160,50,.4);
-      box-shadow: 0 0 40px rgba(34,160,50,.2);
-    }
-    #flash.bad {
-      background: rgba(192,57,43,.12); color: #ef4444;
-      border: 2px solid rgba(192,57,43,.4);
-      box-shadow: 0 0 40px rgba(192,57,43,.15);
-    }
+    #click-hint { position:absolute;bottom:72px;left:50%;transform:translateX(-50%);font-size:.62rem;color:rgba(232,240,232,.4);z-index:20;display:none;letter-spacing:.08em;text-transform:uppercase;background:rgba(0,0,0,.4);padding:5px 12px;border-radius:20px;border:1px solid rgba(34,160,50,.15);backdrop-filter:blur(4px);transition:opacity .5s; }
 
-    /* ── Click hint ── */
-    #click-hint {
-      position: absolute; bottom: 72px; left: 50%; transform: translateX(-50%);
-      font-size: .62rem; color: var(--mu); z-index: 20; display: none;
-      letter-spacing: .08em; text-transform: uppercase;
-      background: rgba(0,0,0,.4); padding: 5px 12px; border-radius: 20px;
-      border: 1px solid var(--bd); backdrop-filter: blur(4px);
-    }
+    #game-over { position:absolute;inset:0;background:rgba(0,0,0,.92);z-index:40;display:none;flex-direction:column;align-items:center;justify-content:center;gap:12px;backdrop-filter:blur(8px); }
+    .go-logo { height:44px;width:auto;margin-bottom:8px;opacity:.7; }
+    #game-over h1 { font-family:var(--fh);color:#c0392b;font-size:4rem;font-weight:700;letter-spacing:.1em; }
+    .go-divider { width:60px;height:2px;background:rgba(34,160,50,.15);border-radius:2px; }
+    #go-score { font-family:var(--fh);font-size:2.5rem;font-weight:700;color:var(--g); }
+    #go-detail { font-size:.78rem;color:rgba(232,240,232,.4);margin-bottom:8px; }
+    .go-btns { display:flex;gap:10px;flex-wrap:wrap;justify-content:center; }
+    .btn { padding:11px 28px;border-radius:9px;font-family:var(--fh);font-size:1rem;font-weight:700;cursor:pointer;transition:all .18s;letter-spacing:.04em; }
+    .btn-p { background:var(--g);border:none;color:#fff; }
+    .btn-p:hover { background:#1a8028;transform:translateY(-2px); }
+    .btn-s { background:transparent;border:1px solid rgba(255,255,255,.12);color:rgba(232,240,232,.4); }
+    .btn-s:hover { border-color:var(--g);color:var(--g);background:rgba(34,160,50,.08); }
 
-    /* ── Game Over ── */
-    #game-over {
-      position: absolute; inset: 0;
-      background: rgba(0,0,0,.92); z-index: 40;
-      display: none; flex-direction: column; align-items: center;
-      justify-content: center; gap: 12px;
-      backdrop-filter: blur(8px);
-    }
-    .go-logo { height: 44px; width: auto; margin-bottom: 8px; filter: drop-shadow(0 0 12px rgba(34,160,50,.4)); opacity: .7; }
-    #game-over h1 {
-      font-family: var(--fh); color: #c0392b;
-      font-size: 4rem; font-weight: 700; letter-spacing: .1em;
-    }
-    .go-divider { width: 60px; height: 2px; background: var(--bd); border-radius: 2px; }
-    #go-score { font-family: var(--fh); font-size: 2.5rem; font-weight: 700; color: var(--g); }
-    #go-detail { font-size: .78rem; color: var(--mu); margin-bottom: 8px; }
-    .go-btns { display: flex; gap: 10px; flex-wrap: wrap; justify-content: center; }
-    .btn {
-      padding: 11px 28px; border-radius: 9px;
-      font-family: var(--fh); font-size: 1rem; font-weight: 700;
-      cursor: pointer; transition: all .18s; letter-spacing: .04em;
-    }
-    .btn-p { background: var(--g); border: none; color: #fff; }
-    .btn-p:hover { background: var(--g2); transform: translateY(-2px); }
-    .btn-s {
-      background: transparent;
-      border: 1px solid rgba(255,255,255,.12);
-      color: var(--mu);
-    }
-    .btn-s:hover { border-color: var(--g); color: var(--g); background: rgba(34,160,50,.08); }
-
-    /* ── Speed line (current lane indicator) ── */
-    .lane-highlight {
-      position: absolute; bottom: 0;
-      width: 33.33%; height: 6px;
-      background: var(--g);
-      border-radius: 4px 4px 0 0;
-      transition: left .2s cubic-bezier(.34,1.56,.64,1);
-      z-index: 25;
-      box-shadow: 0 0 12px rgba(34,160,50,.6);
-    }
+    .lane-highlight { position:absolute;bottom:0;width:33.33%;height:6px;background:var(--g);border-radius:4px 4px 0 0;transition:left .2s cubic-bezier(.34,1.56,.64,1);z-index:25;box-shadow:0 0 12px rgba(34,160,50,.6); }
   </style>
-
   <script type="importmap">
-  {
-    "imports": {
-      "three": "https://unpkg.com/three@0.160.0/build/three.module.js",
-      "three/addons/": "https://unpkg.com/three@0.160.0/examples/jsm/"
-    }
-  }
+  { "imports": { "three": "https://unpkg.com/three@0.160.0/build/three.module.js", "three/addons/": "https://unpkg.com/three@0.160.0/examples/jsm/" } }
   </script>
 </head>
 <body>
-
 <div id="game-root">
 
-  <!-- Auth Screen -->
   <div id="auth-screen">
     <div class="auth-icon">🔒</div>
     <div class="auth-title">Access Required</div>
-    <div class="auth-sub">You need to be logged in to play the Runner. Please enter the platform first.</div>
+    <div class="auth-sub">You need to be logged in to play. Please enter the platform first.</div>
     <button class="auth-btn" onclick="window.location.href='index.html'">→ Login / Get Access</button>
   </div>
 
-  <!-- Loading Screen -->
   <div id="loading-screen">
     <img class="ld-logo" src="logo.png" alt="SAPZCodes" onerror="this.style.display='none'">
     <div class="ld-brand">SAPZCODES</div>
     <div class="ld-title">ABAP <span>Runner</span></div>
     <div class="ld-bar-wrap"><div class="ld-bar-fill" id="ld-bar"></div></div>
     <div class="ld-status" id="ld-status">Initialising…</div>
-    <div class="ld-err"   id="ld-err"></div>
+    <div class="ld-err" id="ld-err"></div>
     <button class="ld-retry" id="ld-retry" onclick="window._retryFetch()">↩ Retry</button>
   </div>
 
-  <!-- HUD -->
   <div id="hud">
     <div class="hud-left">
       <img class="hud-logo" src="logo.png" alt="" onerror="this.style.display='none'">
@@ -337,14 +133,8 @@
       <div class="hud-brand">◉ ABAP Runner</div>
     </div>
     <div class="hud-stats">
-      <div class="hud-stat">
-        <span class="hud-lbl">Score</span>
-        <span class="hud-val green" id="hud-score">0</span>
-      </div>
-      <div class="hud-stat">
-        <span class="hud-lbl">Correct</span>
-        <span class="hud-val" id="hud-correct">0</span>
-      </div>
+      <div class="hud-stat"><span class="hud-lbl">Score</span><span class="hud-val green" id="hud-score">0</span></div>
+      <div class="hud-stat"><span class="hud-lbl">Correct</span><span class="hud-val" id="hud-correct">0</span></div>
       <div class="hud-lives">
         <span class="heart" id="h1">❤️</span>
         <span class="heart" id="h2">❤️</span>
@@ -354,51 +144,39 @@
     </div>
   </div>
 
-  <!-- Lane click zones (always active during game) -->
   <div id="lane-zones">
     <div class="lane-zone" id="lane-left"   onclick="clickLane(0)"></div>
     <div class="lane-zone" id="lane-center" onclick="clickLane(1)"></div>
     <div class="lane-zone" id="lane-right"  onclick="clickLane(2)"></div>
   </div>
 
-  <!-- Lane indicators at bottom -->
   <div id="lane-indicators">
-    <div class="lane-ind" id="lind-0" onclick="clickLane(0)">
-      <span class="lane-ind-icon">◀</span>
-      <span class="lane-ind-label">Left</span>
-    </div>
-    <div class="lane-ind active" id="lind-1" onclick="clickLane(1)">
-      <span class="lane-ind-icon">▲</span>
-      <span class="lane-ind-label">Centre</span>
-    </div>
-    <div class="lane-ind" id="lind-2" onclick="clickLane(2)">
-      <span class="lane-ind-icon">▶</span>
-      <span class="lane-ind-label">Right</span>
-    </div>
+    <div class="lane-ind" id="lind-0" onclick="clickLane(0)"><span class="lane-ind-icon">◀</span><span class="lane-ind-label">Left</span></div>
+    <div class="lane-ind active" id="lind-1" onclick="clickLane(1)"><span class="lane-ind-icon">▲</span><span class="lane-ind-label">Centre</span></div>
+    <div class="lane-ind" id="lind-2" onclick="clickLane(2)"><span class="lane-ind-icon">▶</span><span class="lane-ind-label">Right</span></div>
     <div class="lane-highlight" id="lane-highlight" style="left:33.33%"></div>
   </div>
 
-  <!-- Pause overlay -->
+  <!-- PAUSE OVERLAY — now has Resume, Restart, Return to Main Menu -->
   <div id="pause-overlay">
     <div class="pause-icon">⏸</div>
     <h2>PAUSED</h2>
-    <p>Game is paused — take a breath</p>
-    <button class="btn-resume" id="btn-resume-overlay">▶ Resume</button>
+    <p>Take a breath — your score is safe</p>
+    <div class="pause-btns">
+      <button class="btn-resume" id="btn-resume-overlay">▶ Resume</button>
+      <button class="btn-restart" id="btn-restart-pause">↩ Restart</button>
+      <button class="btn-mainmenu" id="btn-mainmenu-pause">← Main Menu</button>
+    </div>
   </div>
 
-  <!-- Question -->
   <div id="question-box">
     <div class="q-lbl">◉ Question — Move to the correct lane</div>
     <span id="q-text"></span>
   </div>
 
-  <!-- Feedback -->
   <div id="flash"></div>
-
-  <!-- Click hint -->
   <div id="click-hint">Click a lane or use ← → arrows</div>
 
-  <!-- Game Over -->
   <div id="game-over">
     <img class="go-logo" src="logo.png" alt="" onerror="this.style.display='none'">
     <h1>GAME OVER</h1>
@@ -406,694 +184,333 @@
     <div id="go-score">Score: 0</div>
     <div id="go-detail">0 correct answers</div>
     <div class="go-btns">
-      <button class="btn btn-p" onclick="location.reload()">↩ Play Again</button>
+      <button class="btn btn-p" id="go-restart">↩ Play Again</button>
       <button class="btn btn-s" onclick="window.location.href='games.html'">← Games Hub</button>
     </div>
   </div>
 
-</div><!-- #game-root -->
+</div>
 
-<!-- ── Security block ── -->
 <script>
 (function () {
   document.addEventListener('contextmenu', e => e.preventDefault());
   document.addEventListener('keydown', e => {
-    if (e.key === 'F12' ||
-       (e.ctrlKey && e.shiftKey && ['I','J','C','K'].includes(e.key)) ||
-       (e.ctrlKey && e.key === 'U') ||
-       (e.ctrlKey && ['s','S','a','A'].includes(e.key))) { e.preventDefault(); }
+    if (e.key==='F12'||(e.ctrlKey&&e.shiftKey&&['I','J','C','K'].includes(e.key))||(e.ctrlKey&&e.key==='U')||(e.ctrlKey&&['s','S','a','A'].includes(e.key))) e.preventDefault();
   });
-
   setInterval(() => {
-    if (window.outerWidth  - window.innerWidth  > 160 ||
-        window.outerHeight - window.innerHeight > 160) {
-      document.body.innerHTML =
-        '<div style="display:flex;align-items:center;justify-content:center;height:100vh;' +
-        'background:#0a0f0a;color:#c0392b;font-family:monospace;font-size:1.1rem;' +
-        'text-align:center;padding:20px;">⛔ DevTools detected. Close DevTools to continue.</div>';
+    if (window.outerWidth-window.innerWidth>160||window.outerHeight-window.innerHeight>160) {
+      document.body.innerHTML='<div style="display:flex;align-items:center;justify-content:center;height:100vh;background:#0a0f0a;color:#c0392b;font-family:monospace;font-size:1.1rem;text-align:center;padding:20px;">⛔ DevTools detected.</div>';
     }
   }, 1200);
-
-  const ALLOWED = ['students.sapzcodes.com', 'localhost', '127.0.0.1'];
-  if (!ALLOWED.some(d => {
-    const h = window.location.hostname;
-    return h === d || h.endsWith('.' + d);
-  })) {
-    document.body.innerHTML =
-      '<div style="display:flex;align-items:center;justify-content:center;height:100vh;' +
-      'background:#0a0f0a;color:#c0392b;font-family:monospace;font-size:1.1rem;' +
-      'text-align:center;padding:20px;">⛔ This content is only available on the official SAPZCodes platform.</div>';
+  const ALLOWED=['students.sapzcodes.com','localhost','127.0.0.1'];
+  if (!ALLOWED.some(d=>{const h=window.location.hostname;return h===d||h.endsWith('.'+d);})) {
+    document.body.innerHTML='<div style="display:flex;align-items:center;justify-content:center;height:100vh;background:#0a0f0a;color:#c0392b;font-family:monospace;">⛔ Unauthorised domain.</div>';
     throw new Error('Domain lock');
   }
-
-  if (!sessionStorage.getItem('szc_token') && !localStorage.getItem('szc_token')) {
-    document.getElementById('loading-screen').style.display = 'none';
-    document.getElementById('auth-screen').style.display    = 'flex';
+  if (!sessionStorage.getItem('szc_token')&&!localStorage.getItem('szc_token')) {
+    document.getElementById('loading-screen').style.display='none';
+    document.getElementById('auth-screen').style.display='flex';
     throw new Error('Not authenticated');
   }
 })();
 
-// Global lane click handler (accessible from HTML onclick)
 window.clickLane = function(laneIndex) {
   if (window._gameState && !window._gameState.gameOver && window._gameState.running && !window._gameState.paused) {
     window._gameState.currentLane = laneIndex;
-    window._gameState.targetX     = window._LANES[laneIndex];
+    window._gameState.targetX = window._LANES[laneIndex];
     updateLaneIndicators(laneIndex);
-    if (window._gameState.choosing) {
-      scheduleConfirm();
-    }
+    if (window._gameState.choosing) scheduleConfirm();
   }
 };
-
 function updateLaneIndicators(laneIndex) {
   [0,1,2].forEach(i => {
-    const el = document.getElementById('lind-' + i);
-    if (el) el.className = 'lane-ind' + (i === laneIndex ? ' active' : '');
+    const el = document.getElementById('lind-'+i);
+    if (el) el.className='lane-ind'+(i===laneIndex?' active':'');
   });
   const hl = document.getElementById('lane-highlight');
-  if (hl) hl.style.left = (laneIndex * 33.33) + '%';
+  if (hl) hl.style.left=(laneIndex*33.33)+'%';
 }
+window.updateLaneIndicators = updateLaneIndicators;
+window.scheduleConfirm = function() { /* set by module */ };
 </script>
 
-<!-- ── Main game module ── -->
 <script type="module">
 import * as THREE from 'three';
 import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
 
-// ─── CONFIG ────────────────────────────────────────────────────
 const GAS_URL    = 'https://script.google.com/macros/s/AKfycbx4H_6v2nNH_Xa0FajhKQKCZgHgwuupi2CD6NdC4YuatcE0f451IFgXbNES-7sYRF4Hog/exec';
 const API_SECRET = 'SZC-INTERNAL-2025-XK9';
 const LIVES      = 3;
 const SPAWN_Z    = 35;
 const LANES      = [2.5, 0, -2.5];
 const MODEL_URL  = 'https://threejs.org/examples/models/gltf/Soldier.glb';
+const CITY_URL   = 'https://threejs.org/examples/models/gltf/LittlestTokyo.glb';
 
-// Expose LANES globally for the onclick handler
 window._LANES = LANES;
 
-// ─── LOADING UI ────────────────────────────────────────────────
-function setBar(pct, msg) {
-  document.getElementById('ld-bar').style.width = pct + '%';
-  document.getElementById('ld-status').textContent = msg;
-}
-function showErr(msg) {
-  const e = document.getElementById('ld-err');
-  e.textContent = msg; e.classList.add('show');
-  document.getElementById('ld-retry').classList.add('show');
-}
-function hideErr() {
-  document.getElementById('ld-err').classList.remove('show');
-  document.getElementById('ld-retry').classList.remove('show');
-}
+function setBar(pct, msg) { document.getElementById('ld-bar').style.width=pct+'%'; document.getElementById('ld-status').textContent=msg; }
+function showErr(msg) { const e=document.getElementById('ld-err'); e.textContent=msg; e.classList.add('show'); document.getElementById('ld-retry').classList.add('show'); }
+function hideErr() { document.getElementById('ld-err').classList.remove('show'); document.getElementById('ld-retry').classList.remove('show'); }
 
-// ─── FETCH QUESTIONS ───────────────────────────────────────────
 let quizData = [];
 
 async function fetchQuestions() {
-  hideErr(); setBar(10, 'Connecting to question bank…');
+  hideErr(); setBar(10,'Connecting…');
   try {
-    setBar(35, 'Fetching questions…');
-    const url = `${GAS_URL}?action=getSubwayData&key=${encodeURIComponent(API_SECRET)}`;
-    const res  = await fetch(url, { redirect: 'follow' });
-    setBar(65, 'Parsing…');
-    if (!res.ok) throw new Error('HTTP ' + res.status);
-    const json = await res.json();
-    if (json.status !== 'ok' || !json.data || json.data.length === 0)
-      throw new Error('No questions returned — check the "subway" tab in your sheet.');
-    quizData = json.data;
-    setBar(85, 'Loading 3D assets…');
+    setBar(35,'Fetching questions…');
+    const url=`${GAS_URL}?action=getSubwayData&key=${encodeURIComponent(API_SECRET)}`;
+    const res=await fetch(url,{redirect:'follow'});
+    setBar(65,'Parsing…');
+    if (!res.ok) throw new Error('HTTP '+res.status);
+    const json=await res.json();
+    if (json.status!=='ok'||!json.data||json.data.length===0) throw new Error('No questions — check "subway" tab in sheet.');
+    quizData=json.data;
+    setBar(85,'Loading 3D assets…');
     await Promise.all([loadScene(), loadCity()]);
-    setBar(100, '✓ Ready!');
-    await new Promise(r => setTimeout(r, 400));
-    document.getElementById('loading-screen').style.display = 'none';
+    setBar(100,'✓ Ready!');
+    await new Promise(r=>setTimeout(r,400));
+    document.getElementById('loading-screen').style.display='none';
     startGame();
-  } catch (err) {
-    setBar(30, '');
-    showErr('Could not load: ' + err.message);
-  }
+  } catch(err) { setBar(30,''); showErr('Could not load: '+err.message); }
 }
-
 window._retryFetch = fetchQuestions;
 
-// ─── SCENE ─────────────────────────────────────────────────────
-const scene    = new THREE.Scene();
+// ── SCENE ──
+const scene = new THREE.Scene();
 scene.background = new THREE.Color(0x87ceeb);
-scene.fog        = new THREE.FogExp2(0xb0d0e8, 0.012);
+scene.fog = new THREE.FogExp2(0xb0d0e8, 0.012);
 
-const camera   = new THREE.PerspectiveCamera(60, window.innerWidth / window.innerHeight, 0.1, 500);
+const camera = new THREE.PerspectiveCamera(60, window.innerWidth/window.innerHeight, 0.1, 500);
 camera.position.set(0, 2.8, -4);
 camera.lookAt(0, 1.2, 6);
 
-const renderer = new THREE.WebGLRenderer({ antialias: true });
-renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+const renderer = new THREE.WebGLRenderer({antialias:true});
+renderer.setPixelRatio(Math.min(window.devicePixelRatio,2));
 renderer.setSize(window.innerWidth, window.innerHeight);
 renderer.setClearColor(0x87ceeb);
 renderer.shadowMap.enabled = true;
-
-// Critical: ensure canvas is absolutely positioned and centred
-renderer.domElement.style.cssText = 'position:absolute;top:0;left:0;width:100%;height:100%;z-index:1;';
+renderer.domElement.style.cssText='position:absolute;top:0;left:0;width:100%;height:100%;z-index:1;';
 document.getElementById('game-root').appendChild(renderer.domElement);
 
-window.addEventListener('resize', () => {
-  camera.aspect = window.innerWidth / window.innerHeight;
-  camera.updateProjectionMatrix();
-  renderer.setSize(window.innerWidth, window.innerHeight);
-});
+window.addEventListener('resize',()=>{camera.aspect=window.innerWidth/window.innerHeight;camera.updateProjectionMatrix();renderer.setSize(window.innerWidth,window.innerHeight);});
 
-// ─── LIGHTS ────────────────────────────────────────────────────
-const hemi = new THREE.HemisphereLight(0xffffff, 0x88aa88, 2.0);
-hemi.position.set(0, 20, 0);
-scene.add(hemi);
+const hemi=new THREE.HemisphereLight(0xffffff,0x88aa88,2.0); hemi.position.set(0,20,0); scene.add(hemi);
+const sun=new THREE.DirectionalLight(0xffffff,2.5); sun.position.set(3,14,-8); sun.castShadow=true; sun.shadow.mapSize.set(1024,1024); scene.add(sun);
+const rim=new THREE.PointLight(0x22a032,0.6,30); rim.position.set(0,6,8); scene.add(rim);
 
-const sun = new THREE.DirectionalLight(0xffffff, 2.5);
-sun.position.set(3, 14, -8);
-sun.castShadow = true;
-sun.shadow.mapSize.set(1024, 1024);
-scene.add(sun);
+// Track
+const trackMesh=new THREE.Mesh(new THREE.PlaneGeometry(10,600),new THREE.MeshLambertMaterial({color:0xb0c4b8}));
+trackMesh.rotation.x=-Math.PI/2; trackMesh.position.set(0,0,280); trackMesh.receiveShadow=true; scene.add(trackMesh);
+[-1.25,1.25].forEach(x=>{const d=new THREE.Mesh(new THREE.PlaneGeometry(0.07,600),new THREE.MeshBasicMaterial({color:0x22a032,transparent:true,opacity:.35}));d.rotation.x=-Math.PI/2;d.position.set(x,0.01,280);scene.add(d);});
+[-5.2,5.2].forEach(x=>{const w=new THREE.Mesh(new THREE.PlaneGeometry(0.12,600),new THREE.MeshBasicMaterial({color:0x22a032,transparent:true,opacity:.55,side:THREE.DoubleSide}));w.position.set(x,1.2,280);scene.add(w);});
 
-const rim = new THREE.PointLight(0x22a032, 0.6, 30);
-rim.position.set(0, 6, 8);
-scene.add(rim);
-
-// ─── TRACK ─────────────────────────────────────────────────────
-const trackMat  = new THREE.MeshLambertMaterial({ color: 0xb0c4b8 });
-const trackMesh = new THREE.Mesh(new THREE.PlaneGeometry(10, 600), trackMat);
-trackMesh.rotation.x = -Math.PI / 2;
-trackMesh.position.set(0, 0, 280);
-trackMesh.receiveShadow = true;
-scene.add(trackMesh);
-
-[-1.25, 1.25].forEach(x => {
-  const div = new THREE.Mesh(
-    new THREE.PlaneGeometry(0.07, 600),
-    new THREE.MeshBasicMaterial({ color: 0x22a032, transparent: true, opacity: 0.35 })
-  );
-  div.rotation.x = -Math.PI / 2;
-  div.position.set(x, 0.01, 280);
-  scene.add(div);
-});
-
-[-5.2, 5.2].forEach(x => {
-  const wall = new THREE.Mesh(
-    new THREE.PlaneGeometry(0.12, 600),
-    new THREE.MeshBasicMaterial({ color: 0x22a032, transparent: true, opacity: 0.55, side: THREE.DoubleSide })
-  );
-  wall.position.set(x, 1.2, 280);
-  scene.add(wall);
-});
-
-// ─── CITY ──────────────────────────────────────────────────────
-const CITY_URL = 'https://threejs.org/examples/models/gltf/LittlestTokyo.glb';
-let cityMixer  = null;
-
-function loadCity() {
-  return new Promise((resolve) => {
-    const loader = new GLTFLoader();
-    loader.load(CITY_URL, (gltf) => {
-      const city = gltf.scene;
-      city.scale.set(0.012, 0.012, 0.012);
-      city.position.set(0, -0.5, 30);
-      city.rotation.y = Math.PI;
-      city.traverse(child => {
-        if (child.isMesh) { child.receiveShadow = true; child.castShadow = false; }
-      });
-      scene.add(city);
-      if (gltf.animations.length > 0) {
-        cityMixer = new THREE.AnimationMixer(city);
-        gltf.animations.forEach(clip => cityMixer.clipAction(clip).play());
-      }
-      resolve();
-    }, undefined, () => { console.warn('City model failed, continuing.'); resolve(); });
-  });
+// Floor tiles
+const FLOOR_WORDS=['DATA','TYPE','LOOP','SELECT','IF','FORM','CALL','READ','SORT','MOVE','WRITE','CLASS','METHOD','CLEAR','BDEF','CDS'];
+const TILE_D=8, TILE_COUNT=16;
+const floorTiles=[];
+for(let i=0;i<TILE_COUNT;i++){
+  const cv=document.createElement('canvas'); cv.width=256; cv.height=64;
+  const cx=cv.getContext('2d');
+  cx.fillStyle='#b0c4b8'; cx.fillRect(0,0,256,64);
+  cx.fillStyle='rgba(20,100,40,0.35)'; cx.font='bold 18px monospace'; cx.textAlign='center';
+  cx.fillText(FLOOR_WORDS[i%FLOOR_WORDS.length],128,42);
+  const tile=new THREE.Mesh(new THREE.PlaneGeometry(9.4,TILE_D),new THREE.MeshBasicMaterial({map:new THREE.CanvasTexture(cv),transparent:true,opacity:.9}));
+  tile.rotation.x=-Math.PI/2; tile.position.set(0,0.005,i*TILE_D); scene.add(tile); floorTiles.push(tile);
 }
 
-// ─── FLOOR TILES ───────────────────────────────────────────────
-const FLOOR_WORDS = ['DATA','TYPE','LOOP','SELECT','IF','FORM','CALL','READ','SORT','MOVE','WRITE','CLASS','METHOD','CLEAR','BDEF','CDS'];
-const TILE_W = 9.4, TILE_D = 8, TILE_COUNT = 16;
-const floorTiles = [];
-for (let i = 0; i < TILE_COUNT; i++) {
-  const canvas = document.createElement('canvas');
-  canvas.width = 256; canvas.height = 64;
-  const ctx = canvas.getContext('2d');
-  ctx.fillStyle = '#b0c4b8';
-  ctx.fillRect(0, 0, 256, 64);
-  ctx.fillStyle = 'rgba(20,100,40,0.35)';
-  ctx.font = 'bold 18px monospace';
-  ctx.textAlign = 'center';
-  ctx.fillText(FLOOR_WORDS[i % FLOOR_WORDS.length], 128, 42);
-  const tex = new THREE.CanvasTexture(canvas);
-  const tile = new THREE.Mesh(
-    new THREE.PlaneGeometry(TILE_W, TILE_D),
-    new THREE.MeshBasicMaterial({ map: tex, transparent: true, opacity: 0.9 })
-  );
-  tile.rotation.x = -Math.PI / 2;
-  tile.position.set(0, 0.005, i * TILE_D);
-  scene.add(tile);
-  floorTiles.push(tile);
+// City
+let cityMixer=null;
+function loadCity(){return new Promise(resolve=>{new GLTFLoader().load(CITY_URL,gltf=>{const city=gltf.scene;city.scale.set(.012,.012,.012);city.position.set(0,-.5,30);city.rotation.y=Math.PI;city.traverse(c=>{if(c.isMesh){c.receiveShadow=true;c.castShadow=false;}});scene.add(city);if(gltf.animations.length){cityMixer=new THREE.AnimationMixer(city);gltf.animations.forEach(clip=>cityMixer.clipAction(clip).play());}resolve();},undefined,()=>{console.warn('City failed');resolve();});});}
+
+// Character
+let mixer=null,idleAction=null,runAction=null,walkAction=null;
+const charGroup=new THREE.Group(); charGroup.position.set(0,0,2); scene.add(charGroup);
+function loadScene(){return new Promise((resolve,reject)=>{new GLTFLoader().load(MODEL_URL,gltf=>{const model=gltf.scene;model.scale.set(1,1,1);model.rotation.y=Math.PI;model.traverse(c=>{if(c.isMesh){c.castShadow=true;c.receiveShadow=true;}});charGroup.add(model);mixer=new THREE.AnimationMixer(model);idleAction=mixer.clipAction(gltf.animations[0]);runAction=mixer.clipAction(gltf.animations[1]);walkAction=mixer.clipAction(gltf.animations[3]);runAction.enabled=false;walkAction.enabled=false;idleAction.play();resolve();},undefined,err=>reject(new Error('GLB: '+err.message)));});}
+function playIdle(){if(!mixer||!idleAction)return;[runAction,walkAction].forEach(a=>{if(a?.isRunning())a.crossFadeTo(idleAction,.25,true)});idleAction.play();}
+function playRun(){if(!mixer||!runAction)return;[idleAction,walkAction].forEach(a=>{if(a?.isRunning())a.crossFadeTo(runAction,.25,true)});runAction.enabled=true;runAction.play();}
+function playWalk(){if(!mixer||!walkAction)return;[idleAction,runAction].forEach(a=>{if(a?.isRunning())a.crossFadeTo(walkAction,.25,true)});walkAction.enabled=true;walkAction.play();}
+
+// ── STATE ──
+const state={currentLane:1,targetX:0,score:0,lives:LIVES,correct:0,gameOver:false,running:false,paused:false,choosing:false,qIndex:0,speed:15};
+window._gameState=state;
+
+let activeQuestion=null, obstacleMeshes=[], obstacleData=[], questionPending=false;
+const clock=new THREE.Clock();
+
+// ── SAVE SCORE ──
+async function saveScoreToSheet(){
+  try {
+    await fetch(GAS_URL,{method:'POST',headers:{'Content-Type':'text/plain'},
+      body:JSON.stringify({action:'saveScore',apiKey:API_SECRET,gameId:'subway',score:state.score,
+        name:sessionStorage.getItem('szc_name')||localStorage.getItem('szc_name')||'Student',
+        email:sessionStorage.getItem('szc_email')||localStorage.getItem('szc_email')||''}),
+      redirect:'follow'});
+  } catch(e){}
 }
 
-// ─── CHARACTER ─────────────────────────────────────────────────
-let mixer      = null;
-let idleAction = null;
-let runAction  = null;
-let walkAction = null;
-const charGroup  = new THREE.Group();
-charGroup.position.set(0, 0, 2);
-scene.add(charGroup);
-
-function loadScene() {
-  return new Promise((resolve, reject) => {
-    const loader = new GLTFLoader();
-    loader.load(MODEL_URL, (gltf) => {
-      const model = gltf.scene;
-      model.scale.set(1.0, 1.0, 1.0);
-      model.rotation.y = Math.PI;
-      model.traverse(child => {
-        if (child.isMesh) { child.castShadow = true; child.receiveShadow = true; }
-      });
-      charGroup.add(model);
-      mixer = new THREE.AnimationMixer(model);
-      idleAction = mixer.clipAction(gltf.animations[0]);
-      runAction  = mixer.clipAction(gltf.animations[1]);
-      walkAction = mixer.clipAction(gltf.animations[3]);
-      runAction.enabled  = false;
-      walkAction.enabled = false;
-      idleAction.play();
-      resolve();
-    }, undefined, (err) => reject(new Error('GLB load failed: ' + err.message)));
-  });
+// ── PAUSE ──
+function setPaused(val){
+  state.paused=val;
+  document.getElementById('pause-overlay').style.display=val?'flex':'none';
+  document.getElementById('btn-playpause').textContent=val?'▶':'⏸';
+  if(val){playIdle();}else{if(state.choosing)playWalk();else playRun();clock.getDelta();}
 }
 
-function playIdle() {
-  if (!mixer || !idleAction) return;
-  [runAction, walkAction].forEach(a => { if (a?.isRunning()) a.crossFadeTo(idleAction, 0.25, true); });
-  idleAction.play();
-}
-function playRun() {
-  if (!mixer || !runAction) return;
-  [idleAction, walkAction].forEach(a => { if (a?.isRunning()) a.crossFadeTo(runAction, 0.25, true); });
-  runAction.enabled = true;
-  runAction.play();
-}
-function playWalk() {
-  if (!mixer || !walkAction) return;
-  [idleAction, runAction].forEach(a => { if (a?.isRunning()) a.crossFadeTo(walkAction, 0.25, true); });
-  walkAction.enabled = true;
-  walkAction.play();
-}
+document.getElementById('btn-playpause').addEventListener('click',()=>{if(state.gameOver||!state.running)return;setPaused(!state.paused);});
+document.getElementById('btn-resume-overlay').addEventListener('click',()=>setPaused(false));
+document.getElementById('btn-restart-pause').addEventListener('click',()=>{setPaused(false);startGame();});
+document.getElementById('btn-mainmenu-pause').addEventListener('click',()=>{window.location.href='games.html';});
+document.getElementById('go-restart').addEventListener('click',()=>startGame());
 
-// ─── GAME STATE ────────────────────────────────────────────────
-const state = {
-  currentLane   : 1,
-  targetX       : 0,
-  score         : 0,
-  lives         : LIVES,
-  correct       : 0,
-  gameOver      : false,
-  running       : false,
-  paused        : false,
-  choosing      : false,
-  qIndex        : 0,
-  speed         : 15,
-};
-
-// Expose state globally for the click handler
-window._gameState = state;
-
-let activeQuestion  = null;
-let obstacleMeshes  = [];
-let obstacleData    = [];
-let questionPending = false;
-const clock         = new THREE.Clock();
-
-// ─── PAUSE / RESUME ────────────────────────────────────────────
-function setPaused(val) {
-  state.paused = val;
-  document.getElementById('pause-overlay').style.display = val ? 'flex' : 'none';
-  document.getElementById('btn-playpause').textContent   = val ? '▶' : '⏸';
-  if (val) {
-    playIdle();
-  } else {
-    if (state.choosing) playWalk();
-    else playRun();
-    clock.getDelta();
-  }
-}
-
-document.getElementById('btn-playpause').addEventListener('click', () => {
-  if (state.gameOver || !state.running) return;
-  setPaused(!state.paused);
-});
-document.getElementById('btn-resume-overlay').addEventListener('click', () => {
-  setPaused(false);
+window.addEventListener('keydown',e=>{
+  if(e.code==='Space'&&state.running&&!state.gameOver){e.preventDefault();setPaused(!state.paused);}
+  if(state.gameOver||state.paused||!state.running)return;
+  if(e.key==='ArrowLeft'&&state.currentLane>0){state.currentLane--;state.targetX=LANES[state.currentLane];updateLaneIndicators(state.currentLane);playWalk();if(state.choosing)scheduleConfirm();}
+  if(e.key==='ArrowRight'&&state.currentLane<2){state.currentLane++;state.targetX=LANES[state.currentLane];updateLaneIndicators(state.currentLane);playWalk();if(state.choosing)scheduleConfirm();}
+  if((e.key==='ArrowUp'||e.key==='ArrowDown'||e.key==='Enter')&&state.choosing){e.preventDefault();clearTimeout(_confirmTimer);confirmLane();}
 });
 
-window.addEventListener('keydown', e => {
-  if (e.code === 'Space' && state.running && !state.gameOver) {
-    e.preventDefault();
-    setPaused(!state.paused);
-  }
+let _tx=0;
+window.addEventListener('touchstart',e=>{_tx=e.changedTouches[0].screenX;},{passive:true});
+window.addEventListener('touchend',e=>{
+  if(state.paused||state.gameOver||!state.running)return;
+  const dx=e.changedTouches[0].screenX-_tx;
+  if(dx>30&&state.currentLane<2){state.currentLane++;state.targetX=LANES[state.currentLane];updateLaneIndicators(state.currentLane);if(state.choosing)scheduleConfirm();}
+  if(dx<-30&&state.currentLane>0){state.currentLane--;state.targetX=LANES[state.currentLane];updateLaneIndicators(state.currentLane);if(state.choosing)scheduleConfirm();}
 });
 
-// ─── LANE SELECTION ────────────────────────────────────────────
-// Arrow keys still work anytime during game (not just when choosing)
-window.addEventListener('keydown', e => {
-  if (state.gameOver || state.paused || !state.running) return;
+let _confirmTimer=null;
+function scheduleConfirm(){clearTimeout(_confirmTimer);_confirmTimer=setTimeout(confirmLane,320);}
+window.scheduleConfirm=scheduleConfirm;
 
-  if (e.key === 'ArrowLeft' && state.currentLane > 0) {
-    state.currentLane--;
-    state.targetX = LANES[state.currentLane];
-    updateLaneIndicators(state.currentLane);
-    playWalk();
-    if (state.choosing) scheduleConfirm();
-  }
-  if (e.key === 'ArrowRight' && state.currentLane < 2) {
-    state.currentLane++;
-    state.targetX = LANES[state.currentLane];
-    updateLaneIndicators(state.currentLane);
-    playWalk();
-    if (state.choosing) scheduleConfirm();
-  }
-  if ((e.key === 'ArrowUp' || e.key === 'ArrowDown' || e.key === 'Enter') && state.choosing) {
-    e.preventDefault();
-    clearTimeout(_confirmTimer);
-    confirmLane();
-  }
-});
-
-// Touch swipe
-let _tx = 0;
-window.addEventListener('touchstart', e => { _tx = e.changedTouches[0].screenX; }, { passive: true });
-window.addEventListener('touchend', e => {
-  if (state.paused || state.gameOver || !state.running) return;
-  const dx = e.changedTouches[0].screenX - _tx;
-  if (dx > 30 && state.currentLane < 2) {
-    state.currentLane++;
-    state.targetX = LANES[state.currentLane];
-    updateLaneIndicators(state.currentLane);
-    if (state.choosing) scheduleConfirm();
-  }
-  if (dx < -30 && state.currentLane > 0) {
-    state.currentLane--;
-    state.targetX = LANES[state.currentLane];
-    updateLaneIndicators(state.currentLane);
-    if (state.choosing) scheduleConfirm();
-  }
-});
-
-let _confirmTimer = null;
-function scheduleConfirm() {
-  clearTimeout(_confirmTimer);
-  _confirmTimer = setTimeout(confirmLane, 320);
-}
-
-// Make scheduleConfirm globally accessible
-window.scheduleConfirm = scheduleConfirm;
-
-function confirmLane() {
-  if (!state.choosing || state.paused || state.gameOver) return;
-  const laneX = LANES[state.currentLane];
-  let hit = null;
-  for (const obs of obstacleData) {
-    if (Math.abs(obs.mesh.position.x - laneX) < 0.5) { hit = obs; break; }
-  }
-  if (!hit) return;
-  state.choosing  = false;
-  questionPending = true;
+function confirmLane(){
+  if(!state.choosing||state.paused||state.gameOver)return;
+  const laneX=LANES[state.currentLane];
+  let hit=null;
+  for(const obs of obstacleData){if(Math.abs(obs.mesh.position.x-laneX)<0.5){hit=obs;break;}}
+  if(!hit)return;
+  state.choosing=false; questionPending=true;
   onAnswer(hit.correct);
 }
 
-// ─── LANE INDICATOR UPDATE ─────────────────────────────────────
-// Make globally accessible (called from non-module script)
-window.updateLaneIndicators = updateLaneIndicators;
-function updateLaneIndicators(laneIndex) {
-  [0,1,2].forEach(i => {
-    const el = document.getElementById('lind-' + i);
-    if (el) el.className = 'lane-ind' + (i === laneIndex ? ' active' : '');
-  });
-  const hl = document.getElementById('lane-highlight');
-  if (hl) hl.style.left = (laneIndex * 33.33) + '%';
-}
+// ── HUD ──
+function updateHUD(){document.getElementById('hud-score').textContent=state.score;document.getElementById('hud-correct').textContent=state.correct;}
+function updateLives(){['h1','h2','h3'].forEach((id,i)=>{const el=document.getElementById(id);if(el)el.className='heart'+(i>=state.lives?' lost':'');});}
 
-// ─── HUD HELPERS ───────────────────────────────────────────────
-function updateHUD() {
-  document.getElementById('hud-score').textContent   = state.score;
-  document.getElementById('hud-correct').textContent = state.correct;
-}
-function updateLives() {
-  ['h1','h2','h3'].forEach((id, i) => {
-    const el = document.getElementById(id);
-    if (el) el.className = 'heart' + (i >= state.lives ? ' lost' : '');
-  });
-}
-
-// ─── SPAWN QUESTION ────────────────────────────────────────────
-const LANE_COLORS_HEX = ['#2563eb', '#d97706', '#c0392b'];
-
-function spawnNextQuestion() {
-  questionPending = false;
-  activeQuestion  = null;
-  state.choosing  = false;
-  if (quizData.length === 0) return;
-  if (state.qIndex >= quizData.length) state.qIndex = 0;
-
-  activeQuestion = quizData[state.qIndex++];
-
-  document.getElementById('q-text').textContent = activeQuestion.question;
-  document.getElementById('question-box').style.display = 'block';
-
-  const answers = [
-    { text: activeQuestion.correct, correct: true  },
-    { text: activeQuestion.wrong1,  correct: false },
-    { text: activeQuestion.wrong2,  correct: false },
-  ].sort(() => Math.random() - 0.5);
-
-  obstacleMeshes.forEach(m => scene.remove(m));
-  obstacleMeshes = [];
-  obstacleData   = [];
-
-  for (let i = 0; i < 3; i++) {
-    const canvas = document.createElement('canvas');
-    canvas.width  = 512;
-    canvas.height = 256;
-    const ctx = canvas.getContext('2d');
-
-    // Modern glassmorphism style obstacle
-    ctx.fillStyle = 'rgba(0,0,0,0.88)';
-    ctx.roundRect(4, 4, 504, 248, 18);
-    ctx.fill();
-
-    // Glow border
-    const grd = ctx.createLinearGradient(0, 0, 0, 256);
-    grd.addColorStop(0, LANE_COLORS_HEX[i]);
-    grd.addColorStop(1, LANE_COLORS_HEX[i] + '44');
-    ctx.strokeStyle = grd;
-    ctx.lineWidth = 6;
-    ctx.roundRect(4, 4, 504, 248, 18);
-    ctx.stroke();
-
-    // Inner glow top
-    ctx.fillStyle = LANE_COLORS_HEX[i] + '22';
-    ctx.roundRect(4, 4, 504, 80, [18, 18, 0, 0]);
-    ctx.fill();
-
-    ctx.fillStyle = '#ffffff';
-    ctx.textAlign = 'center';
-    ctx.textBaseline = 'middle';
-
-    const words = answers[i].text.split(' ');
-    const lines = [];
-    let line = '';
-    for (const w of words) {
-      const test = line ? line + ' ' + w : w;
-      ctx.font = 'bold 42px monospace';
-      if (ctx.measureText(test).width > 460 && line) {
-        lines.push(line); line = w;
-      } else { line = test; }
-    }
+// ── OBSTACLES ──
+const LANE_COLORS=['#2563eb','#d97706','#c0392b'];
+function spawnNextQuestion(){
+  questionPending=false; activeQuestion=null; state.choosing=false;
+  if(quizData.length===0)return;
+  if(state.qIndex>=quizData.length)state.qIndex=0;
+  activeQuestion=quizData[state.qIndex++];
+  document.getElementById('q-text').textContent=activeQuestion.question;
+  document.getElementById('question-box').style.display='block';
+  const answers=[{text:activeQuestion.correct,correct:true},{text:activeQuestion.wrong1,correct:false},{text:activeQuestion.wrong2,correct:false}].sort(()=>Math.random()-.5);
+  obstacleMeshes.forEach(m=>scene.remove(m)); obstacleMeshes=[]; obstacleData=[];
+  for(let i=0;i<3;i++){
+    const cv=document.createElement('canvas'); cv.width=512; cv.height=256;
+    const cx=cv.getContext('2d');
+    cx.fillStyle='rgba(0,0,0,0.88)'; cx.roundRect(4,4,504,248,18); cx.fill();
+    const grd=cx.createLinearGradient(0,0,0,256); grd.addColorStop(0,LANE_COLORS[i]); grd.addColorStop(1,LANE_COLORS[i]+'44');
+    cx.strokeStyle=grd; cx.lineWidth=6; cx.roundRect(4,4,504,248,18); cx.stroke();
+    cx.fillStyle=LANE_COLORS[i]+'22'; cx.roundRect(4,4,504,80,[18,18,0,0]); cx.fill();
+    cx.fillStyle='#ffffff'; cx.textAlign='center'; cx.textBaseline='middle';
+    const words=answers[i].text.split(' '); const lines=[]; let line='';
+    for(const w of words){const test=line?line+' '+w:w;cx.font='bold 42px monospace';if(cx.measureText(test).width>460&&line){lines.push(line);line=w;}else{line=test;}}
     lines.push(line);
-
-    const lineH = 52;
-    const startY = 128 - ((lines.length - 1) * lineH) / 2;
-    ctx.font = 'bold 42px monospace';
-    lines.forEach((l, li) => ctx.fillText(l, 256, startY + li * lineH));
-
-    const tex      = new THREE.CanvasTexture(canvas);
-    const solidMat = new THREE.MeshLambertMaterial({ color: LANE_COLORS_HEX[i], transparent: true, opacity: 0.7 });
-    const textMat  = new THREE.MeshLambertMaterial({ map: tex });
-    const materials = [solidMat, solidMat, solidMat, solidMat, solidMat, textMat];
-
-    const geo = new THREE.BoxGeometry(2.2, 1.6, 0.5);
-    const box = new THREE.Mesh(geo, materials);
-    box.position.set(LANES[i], 1.2, SPAWN_Z);
-    box.castShadow = true;
-
-    const edges = new THREE.EdgesGeometry(geo);
-    box.add(new THREE.LineSegments(edges,
-      new THREE.LineBasicMaterial({ color: LANE_COLORS_HEX[i], transparent: true, opacity: 0.9 })
-    ));
-    scene.add(box);
-    obstacleMeshes.push(box);
-    obstacleData.push({ mesh: box, correct: answers[i].correct, laneIndex: i });
+    const lineH=52,startY=128-((lines.length-1)*lineH)/2;
+    cx.font='bold 42px monospace'; lines.forEach((l,li)=>cx.fillText(l,256,startY+li*lineH));
+    const solidMat=new THREE.MeshLambertMaterial({color:LANE_COLORS[i],transparent:true,opacity:.7});
+    const textMat=new THREE.MeshLambertMaterial({map:new THREE.CanvasTexture(cv)});
+    const geo=new THREE.BoxGeometry(2.2,1.6,0.5);
+    const box=new THREE.Mesh(geo,[solidMat,solidMat,solidMat,solidMat,solidMat,textMat]);
+    box.position.set(LANES[i],1.2,SPAWN_Z); box.castShadow=true;
+    box.add(new THREE.LineSegments(new THREE.EdgesGeometry(geo),new THREE.LineBasicMaterial({color:LANE_COLORS[i],transparent:true,opacity:.9})));
+    scene.add(box); obstacleMeshes.push(box); obstacleData.push({mesh:box,correct:answers[i].correct,laneIndex:i});
   }
-  questionPending = false;
+  questionPending=false;
 }
 
-// ─── OBSTACLE APPROACH ─────────────────────────────────────────
-const PAUSE_TRIGGER_Z = 10;
-
-function updateObstacles(dt) {
-  if (!activeQuestion || state.gameOver || questionPending || state.choosing) return;
-  for (const obs of obstacleData) {
-    obs.mesh.position.z -= state.speed * dt;
-    // Subtle float animation
-    obs.mesh.position.y = 1.2 + Math.sin(Date.now() * 0.003 + obs.laneIndex) * 0.05;
-  }
-  const leadZ = obstacleData[0]?.mesh.position.z ?? 999;
-  if (leadZ <= PAUSE_TRIGGER_Z && !state.choosing) {
-    triggerChoosing();
-  }
+const PAUSE_TRIGGER_Z=10;
+function updateObstacles(dt){
+  if(!activeQuestion||state.gameOver||questionPending||state.choosing)return;
+  for(const obs of obstacleData){obs.mesh.position.z-=state.speed*dt;obs.mesh.position.y=1.2+Math.sin(Date.now()*.003+obs.laneIndex)*.05;}
+  const leadZ=obstacleData[0]?.mesh.position.z??999;
+  if(leadZ<=PAUSE_TRIGGER_Z&&!state.choosing)triggerChoosing();
 }
+function triggerChoosing(){state.choosing=true;obstacleMeshes.forEach((m,i)=>{obstacleData[i].mesh.position.z=PAUSE_TRIGGER_Z;});playWalk();}
 
-function triggerChoosing() {
-  state.choosing = true;
-  obstacleMeshes.forEach((m, i) => {
-    obstacleData[i].mesh.position.z = PAUSE_TRIGGER_Z;
-  });
-  playWalk();
-}
-
-// ─── ANSWER HANDLING ───────────────────────────────────────────
-async function onAnswer(correct) {
-  document.getElementById('question-box').style.display = 'none';
-  const flash = document.getElementById('flash');
+// ── ANSWER — game ends when all lives lost ──
+async function onAnswer(correct){
+  document.getElementById('question-box').style.display='none';
+  const flash=document.getElementById('flash');
   playIdle();
-
-  if (correct) {
-    state.score   += 100;
-    state.correct += 1;
-    state.speed    = Math.min(32, state.speed + 0.6);
-    flash.textContent = '✓ CORRECT! +100';
-    flash.className   = 'ok';
-    flash.style.display = 'block';
+  if(correct){
+    state.score+=100; state.correct+=1; state.speed=Math.min(32,state.speed+.6);
+    flash.textContent='✓ CORRECT! +100'; flash.className='ok'; flash.style.display='block';
     spawnParticles(0x22a032);
   } else {
     state.lives--;
     updateLives();
-    flash.textContent = '✗ WRONG! −1 Life';
-    flash.className   = 'bad';
-    flash.style.display = 'block';
-    if (state.lives <= 0) {
-      setTimeout(triggerGameOver, 900);
+    flash.textContent='✗ WRONG! −1 Life'; flash.className='bad'; flash.style.display='block';
+    if(state.lives<=0){
+      setTimeout(triggerGameOver,900);
       return;
     }
   }
   updateHUD();
-
-  obstacleMeshes.forEach(m => scene.remove(m));
-  obstacleMeshes = [];
-  obstacleData   = [];
-
-  setTimeout(() => { flash.style.display = 'none'; }, 1000);
-  setTimeout(() => { playRun(); spawnNextQuestion(); }, 1300);
+  obstacleMeshes.forEach(m=>scene.remove(m)); obstacleMeshes=[]; obstacleData=[];
+  setTimeout(()=>{flash.style.display='none';},1000);
+  setTimeout(()=>{playRun();spawnNextQuestion();},1300);
 }
 
-async function triggerGameOver() {
-  state.gameOver = true;
+async function triggerGameOver(){
+  state.gameOver=true; state.running=false;
   playIdle();
-  obstacleMeshes.forEach(m => scene.remove(m));
-  obstacleMeshes = [];
-  obstacleData   = [];
-  document.getElementById('question-box').style.display = 'none';
-  document.getElementById('flash').style.display        = 'none';
-  document.getElementById('lane-indicators').style.display = 'none';
-  document.getElementById('lane-zones').style.display      = 'none';
-  document.getElementById('go-score').textContent  = 'Score: '  + state.score;
-  document.getElementById('go-detail').textContent = state.correct + ' correct answers';
-
-  // ── Save score to sheet ──
-  try {
-    await fetch(GAS_URL, {
-      method: 'POST',
-      headers: { 'Content-Type': 'text/plain' },
-      body: JSON.stringify({
-        action: 'saveScore',
-        apiKey:  API_SECRET,
-        gameId:  'abap-runner',
-        score:   state.score,
-        name:    sessionStorage.getItem('szc_name')  || localStorage.getItem('szc_name')  || 'Student',
-        email:   sessionStorage.getItem('szc_email') || localStorage.getItem('szc_email') || '',
-      }),
-      redirect: 'follow',
-    });
-  } catch(e) { /* silent fail */ }
-
-  document.getElementById('game-over').style.display = 'flex';
+  obstacleMeshes.forEach(m=>scene.remove(m)); obstacleMeshes=[]; obstacleData=[];
+  document.getElementById('question-box').style.display='none';
+  document.getElementById('flash').style.display='none';
+  document.getElementById('hud').style.display='none';
+  document.getElementById('lane-indicators').style.display='none';
+  document.getElementById('lane-zones').style.display='none';
+  document.getElementById('pause-overlay').style.display='none';
+  document.getElementById('go-score').textContent='Score: '+state.score;
+  document.getElementById('go-detail').textContent=state.correct+' correct answers';
+  await saveScoreToSheet();
+  document.getElementById('game-over').style.display='flex';
 }
 
-// ─── PARTICLES ─────────────────────────────────────────────────
-const particles = [];
-function spawnParticles(color) {
-  for (let i = 0; i < 14; i++) {
-    const p = new THREE.Mesh(
-      new THREE.SphereGeometry(0.09, 4, 4),
-      new THREE.MeshBasicMaterial({ color, transparent: true })
-    );
-    p.position.copy(charGroup.position);
-    p.position.y += 1.2;
-    p._v = new THREE.Vector3(
-      (Math.random() - 0.5) * 5,
-      3 + Math.random() * 4,
-      (Math.random() - 0.5) * 2
-    );
-    p._life = 1.0;
-    scene.add(p);
-    particles.push(p);
-  }
-}
-function updateParticles(dt) {
-  for (let i = particles.length - 1; i >= 0; i--) {
-    const p = particles[i];
-    p._v.y -= 8 * dt;
-    p.position.addScaledVector(p._v, dt);
-    p._life -= dt * 1.8;
-    p.material.opacity = Math.max(0, p._life);
-    if (p._life <= 0) { scene.remove(p); particles.splice(i, 1); }
-  }
-}
+// Particles
+const particles=[];
+function spawnParticles(color){for(let i=0;i<14;i++){const p=new THREE.Mesh(new THREE.SphereGeometry(.09,4,4),new THREE.MeshBasicMaterial({color,transparent:true}));p.position.copy(charGroup.position);p.position.y+=1.2;p._v=new THREE.Vector3((Math.random()-.5)*5,3+Math.random()*4,(Math.random()-.5)*2);p._life=1.0;scene.add(p);particles.push(p);}}
+function updateParticles(dt){for(let i=particles.length-1;i>=0;i--){const p=particles[i];p._v.y-=8*dt;p.position.addScaledVector(p._v,dt);p._life-=dt*1.8;p.material.opacity=Math.max(0,p._life);if(p._life<=0){scene.remove(p);particles.splice(i,1);}}}
 
-// ─── START GAME ────────────────────────────────────────────────
-function startGame() {
-  state.currentLane = 1;
-  state.targetX     = 0;
-  state.score       = 0;
-  state.lives       = LIVES;
-  state.correct     = 0;
-  state.gameOver    = false;
-  state.running     = true;
-  state.paused      = false;
-  state.choosing    = false;
-  state.qIndex      = 0;
-  state.speed       = 15;
+// ── START ──
+function startGame(){
+  // Reset all state
+  state.currentLane=1; state.targetX=0; state.score=0; state.lives=LIVES;
+  state.correct=0; state.gameOver=false; state.running=true;
+  state.paused=false; state.choosing=false; state.qIndex=0; state.speed=15;
 
-  updateHUD();
-  updateLives();
-  updateLaneIndicators(1);
+  // Clear leftover obstacles
+  obstacleMeshes.forEach(m=>scene.remove(m)); obstacleMeshes=[]; obstacleData=[];
+  activeQuestion=null; questionPending=false;
+  particles.forEach(p=>scene.remove(p)); particles.length=0;
 
-  document.getElementById('hud').style.display              = 'flex';
-  document.getElementById('lane-zones').style.display       = 'block';
-  document.getElementById('lane-indicators').style.display  = 'flex';
-  document.getElementById('click-hint').style.display       = 'block';
-  document.getElementById('game-over').style.display        = 'none';
-  document.getElementById('pause-overlay').style.display    = 'none';
-  document.getElementById('btn-playpause').textContent      = '⏸';
+  updateHUD(); updateLives(); updateLaneIndicators(1);
+  document.getElementById('hud').style.display='flex';
+  document.getElementById('lane-zones').style.display='block';
+  document.getElementById('lane-indicators').style.display='flex';
+  document.getElementById('click-hint').style.display='block';
+  document.getElementById('click-hint').style.opacity='1';
+  document.getElementById('game-over').style.display='none';
+  document.getElementById('pause-overlay').style.display='none';
+  document.getElementById('question-box').style.display='none';
+  document.getElementById('flash').style.display='none';
+  document.getElementById('btn-playpause').textContent='⏸';
 
-  // Hide click hint after 5 seconds
-  setTimeout(() => {
-    const hint = document.getElementById('click-hint');
-    if (hint) hint.style.opacity = '0';
-    setTimeout(() => { if (hint) hint.style.display = 'none'; }, 500);
-  }, 5000);
+  setTimeout(()=>{const h=document.getElementById('click-hint');if(h){h.style.opacity='0';setTimeout(()=>{h.style.display='none';},500);}},5000);
 
   playRun();
   spawnNextQuestion();
@@ -1101,35 +518,25 @@ function startGame() {
   requestAnimationFrame(loop);
 }
 
-// ─── MAIN LOOP ─────────────────────────────────────────────────
-function loop() {
+// ── LOOP ──
+function loop(){
   requestAnimationFrame(loop);
-  const dt = Math.min(clock.getDelta(), 0.05);
-
-  if (mixer) mixer.update(dt);
-  if (cityMixer) cityMixer.update(dt);
-
-  if (!state.gameOver && state.running && !state.paused) {
-    charGroup.position.x = THREE.MathUtils.lerp(charGroup.position.x, state.targetX, 10 * dt);
-    charGroup.position.y = 0;
-    charGroup.position.z = 2;
-
-    if (!state.choosing) {
-      const TOTAL = TILE_COUNT * TILE_D;
-      floorTiles.forEach(tile => {
-        tile.position.z -= state.speed * dt;
-        if (tile.position.z < -TILE_D * 2) tile.position.z += TOTAL;
-      });
+  const dt=Math.min(clock.getDelta(),.05);
+  if(mixer)mixer.update(dt);
+  if(cityMixer)cityMixer.update(dt);
+  if(!state.gameOver&&state.running&&!state.paused){
+    charGroup.position.x=THREE.MathUtils.lerp(charGroup.position.x,state.targetX,10*dt);
+    charGroup.position.y=0; charGroup.position.z=2;
+    if(!state.choosing){
+      const TOTAL=TILE_COUNT*TILE_D;
+      floorTiles.forEach(tile=>{tile.position.z-=state.speed*dt;if(tile.position.z<-TILE_D*2)tile.position.z+=TOTAL;});
       updateObstacles(dt);
     }
-
     updateParticles(dt);
   }
-
-  renderer.render(scene, camera);
+  renderer.render(scene,camera);
 }
 
-// ─── KICK OFF ──────────────────────────────────────────────────
 fetchQuestions();
 </script>
 </body>
