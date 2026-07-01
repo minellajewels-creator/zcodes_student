@@ -13,15 +13,14 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/babel-standalone/7.23.2/babel.min.js"></script>
 <link rel="stylesheet" href="style.css"/>
 <style>
-body { cursor: default; overflow-x: hidden; }
+body { cursor: default; overflow-x: hidden; background: var(--bg); color: var(--text); }
 #cur, #ring { display: none; }
 
 .topbar {
   height: 58px; background: var(--s1);
   border-bottom: 1px solid var(--bd);
   display: flex; align-items: center; padding: 0 24px; gap: 12px;
-  position: sticky; top: 0; z-index: 100;
-  box-shadow: var(--shadow);
+  position: sticky; top: 0; z-index: 100; box-shadow: var(--shadow);
 }
 .topbar-logo { display: flex; align-items: center; gap: 10px; text-decoration: none; }
 .topbar-logo img { height: 28px; width: auto; }
@@ -42,7 +41,6 @@ body { cursor: default; overflow-x: hidden; }
 .topbar-btn.danger:hover { background: rgba(200,50,50,.06); color: #c0392b; border-color: rgba(200,50,50,.4); }
 
 .main-body { flex: 1; display: flex; flex-direction: column; overflow-y: auto; }
-
 .loading-screen { display: flex; flex-direction: column; align-items: center; justify-content: center; flex: 1; gap: 14px; min-height: calc(100vh - 58px); }
 .spinner { width: 32px; height: 32px; border: 2.5px solid var(--bd); border-top-color: var(--g); border-radius: 50%; animation: spin .7s linear infinite; }
 @keyframes spin { to { transform: rotate(360deg); } }
@@ -80,7 +78,6 @@ body { cursor: default; overflow-x: hidden; }
 
 .hub-grid { max-width: 1060px; margin: 36px auto 56px; padding: 0 22px; display: grid; grid-template-columns: repeat(auto-fill, minmax(272px, 1fr)); gap: 16px; }
 
-/* ── Game Card ───────────────────────────────────────────────── */
 .game-card {
   background: var(--s1); border: 1px solid var(--bd2);
   border-radius: var(--r); padding: 22px; cursor: pointer;
@@ -101,37 +98,18 @@ body { cursor: default; overflow-x: hidden; }
 .game-card-tag { font-family: var(--fm); font-size: .58rem; font-weight: 700; letter-spacing: .1em; text-transform: uppercase; padding: 3px 9px; border-radius: 20px; background: rgba(34,160,50,.08); color: var(--g); border: 1px solid rgba(34,160,50,.16); }
 .game-card-play { font-size: .78rem; font-weight: 700; color: var(--g); }
 
-/* ── Mini Leaderboard inside card ───────────────────────────── */
-.card-leaderboard {
-  margin-top: 14px;
-  border-top: 1px solid var(--bd);
-  padding-top: 11px;
-}
-.card-lb-title {
-  font-family: var(--fm); font-size: .55rem; font-weight: 700;
-  letter-spacing: .12em; text-transform: uppercase; color: var(--mu);
-  margin-bottom: 7px;
-}
-.card-lb-row {
-  display: flex; align-items: center; gap: 7px;
-  padding: 4px 0; border-bottom: 1px solid rgba(255,255,255,.03);
-  font-family: var(--fm); font-size: .68rem;
-}
+.card-leaderboard { margin-top: 14px; border-top: 1px solid var(--bd); padding-top: 11px; }
+.card-lb-title { font-family: var(--fm); font-size: .55rem; font-weight: 700; letter-spacing: .12em; text-transform: uppercase; color: var(--mu); margin-bottom: 7px; }
+.card-lb-row { display: flex; align-items: center; gap: 7px; padding: 4px 0; border-bottom: 1px solid rgba(0,0,0,.05); font-family: var(--fm); font-size: .68rem; }
 .card-lb-row:last-child { border-bottom: none; }
-.card-lb-rank {
-  width: 18px; text-align: center; font-size: .6rem; font-weight: 700;
-  flex-shrink: 0;
-}
-.rank-1 { color: #f59e0b; }
-.rank-2 { color: #94a3b8; }
-.rank-3 { color: #cd7c4b; }
-.rank-n { color: var(--mu); }
+.card-lb-rank { width: 18px; text-align: center; font-size: .6rem; font-weight: 700; flex-shrink: 0; }
+.rank-1 { color: #f59e0b; } .rank-2 { color: #94a3b8; } .rank-3 { color: #cd7c4b; } .rank-n { color: var(--mu); }
 .card-lb-name { flex: 1; color: var(--text); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 .card-lb-score { font-weight: 700; color: var(--g); flex-shrink: 0; }
 .card-lb-you { color: #2563eb !important; }
 .card-lb-empty { font-size: .68rem; color: var(--mu); font-family: var(--fm); font-style: italic; padding: 2px 0; }
 
-/* ── Runner Card ─────────────────────────────────────────────── */
+/* Runner card */
 .game-card-runner {
   background: var(--text); border: 1px solid rgba(34,160,50,.3);
   border-radius: var(--r); padding: 26px; cursor: pointer;
@@ -141,7 +119,7 @@ body { cursor: default; overflow-x: hidden; }
 }
 .runner-top { display: flex; align-items: center; gap: 24px; width: 100%; }
 .game-card-runner::before { content: ''; position: absolute; inset: 0; background: linear-gradient(135deg, rgba(34,160,50,.07) 0%, transparent 60%); pointer-events: none; }
-.game-card-runner::after { content: '◉ ABAP RUNNER'; position: absolute; top: 14px; right: 18px; font-family: var(--fm); font-size: .58rem; font-weight: 700; letter-spacing: .2em; color: rgba(34,160,50,.35); }
+.game-card-runner::after { content: '◉ SAPZCODES RUNNER'; position: absolute; top: 14px; right: 18px; font-family: var(--fm); font-size: .58rem; font-weight: 700; letter-spacing: .2em; color: rgba(34,160,50,.35); }
 .game-card-runner:hover { transform: translateY(-2px); box-shadow: 0 10px 36px rgba(34,160,50,.2); border-color: rgba(34,160,50,.5); }
 .runner-icon-wrap { flex-shrink: 0; width: 64px; height: 64px; background: rgba(34,160,50,.12); border: 1px solid rgba(34,160,50,.22); border-radius: 14px; display: flex; align-items: center; justify-content: center; font-size: 2rem; }
 .runner-content { flex: 1; }
@@ -152,24 +130,10 @@ body { cursor: default; overflow-x: hidden; }
 .runner-badge { font-family: var(--fm); font-size: .58rem; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; padding: 3px 9px; border-radius: 20px; background: rgba(34,160,50,.15); color: var(--g); border: 1px solid rgba(34,160,50,.25); }
 .runner-play-btn { padding: 8px 20px; background: var(--g); border: none; border-radius: 7px; color: #fff; font-family: var(--fh); font-size: .88rem; font-weight: 700; cursor: pointer; transition: all .18s; display: inline-flex; align-items: center; gap: 6px; box-shadow: 0 3px 12px rgba(34,160,50,.3); }
 .runner-play-btn:hover { background: #1a8028; transform: translateY(-1px); }
-
-/* Runner leaderboard at bottom of runner card */
-.runner-lb-wrap {
-  width: 100%; border-top: 1px solid rgba(255,255,255,.07);
-  padding-top: 14px; display: flex; gap: 24px; flex-wrap: wrap;
-}
+.runner-lb-wrap { width: 100%; border-top: 1px solid rgba(255,255,255,.07); padding-top: 14px; display: flex; gap: 24px; flex-wrap: wrap; }
 .runner-lb-col { flex: 1; min-width: 200px; }
-.runner-lb-col-title {
-  font-family: var(--fm); font-size: .55rem; font-weight: 700;
-  letter-spacing: .14em; text-transform: uppercase;
-  color: rgba(255,255,255,.28); margin-bottom: 8px;
-  display: flex; align-items: center; gap: 5px;
-}
-.runner-lb-row {
-  display: flex; align-items: center; gap: 7px;
-  padding: 4px 0; border-bottom: 1px solid rgba(255,255,255,.04);
-  font-family: var(--fm); font-size: .7rem;
-}
+.runner-lb-col-title { font-family: var(--fm); font-size: .55rem; font-weight: 700; letter-spacing: .14em; text-transform: uppercase; color: rgba(255,255,255,.28); margin-bottom: 8px; }
+.runner-lb-row { display: flex; align-items: center; gap: 7px; padding: 4px 0; border-bottom: 1px solid rgba(255,255,255,.04); font-family: var(--fm); font-size: .7rem; }
 .runner-lb-row:last-child { border-bottom: none; }
 .runner-lb-rank { width: 18px; text-align: center; font-size: .62rem; font-weight: 700; flex-shrink: 0; }
 .runner-lb-name { flex: 1; color: rgba(255,255,255,.7); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
@@ -177,7 +141,7 @@ body { cursor: default; overflow-x: hidden; }
 .runner-lb-you { color: #60a5fa !important; }
 .runner-lb-empty { font-size: .68rem; color: rgba(255,255,255,.25); font-family: var(--fm); font-style: italic; padding: 2px 0; }
 
-/* ── Game content wrappers ───────────────────────────────────── */
+/* Game content wrappers */
 .game-wrap { flex: 1; overflow-y: auto; padding: 28px 18px; max-width: 840px; margin: 0 auto; width: 100%; }
 .back-btn { display: inline-flex; align-items: center; gap: 6px; padding: 6px 14px; border-radius: 6px; font-size: .75rem; font-weight: 700; font-family: var(--fb); cursor: pointer; border: 1px solid var(--bd); background: var(--bg); color: var(--mu); transition: all .15s; }
 .back-btn:hover { border-color: var(--g); color: var(--g); background: rgba(34,160,50,.06); }
@@ -187,21 +151,16 @@ body { cursor: default; overflow-x: hidden; }
 
 .progress-bar-wrap { height: 3px; background: var(--bd); border-radius: 4px; margin-bottom: 20px; overflow: hidden; }
 .progress-bar-fill { height: 100%; background: var(--g); border-radius: 4px; transition: width .4s ease; }
-
 .score-badge { display: inline-flex; align-items: center; gap: 6px; padding: 5px 12px; background: rgba(34,160,50,.08); border: 1px solid rgba(34,160,50,.2); border-radius: 20px; font-family: var(--fm); font-size: .78rem; font-weight: 700; color: var(--g); }
 
 .panel-card { background: var(--s1); border: 1px solid var(--bd); border-radius: var(--r); box-shadow: var(--shadow); overflow: hidden; margin-bottom: 14px; animation: fadeUp .3s ease both; }
-.panel-card-head { padding: 14px 20px; border-bottom: 1px solid var(--bd); background: var(--bg); display: flex; align-items: center; gap: 9px; flex-wrap: wrap; }
+.panel-card-head { padding: 14px 20px; border-bottom: 1px solid var(--bd); background: var(--s2); display: flex; align-items: center; gap: 9px; flex-wrap: wrap; }
 .panel-card-body { padding: 20px; }
 @keyframes fadeUp { from{opacity:0;transform:translateY(10px)} to{opacity:1;transform:none} }
 
 .panel-tag { font-family: var(--fm); font-size: .58rem; font-weight: 700; letter-spacing: .12em; text-transform: uppercase; padding: 3px 8px; border-radius: 20px; }
 .tag-green { background: rgba(34,160,50,.08); color: var(--g); border: 1px solid rgba(34,160,50,.18); }
-.tag-red { background: rgba(200,50,50,.07); color: #c0392b; border: 1px solid rgba(200,50,50,.18); }
-.tag-blue { background: rgba(37,99,235,.07); color: #2563eb; border: 1px solid rgba(37,99,235,.18); }
 .tag-warn { background: rgba(217,119,6,.07); color: #d97706; border: 1px solid rgba(217,119,6,.18); }
-.tag-purple { background: rgba(124,58,237,.07); color: #7c3aed; border: 1px solid rgba(124,58,237,.18); }
-.tag-gray { background: var(--s2); color: var(--mu); border: 1px solid var(--bd); }
 .panel-card-title { font-family: var(--fh); font-size: .92rem; font-weight: 700; color: var(--text); }
 
 .option-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 9px; }
@@ -226,34 +185,6 @@ body { cursor: default; overflow-x: hidden; }
 .btn-danger { display: inline-flex; align-items: center; gap: 5px; padding: 7px 14px; background: rgba(200,50,50,.06); border: 1px solid rgba(200,50,50,.2); border-radius: 6px; color: #c0392b; font-size: .75rem; font-weight: 700; font-family: var(--fb); cursor: pointer; transition: all .15s; }
 .btn-danger:hover { background: rgba(200,50,50,.12); }
 
-.code-block { background: var(--text); border-radius: 8px; padding: 14px 18px; font-family: var(--fm); font-size: .78rem; line-height: 1.7; color: var(--bg); overflow-x: auto; margin-bottom: 12px; }
-.code-textarea-dark { width: 100%; min-height: 120px; background: var(--text); border: 1px solid rgba(255,255,255,.1); border-radius: 8px; padding: 12px 16px; color: var(--bg); font-family: var(--fm); font-size: .78rem; line-height: 1.7; resize: vertical; outline: none; transition: border-color .18s; }
-.code-textarea-dark:focus { border-color: var(--g); }
-
-.match-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
-.match-col-label { font-family: var(--fm); font-size: .58rem; font-weight: 700; letter-spacing: .15em; text-transform: uppercase; color: var(--mu); text-align: center; margin-bottom: 7px; }
-.match-item { padding: 10px 13px; border-radius: 7px; font-family: var(--fm); font-size: .75rem; font-weight: 500; cursor: pointer; text-align: left; transition: all .18s; border: 1.5px solid var(--bd2); background: var(--bg); color: var(--gr); width: 100%; }
-.match-item:hover:not(:disabled) { border-color: var(--g); color: var(--text); background: rgba(34,160,50,.06); }
-.match-item.selected { border-color: #2563eb; background: rgba(37,99,235,.06); color: #2563eb; }
-.match-item.matched { border-color: var(--g); background: rgba(34,160,50,.06); color: var(--g); opacity: .7; cursor: default; }
-.match-item.wrong-flash { border-color: #c0392b; background: rgba(200,50,50,.06); color: #c0392b; }
-.match-meaning { font-family: var(--fb); letter-spacing: 0; }
-
-.sorter-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(196px, 1fr)); gap: 10px; }
-.sorter-card { background: var(--s1); border: 1.5px solid var(--bd2); border-radius: 8px; padding: 13px; transition: border-color .2s; }
-.sorter-card.assigned { border-color: #2563eb; }
-.sorter-card.correct { border-color: var(--g); }
-.sorter-card.wrong-ans { border-color: #c0392b; }
-.sorter-card-text { font-size: .82rem; font-weight: 600; color: var(--text); margin-bottom: 9px; line-height: 1.4; font-family: var(--fb); }
-.sorter-layer-btn { display: block; width: 100%; text-align: left; padding: 5px 8px; border-radius: 5px; font-size: .72rem; font-family: var(--fb); cursor: pointer; border: 1px solid var(--bd); background: transparent; color: var(--mu); margin-bottom: 4px; transition: all .15s; }
-.sorter-layer-btn:hover { border-color: var(--g); color: var(--g); background: rgba(34,160,50,.06); }
-.sorter-layer-btn.chosen { border-color: #2563eb; background: rgba(37,99,235,.06); color: #2563eb; font-weight: 700; }
-
-.speed-target { background: var(--text); border-radius: 8px; padding: 18px 20px; font-family: var(--fm); font-size: .9rem; line-height: 1.8; margin-bottom: 14px; letter-spacing: .02em; }
-.speed-char-done { color: var(--g); }
-.speed-char-error { color: #c0392b; background: rgba(200,50,50,.15); border-radius: 2px; }
-.speed-char-wait { color: rgba(240,244,240,.2); }
-
 .topic-selector { max-width: 660px; margin: 0 auto; padding: 28px 20px; }
 .topic-selector h2 { font-family: var(--fh); font-size: 1.3rem; font-weight: 700; color: var(--text); margin-bottom: 5px; }
 .topic-selector p { font-size: .82rem; color: var(--mu); margin-bottom: 20px; }
@@ -263,18 +194,6 @@ body { cursor: default; overflow-x: hidden; }
 .topic-chip.active { border-color: var(--g); background: rgba(34,160,50,.08); color: var(--g); }
 .topic-count { font-family: var(--fm); font-size: .72rem; color: var(--mu); margin-bottom: 14px; }
 
-.finding-row { display: flex; align-items: flex-start; gap: 9px; padding: 9px 0; border-bottom: 1px solid var(--bd); }
-.finding-row:last-child { border-bottom: none; }
-.finding-sev { font-family: var(--fm); font-size: .58rem; font-weight: 700; padding: 2px 7px; border-radius: 20px; white-space: nowrap; flex-shrink: 0; margin-top: 2px; }
-.sev-error { background: rgba(200,50,50,.07); color: #c0392b; border: 1px solid rgba(200,50,50,.18); }
-.sev-warning { background: rgba(217,119,6,.07); color: #d97706; border: 1px solid rgba(217,119,6,.18); }
-.sev-info { background: rgba(37,99,235,.07); color: #2563eb; border: 1px solid rgba(37,99,235,.18); }
-.finding-body { flex: 1; }
-.finding-msg { font-size: .82rem; color: var(--text); font-weight: 600; margin-bottom: 2px; font-family: var(--fb); }
-.finding-detail { font-family: var(--fm); font-size: .68rem; color: var(--mu); }
-.finding-fix { font-size: .72rem; color: var(--g); margin-top: 3px; }
-.no-issues { text-align: center; padding: 22px; color: var(--g); font-weight: 700; font-size: .88rem; font-family: var(--fh); }
-
 .result-wrap { max-width: 480px; margin: 0 auto; text-align: center; padding: 36px 20px; }
 .result-emoji { font-size: 3rem; margin-bottom: 14px; }
 .result-title { font-family: var(--fh); font-size: 1.6rem; font-weight: 700; color: var(--text); margin-bottom: 5px; letter-spacing: .03em; }
@@ -282,13 +201,7 @@ body { cursor: default; overflow-x: hidden; }
 .result-pct { font-size: .8rem; color: var(--mu); margin-bottom: 24px; font-family: var(--fm); }
 .result-actions { display: flex; gap: 10px; justify-content: center; flex-wrap: wrap; }
 .result-msg { font-size: .85rem; color: var(--gr); margin-bottom: 18px; }
-
-/* ── Save score notice inside result ─────────────────────────── */
-.result-save-notice {
-  margin-top: 12px;
-  font-family: var(--fm); font-size: .68rem; color: var(--mu);
-  display: flex; align-items: center; justify-content: center; gap: 5px;
-}
+.result-save-notice { margin-top: 12px; font-family: var(--fm); font-size: .68rem; color: var(--mu); display: flex; align-items: center; justify-content: center; gap: 5px; }
 .result-save-notice.saving { color: #d97706; }
 .result-save-notice.saved  { color: var(--g); }
 .result-save-notice.failed { color: #c0392b; }
@@ -300,7 +213,7 @@ body { cursor: default; overflow-x: hidden; }
 <script type="text/babel">
 const { useState, useEffect, useRef, useCallback } = React;
 
-if (!sessionStorage.getItem('szc_token')) { window.location.href = 'index'; }
+if (!sessionStorage.getItem('szc_token')) { window.location.href = 'index.html'; }
 const STUDENT_NAME  = sessionStorage.getItem('szc_name')  || 'Student';
 const STUDENT_EMAIL = sessionStorage.getItem('szc_email') || '';
 
@@ -315,20 +228,11 @@ const STUDENT_EMAIL = sessionStorage.getItem('szc_email') || '';
 const GAS_URL    = 'https://script.google.com/macros/s/AKfycbx4H_6v2nNH_Xa0FajhKQKCZgHgwuupi2CD6NdC4YuatcE0f451IFgXbNES-7sYRF4Hog/exec';
 const API_SECRET = 'SZC-INTERNAL-2025-XK9';
 
-// ─── HIGH SCORE API ─────────────────────────────────────────────
 async function saveHighScore(gameId, score) {
   try {
     const res = await fetch(GAS_URL, {
-      method: 'POST',
-      headers: { 'Content-Type': 'text/plain' },
-      body: JSON.stringify({
-        action: 'saveScore',
-        apiKey: API_SECRET,
-        gameId,
-        score,
-        name: STUDENT_NAME,
-        email: STUDENT_EMAIL,
-      }),
+      method: 'POST', headers: { 'Content-Type': 'text/plain' },
+      body: JSON.stringify({ action: 'saveScore', apiKey: API_SECRET, gameId, score, name: STUDENT_NAME, email: STUDENT_EMAIL }),
       redirect: 'follow',
     });
     const data = await res.json();
@@ -340,46 +244,34 @@ async function fetchHighScores() {
   try {
     const res  = await fetch(`${GAS_URL}?action=getHighScores&key=${encodeURIComponent(API_SECRET)}`);
     const data = await res.json();
-    if (data.status === 'ok') return data.scores; // { gameId: [{name,score,email},...] }
+    if (data.status === 'ok') return data.scores;
     return {};
   } catch { return {}; }
 }
 
-// ─── SCORE SAVE STATUS INDICATOR ────────────────────────────────
 function SaveNotice({ status }) {
   if (!status) return null;
   const labels = { saving: '⏳ Saving score…', saved: '✅ Score saved to leaderboard!', failed: '⚠️ Could not save score' };
   return <div className={`result-save-notice ${status}`}>{labels[status]}</div>;
 }
 
-// ─── MINI LEADERBOARD (inside game cards) ────────────────────────
 function MiniLeaderboard({ scores, gameId, dark }) {
   const list = (scores[gameId] || []).slice(0, 3);
   const rankIcons = ['🥇','🥈','🥉'];
   const rankClass = ['rank-1','rank-2','rank-3','rank-n'];
-  const Row = dark
-    ? ({ r, i }) => (
-        <div key={i} className="runner-lb-row">
-          <span className={`runner-lb-rank ${rankClass[i]}`}>{rankIcons[i]||i+1}</span>
-          <span className={`runner-lb-name${r.email===STUDENT_EMAIL?' runner-lb-you':''}`}>{r.name}</span>
-          <span className="runner-lb-score">{r.score.toLocaleString()}</span>
-        </div>
-      )
-    : ({ r, i }) => (
-        <div key={i} className="card-lb-row">
-          <span className={`card-lb-rank ${rankClass[i]}`}>{rankIcons[i]||i+1}</span>
-          <span className={`card-lb-name${r.email===STUDENT_EMAIL?' card-lb-you':''}`}>{r.name}</span>
-          <span className="card-lb-score">{r.score.toLocaleString()}</span>
-        </div>
-      );
-
   if (dark) {
     return (
       <div className="runner-lb-col">
         <div className="runner-lb-col-title">🏆 Top Scores</div>
         {list.length === 0
           ? <div className="runner-lb-empty">No scores yet — be first!</div>
-          : list.map((r,i) => <Row key={i} r={r} i={i}/>)
+          : list.map((r,i) => (
+              <div key={i} className="runner-lb-row">
+                <span className={`runner-lb-rank ${rankClass[i]}`}>{rankIcons[i]||i+1}</span>
+                <span className={`runner-lb-name${r.email===STUDENT_EMAIL?' runner-lb-you':''}`}>{r.name}</span>
+                <span className="runner-lb-score">{r.score.toLocaleString()}</span>
+              </div>
+            ))
         }
       </div>
     );
@@ -389,53 +281,23 @@ function MiniLeaderboard({ scores, gameId, dark }) {
       <div className="card-lb-title">🏆 Top Scores</div>
       {list.length === 0
         ? <div className="card-lb-empty">No scores yet — be first!</div>
-        : list.map((r,i) => <Row key={i} r={r} i={i}/>)
+        : list.map((r,i) => (
+            <div key={i} className="card-lb-row">
+              <span className={`card-lb-rank ${rankClass[i]}`}>{rankIcons[i]||i+1}</span>
+              <span className={`card-lb-name${r.email===STUDENT_EMAIL?' card-lb-you':''}`}>{r.name}</span>
+              <span className="card-lb-score">{r.score.toLocaleString()}</span>
+            </div>
+          ))
       }
     </div>
   );
 }
 
-// ─── DEBUG CHALLENGES & STATIC DATA ─────────────────────────────
-const DEBUG_CHALLENGES = [
-  { title:"SELECT INTO TABLE syntax", buggy:"DATA lt_mat TYPE TABLE OF i_material.\nSELECT * FROM i_material INTO lt_mat.", fixed:"DATA lt_mat TYPE TABLE OF i_material.\nSELECT * FROM i_material INTO TABLE @lt_mat.", hint:"Missing TABLE keyword and @ symbol for host variable", explanation:"In ABAP 7.40+, use INTO TABLE @lt_mat. TABLE is needed for internal tables, and @ marks host variables." },
-  { title:"Loop variable typo", buggy:"LOOP AT lt_orders INTO ls_order.\n  WRITE: / ls_orders-salesorder.\nENDLOOP.", fixed:"LOOP AT lt_orders INTO ls_order.\n  WRITE: / ls_order-salesorder.\nENDLOOP.", hint:"Check the variable name inside the loop — singular vs plural", explanation:"ls_orders (plural) doesn't exist. The loop variable is ls_order (singular). A classic ABAP typo." },
-  { title:"RAP method missing RAISING", buggy:"METHODS create_hu\n  IMPORTING it_keys TYPE TABLE OF zpphucreate\n  CHANGING ct_result TYPE TABLE OF zpphucreate_result.", fixed:"METHODS create_hu\n  IMPORTING it_keys TYPE TABLE OF zpphucreate\n  CHANGING ct_result TYPE TABLE OF zpphucreate_result\n  RAISING cx_rap_bo_action_result.", hint:"RAP action methods need an exception declaration", explanation:"RAP action methods must include RAISING cx_rap_bo_action_result to propagate errors to the framework." },
-  { title:"Physical table instead of CDS view", buggy:"SELECT vbeln, posnr, matnr\n  FROM vbap\n  INTO TABLE @lt_items.", fixed:"SELECT vbeln, posnr, matnr\n  FROM I_SalesOrderItem\n  INTO TABLE @lt_items\n  WHERE vbeln = @lv_order.", hint:"Selecting from physical table + no WHERE = bad practice on HANA", explanation:"Always select from CDS views (not physical tables like VBAP) and always add WHERE conditions. Full table scans kill HANA performance." },
-  { title:"COMMIT WORK inside RAP save_modified", buggy:"METHOD save_modified.\n  LOOP AT create ASSIGNING FIELD-SYMBOL(<fs>).\n    INSERT zpptbl FROM @<fs>.\n  ENDLOOP.\n  COMMIT WORK.\nENDMETHOD.", fixed:"METHOD save_modified.\n  LOOP AT create ASSIGNING FIELD-SYMBOL(<fs>).\n    INSERT zpptbl FROM @<fs>.\n  ENDLOOP.\nENDMETHOD.", hint:"RAP controls the Logical Unit of Work — never commit manually", explanation:"In RAP unmanaged implementations, the framework controls the LUW. COMMIT WORK causes a runtime error." },
-];
-const RAP_LAYERS = ["Interface Layer","Consumption Layer","Behavior Layer","Service Layer"];
-const RAP_ITEMS = [
-  {id:1,text:"Interface CDS View (ZI_)",layer:"Interface Layer"},
-  {id:2,text:"Consumption CDS View (ZC_)",layer:"Consumption Layer"},
-  {id:3,text:"Behavior Definition (BDEF)",layer:"Behavior Layer"},
-  {id:4,text:"Behavior Impl Class (ZBP_)",layer:"Behavior Layer"},
-  {id:5,text:"OData Service (SRVD)",layer:"Service Layer"},
-  {id:6,text:"Metadata Extension (ZMDEX)",layer:"Consumption Layer"},
-  {id:7,text:"Business Service Binding",layer:"Service Layer"},
-  {id:8,text:"AMDP Class for DB Logic",layer:"Behavior Layer"},
-];
-const SPEED_LINES = [
-  "SELECT * FROM I_Material INTO TABLE @lt_mat UP TO 10 ROWS.",
-  "LOOP AT lt_mat INTO DATA(ls_mat).",
-  "IF sy-subrc = 0.",
-  "READ TABLE lt_tab INTO ls_row WITH KEY matnr = lv_mat.",
-  "SORT lt_orders BY netamount DESCENDING.",
-  "DELETE lt_items WHERE status = 'X'.",
-  "COLLECT ls_total INTO lt_totals.",
-  "MODIFY lt_tab FROM ls_row TRANSPORTING status WHERE matnr = ls_row-matnr.",
-];
+// Only 2 games remain: Quiz + the two runners
 const GAMES_META = [
-  {id:'quiz',     icon:'🧠',title:'ABAP Quiz',      desc:'Adaptive quiz with topic filter — choose what you have covered and practice on it.',     tag:'Database-Driven', color:'#22a032'},
-  {id:'debug',    icon:'🐛',title:'Debug Master',   desc:'Find and fix real ABAP bugs in RAP code. Each challenge has a hint (costs 0.5 pts).',    tag:'5 Challenges',    color:'#c0392b'},
-  {id:'match',    icon:'🎯',title:'Annotation Match',desc:'Match CDS annotations to their meanings. Click annotation → its meaning.',                tag:'Database-Driven', color:'#2563eb'},
-  {id:'detective',icon:'🕵️',title:'Table Detective', desc:'Identify the SAP table from the clue. Also shows the CDS view equivalent!',              tag:'Database-Driven', color:'#d97706'},
-  {id:'sorter',   icon:'🗂',title:'RAP Layer Sorter',desc:'Assign each RAP artifact to its correct architectural layer.',                             tag:'8 Artifacts',     color:'#7c3aed'},
-  {id:'speed',    icon:'⚡',title:'Speed Coder',     desc:'Type ABAP statements as fast and accurately as possible. Race the clock!',                 tag:'Speed Run',       color:'#0891b2'},
-  {id:'inspector',icon:'🔍',title:'Code Inspector',  desc:'Paste ABAP/CDS code and get instant static analysis findings — powered by rule engine.',  tag:'Rule Engine',     color:'#16a34a'},
-  {id:'subway',   icon:'🏃',title:'Subway Runner',   desc:'Run through an endless ABAP world. Dodge bugs and dumps — answer correctly to score!',    tag:'3D Runner',       color:'#0891b2'},
+  {id:'quiz', icon:'🧠', title:'ABAP Quiz', desc:'Adaptive quiz with topic filter — choose what you have covered and practice on it.', tag:'Database-Driven', color:'#22a032'},
 ];
 
-// ─── GAME DATA HOOK ──────────────────────────────────────────────
 function useGameData() {
   const [data, setData]       = useState(null);
   const [loading, setLoading] = useState(true);
@@ -452,7 +314,6 @@ function useGameData() {
   return { data, loading, error };
 }
 
-// ─── HIGH SCORES HOOK ────────────────────────────────────────────
 function useHighScores() {
   const [scores, setScores]   = useState({});
   const [lbLoading, setLbLoading] = useState(true);
@@ -464,7 +325,6 @@ function useHighScores() {
   return { scores, lbLoading, reload };
 }
 
-// ─── SHARED UI COMPONENTS ────────────────────────────────────────
 function ScoreBadge({score,total}) { const pct=total>0?Math.round((score/total)*100):0; return <span className="score-badge">{score}/{total} · {pct}%</span>; }
 function ProgressBar({current,total}) { return <div className="progress-bar-wrap"><div className="progress-bar-fill" style={{width:`${(current/total)*100}%`}}/></div>; }
 
@@ -494,7 +354,6 @@ function GameResult({score,total,gameName,gameId,onBack,onReplay}) {
   );
 }
 
-// ─── QUIZ GAME ───────────────────────────────────────────────────
 function QuizGame({onBack,allQuestions}) {
   const topics=[...new Set(allQuestions.map(q=>q.topic))].sort();
   const [phase,setPhase]=useState('topic');
@@ -505,7 +364,7 @@ function QuizGame({onBack,allQuestions}) {
   const [score,setScore]=useState(0);
   const toggleTopic=t=>setSelectedTopics(prev=>{const n=new Set(prev);n.has(t)?n.delete(t):n.add(t);return n;});
   const startQuiz=()=>{const pool=allQuestions.filter(q=>selectedTopics.has(q.topic));const sh=[...pool].sort(()=>Math.random()-.5).slice(0,Math.min(15,pool.length));setQuestions(sh);setIdx(0);setScore(0);setSelected(null);setPhase('playing');};
-  if(phase==='topic'){const pool=allQuestions.filter(q=>selectedTopics.has(q.topic));return(<div className="topic-selector"><button className="btn-danger" style={{marginBottom:18}} onClick={onBack}>← Back</button><h2>🧠 ABAP Quiz</h2><p>Select the topics you have covered.</p><div className="topic-chips"><div className="topic-chip active" style={{background:'var(--text)',color:'#fff',borderColor:'var(--text)'}} onClick={()=>setSelectedTopics(new Set(topics))}>All Topics</div><div className="topic-chip" style={{background:'rgba(200,50,50,.06)',color:'#c0392b',borderColor:'rgba(200,50,50,.2)'}} onClick={()=>setSelectedTopics(new Set())}>Clear All</div>{topics.map(t=><div key={t} className={`topic-chip${selectedTopics.has(t)?' active':''}`} onClick={()=>toggleTopic(t)}>{t}</div>)}</div><div className="topic-count">{pool.length} questions available</div><button className="btn-action" onClick={startQuiz} disabled={pool.length===0}>Start Quiz ({Math.min(15,pool.length)} Questions) →</button></div>);}
+  if(phase==='topic'){const pool=allQuestions.filter(q=>selectedTopics.has(q.topic));return(<div className="topic-selector"><button className="btn-danger" style={{marginBottom:18}} onClick={onBack}>← Back</button><h2>🧠 ABAP Quiz</h2><p>Select the topics you have covered.</p><div className="topic-chips"><div className="topic-chip active" style={{background:'var(--g)',color:'#fff',borderColor:'var(--g)'}} onClick={()=>setSelectedTopics(new Set(topics))}>All Topics</div><div className="topic-chip" style={{background:'rgba(200,50,50,.06)',color:'#c0392b',borderColor:'rgba(200,50,50,.2)'}} onClick={()=>setSelectedTopics(new Set())}>Clear All</div>{topics.map(t=><div key={t} className={`topic-chip${selectedTopics.has(t)?' active':''}`} onClick={()=>toggleTopic(t)}>{t}</div>)}</div><div className="topic-count">{pool.length} questions available</div><button className="btn-action" onClick={startQuiz} disabled={pool.length===0}>Start Quiz ({Math.min(15,pool.length)} Questions) →</button></div>);}
   if(phase==='done') return <GameResult score={score} total={questions.length} gameName="ABAP Quiz" gameId="quiz" onBack={onBack} onReplay={()=>setPhase('topic')}/>;
   const q=questions[idx];
   const choose=i=>{if(selected!==null)return;setSelected(i);if(i===q.ans)setScore(s=>s+1);};
@@ -513,161 +372,43 @@ function QuizGame({onBack,allQuestions}) {
   return(<div className="game-wrap"><div className="game-header"><div><div className="game-title">🧠 ABAP Quiz</div><div className="game-subtitle">Q {idx+1} of {questions.length} · {q.topic}</div></div><ScoreBadge score={score} total={idx+(selected!==null?1:0)}/><button className="btn-danger" onClick={()=>setPhase('topic')}>← Topics</button></div><ProgressBar current={idx+1} total={questions.length}/><div className="panel-card"><div className="panel-card-head"><span className="panel-tag tag-green">Question</span><span className="panel-card-title" style={{flex:1}}>{q.q}</span></div><div className="panel-card-body"><div className="option-grid">{q.opts.map((opt,i)=>{let cls='option-btn';if(selected!==null){if(i===q.ans)cls+=' correct';else if(i===selected&&i!==q.ans)cls+=' wrong';}return<button key={i} className={cls} onClick={()=>choose(i)} disabled={selected!==null}><span className="option-letter">{'ABCD'[i]}.</span>{opt}</button>;})}</div>{selected!==null&&<div className={`feedback-box${selected===q.ans?' correct':' wrong'}`}><div className="feedback-title">{selected===q.ans?'✅ Correct!':`❌ Wrong — Answer: ${q.opts[q.ans]}`}</div><div className="feedback-text">{q.exp}</div></div>}{selected!==null&&<div style={{textAlign:'right',marginTop:12}}><button className="btn-action" onClick={next}>{idx+1>=questions.length?'See Results →':'Next →'}</button></div>}</div></div></div>);
 }
 
-// ─── DEBUG GAME ──────────────────────────────────────────────────
-function DebugGame({onBack}) {
-  const [idx,setIdx]=useState(0);
-  const [code,setCode]=useState(DEBUG_CHALLENGES[0].buggy);
-  const [result,setResult]=useState(null);
-  const [hintShown,setHintShown]=useState(false);
-  const [hintUsed,setHintUsed]=useState(false);
-  const [score,setScore]=useState(0);
-  const [done,setDone]=useState(false);
-  const ch=DEBUG_CHALLENGES[idx];
-  const check=()=>{const norm=s=>s.replace(/\s+/g,' ').trim().toLowerCase();const correct=norm(code)===norm(ch.fixed);setResult(correct?'correct':'wrong');if(correct)setScore(s=>s+(hintUsed?.5:1));};
-  const next=()=>{const ni=idx+1;if(ni>=DEBUG_CHALLENGES.length){setDone(true);return;}setIdx(ni);setCode(DEBUG_CHALLENGES[ni].buggy);setResult(null);setHintShown(false);setHintUsed(false);};
-  const reset=()=>{setIdx(0);setCode(DEBUG_CHALLENGES[0].buggy);setResult(null);setScore(0);setDone(false);setHintShown(false);setHintUsed(false);};
-  if(done) return <GameResult score={Math.round(score)} total={DEBUG_CHALLENGES.length} gameName="Debug Master" gameId="debug" onBack={onBack} onReplay={reset}/>;
-  return(<div className="game-wrap"><div className="game-header"><div><div className="game-title">🐛 Debug Master</div><div className="game-subtitle">Bug {idx+1} of {DEBUG_CHALLENGES.length} — {score} pts</div></div><button className="btn-danger" onClick={onBack}>← Back</button></div><ProgressBar current={idx+1} total={DEBUG_CHALLENGES.length}/><div className="panel-card"><div className="panel-card-head"><span className="panel-tag tag-red">🐛 Bug #{idx+1}</span><span className="panel-card-title">{ch.title}</span><button className="btn-secondary" style={{marginLeft:'auto',fontSize:'.72rem',padding:'4px 10px'}} onClick={()=>{setHintShown(true);setHintUsed(true);}} disabled={hintShown}>{hintShown?'Hint used (−0.5)':'💡 Hint (−0.5)'}</button></div><div className="panel-card-body">{hintShown&&<div className="feedback-box" style={{background:'rgba(217,119,6,.07)',border:'1px solid rgba(217,119,6,.18)',color:'#d97706',marginBottom:10}}>💡 {ch.hint}</div>}<textarea className="code-textarea-dark" value={code} onChange={e=>setCode(e.target.value)}/>{result==='correct'&&<div className="feedback-box correct" style={{marginTop:10}}><div className="feedback-title">✅ Fixed! +{hintUsed?.5:1} point</div><div className="feedback-text">{ch.explanation}</div></div>}{result==='wrong'&&<div className="feedback-box wrong" style={{marginTop:10}}><div className="feedback-title">❌ Not quite — compare carefully</div></div>}<div style={{display:'flex',gap:8,marginTop:14,flexWrap:'wrap'}}>{!result&&<button className="btn-action" onClick={check}>🔍 Check Fix</button>}{result==='correct'&&<button className="btn-action" onClick={next}>{idx+1>=DEBUG_CHALLENGES.length?'Results →':'Next Bug →'}</button>}{result==='wrong'&&<><button className="btn-action" onClick={()=>setResult(null)}>Try Again</button><button className="btn-secondary" onClick={()=>{setCode(ch.fixed);setResult(null);}}>Show Solution</button></>}</div></div></div></div>);
-}
-
-// ─── ANNOTATION MATCH ────────────────────────────────────────────
-function AnnotationMatch({onBack,allPairs}) {
-  const [pairs]=useState(()=>[...allPairs].sort(()=>Math.random()-.5).slice(0,8));
-  const [meanings]=useState(()=>pairs.map(p=>p.meaning).sort(()=>Math.random()-.5));
-  const [selected,setSelected]=useState(null);
-  const [matched,setMatched]=useState([]);
-  const [wrongFlash,setWrongFlash]=useState(null);
-  const [score,setScore]=useState(0);
-  const [done,setDone]=useState(false);
-  const pickAnnotation=ann=>{if(matched.includes(ann))return;setSelected(ann);};
-  const pickMeaning=meaning=>{if(!selected)return;const correct=pairs.find(p=>p.annotation===selected)?.meaning===meaning;if(correct){const newM=[...matched,selected];setMatched(newM);setScore(s=>s+1);setSelected(null);if(newM.length>=pairs.length)setTimeout(()=>setDone(true),500);}else{setWrongFlash({ann:selected,meaning});setTimeout(()=>{setWrongFlash(null);setSelected(null);},800);}};
-  if(done) return <GameResult score={score} total={pairs.length} gameName="Annotation Match" gameId="match" onBack={onBack} onReplay={()=>window.location.reload()}/>;
-  return(<div className="game-wrap"><div className="game-header"><div><div className="game-title">🎯 Annotation Match</div><div className="game-subtitle">Click annotation → then its meaning</div></div><ScoreBadge score={score} total={pairs.length}/><button className="btn-danger" onClick={onBack}>← Back</button></div><div className="match-grid"><div><div className="match-col-label">CDS Annotations</div>{pairs.map(p=>{const isM=matched.includes(p.annotation),isSel=selected===p.annotation,isW=wrongFlash?.ann===p.annotation;let cls='match-item';if(isM)cls+=' matched';else if(isW)cls+=' wrong-flash';else if(isSel)cls+=' selected';return<button key={p.annotation} className={cls} onClick={()=>pickAnnotation(p.annotation)} disabled={isM} style={{marginBottom:7}}>{isM?'✓ ':''}{p.annotation}</button>;})}</div><div><div className="match-col-label">Meanings</div>{meanings.map(m=>{const isUsed=matched.some(ann=>pairs.find(p=>p.annotation===ann)?.meaning===m),isW=wrongFlash?.meaning===m;let cls='match-item match-meaning';if(isUsed)cls+=' matched';else if(isW)cls+=' wrong-flash';return<button key={m} className={cls} onClick={()=>pickMeaning(m)} disabled={isUsed} style={{marginBottom:7}}>{isUsed?'✓ ':''}{m}</button>;})}</div></div></div>);
-}
-
-// ─── TABLE DETECTIVE ─────────────────────────────────────────────
-function TableDetective({onBack,allTables}) {
-  const [cases]=useState(()=>[...allTables].sort(()=>Math.random()-.5));
-  const [idx,setIdx]=useState(0);
-  const [selected,setSelected]=useState(null);
-  const [score,setScore]=useState(0);
-  const [done,setDone]=useState(false);
-  const q=cases[idx];
-  const choose=opt=>{if(selected)return;setSelected(opt);if(opt===q.answer)setScore(s=>s+1);};
-  const next=()=>{if(idx+1>=cases.length){setDone(true);return;}setIdx(i=>i+1);setSelected(null);};
-  if(done) return <GameResult score={score} total={cases.length} gameName="Table Detective" gameId="detective" onBack={onBack} onReplay={()=>{setIdx(0);setSelected(null);setScore(0);setDone(false);}}/>;
-  return(<div className="game-wrap"><div className="game-header"><div><div className="game-title">🕵️ Table Detective</div><div className="game-subtitle">Case {idx+1} of {cases.length}</div></div><ScoreBadge score={score} total={idx+(selected?1:0)}/><button className="btn-danger" onClick={onBack}>← Back</button></div><ProgressBar current={idx+1} total={cases.length}/><div className="panel-card"><div className="panel-card-head"><span className="panel-tag tag-warn">🕵️ Identify the Table</span></div><div className="panel-card-body"><div style={{fontSize:'.95rem',fontStyle:'italic',color:'var(--text)',lineHeight:1.7,marginBottom:18,padding:'12px 16px',background:'rgba(217,119,6,.06)',border:'1px solid rgba(217,119,6,.16)',borderRadius:8}}>"{q.clue}"</div>{selected&&<div style={{fontSize:'.75rem',color:'var(--mu)',marginBottom:14}}>CDS equivalent: <span style={{fontFamily:'var(--fm)',color:'#2563eb',fontWeight:700}}>{q.cds}</span></div>}<div className="option-grid" style={{gridTemplateColumns:'repeat(4,1fr)'}}>{q.options.map(opt=>{let cls='option-btn';if(selected){if(opt===q.answer)cls+=' correct';else if(opt===selected&&opt!==q.answer)cls+=' wrong';}return<button key={opt} className={cls} onClick={()=>choose(opt)} disabled={!!selected} style={{textAlign:'center',fontFamily:'var(--fm)',fontWeight:700,fontSize:'.88rem',padding:'16px 8px'}}>{opt}</button>;})}</div>{selected&&<div style={{textAlign:'right',marginTop:14}}><div style={{fontSize:'.82rem',color:selected===q.answer?'var(--g)':'#c0392b',fontWeight:700,marginBottom:8}}>{selected===q.answer?'🎯 Correct!':`❌ Wrong — it was ${q.answer}`}</div><button className="btn-action" onClick={next}>{idx+1>=cases.length?'Results →':'Next Case →'}</button></div>}</div></div></div>);
-}
-
-// ─── RAP SORTER ──────────────────────────────────────────────────
-function RAPSorter({onBack}) {
-  const [items]=useState(()=>[...RAP_ITEMS].sort(()=>Math.random()-.5));
-  const [assignments,setAssignments]=useState({});
-  const [checked,setChecked]=useState(false);
-  const [score,setScore]=useState(0);
-  const assign=(id,layer)=>{if(checked)return;setAssignments(a=>({...a,[id]:layer}));};
-  const checkAll=()=>{let s=0;items.forEach(item=>{if(assignments[item.id]===item.layer)s++;});setScore(s);setChecked(true);};
-  const allAssigned=items.every(item=>assignments[item.id]);
-  const [saveStatus, setSaveStatus]=useState(null);
-  const handleSave=useCallback(async(finalScore)=>{setSaveStatus('saving');const ok=await saveHighScore('sorter',finalScore);setSaveStatus(ok?'saved':'failed');},[]);
-  useEffect(()=>{if(checked&&score>0)handleSave(score);},[checked]);
-  return(<div className="game-wrap"><div className="game-header"><div><div className="game-title">🗂 RAP Layer Sorter</div><div className="game-subtitle">Assign each artifact to its correct layer</div></div>{checked&&<ScoreBadge score={score} total={items.length}/>}<button className="btn-danger" onClick={onBack}>← Back</button></div><div className="sorter-grid">{items.map(item=>{const chosen=assignments[item.id],correct=checked&&chosen===item.layer,wrong=checked&&chosen&&chosen!==item.layer;let cls='sorter-card';if(chosen&&!checked)cls+=' assigned';else if(correct)cls+=' correct';else if(wrong)cls+=' wrong-ans';return<div key={item.id} className={cls}><div className="sorter-card-text">{item.text}</div>{checked&&<div style={{fontSize:'.72rem',fontWeight:700,color:correct?'var(--g)':'#c0392b',marginBottom:7}}>{correct?`✓ ${item.layer}`:`✗ → ${item.layer}`}</div>}{!checked&&RAP_LAYERS.map(layer=><button key={layer} className={`sorter-layer-btn${chosen===layer?' chosen':''}`} onClick={()=>assign(item.id,layer)}>{chosen===layer?'● ':''}{layer}</button>)}</div>;})} </div><div style={{textAlign:'center',marginTop:24}}>{!checked?<button className="btn-action" onClick={checkAll} disabled={!allAssigned} style={{opacity:allAssigned?1:.5}}>✓ Check All Answers</button>:<div><div style={{fontSize:'1.1rem',fontWeight:700,fontFamily:'var(--fh)',color:score>=6?'var(--g)':score>=4?'#d97706':'#c0392b',marginBottom:8}}>{score}/{items.length} Correct!</div><SaveNotice status={saveStatus}/><div style={{display:'flex',gap:8,justifyContent:'center',marginTop:12}}><button className="btn-action" onClick={()=>window.location.reload()}>↺ Retry</button><button className="btn-secondary" onClick={onBack}>← All Games</button></div></div>}</div></div>);
-}
-
-// ─── SPEED CODER ─────────────────────────────────────────────────
-function SpeedCoder({onBack}) {
-  const [challenges]=useState(()=>[...SPEED_LINES].sort(()=>Math.random()-.5));
-  const [idx,setIdx]=useState(0);
-  const [input,setInput]=useState('');
-  const [score,setScore]=useState(0);
-  const [times,setTimes]=useState([]);
-  const [startTime,setStartTime]=useState(Date.now());
-  const [flash,setFlash]=useState(null);
-  const [done,setDone]=useState(false);
-  const inputRef=useRef(null);
-  const target=challenges[idx];
-  useEffect(()=>{inputRef.current?.focus();setStartTime(Date.now());},[idx]);
-  const handleInput=e=>{const val=e.target.value;setInput(val);if(val===target){setTimes(t=>[...t,Date.now()-startTime]);setScore(s=>s+1);setFlash('correct');setTimeout(()=>{setFlash(null);setInput('');if(idx+1>=challenges.length)setDone(true);else setIdx(i=>i+1);},600);}};
-  if(done){const totalMs=times.reduce((a,b)=>a+b,0);return(<div className="result-wrap"><div className="result-emoji">⚡</div><div className="result-title">Speed Coder — Done!</div><div className="result-score">{score}/{challenges.length}</div><div className="result-pct">Total: {(totalMs/1000).toFixed(1)}s{score>0&&` · Avg: ${(totalMs/score/1000).toFixed(1)}s/line`}</div><SaveScoreOnMount gameId="speed" score={score}/><div className="result-actions" style={{marginTop:16}}><button className="btn-action" onClick={()=>{setIdx(0);setScore(0);setDone(false);setInput('');setTimes([]);}}>↺ Play Again</button><button className="btn-secondary" onClick={onBack}>← All Games</button></div></div>);}
-  const matched=target.split('').map((ch,i)=>({ch,typed:i<input.length,ok:input[i]===ch}));
-  return(<div className="game-wrap"><div className="game-header"><div><div className="game-title">⚡ Speed Coder</div><div className="game-subtitle">Line {idx+1} of {challenges.length} · Score: {score}</div></div><button className="btn-danger" onClick={onBack}>← Back</button></div><ProgressBar current={idx+1} total={challenges.length}/><div className="panel-card"><div className="panel-card-head"><span className="panel-tag tag-blue">⚡ Type This Exactly</span></div><div className="panel-card-body"><div className="speed-target">{matched.map((m,i)=>{let cls='speed-char-wait';if(m.typed)cls=m.ok?'speed-char-done':'speed-char-error';return<span key={i} className={cls}>{m.ch}</span>;})}</div><input ref={inputRef} value={input} onChange={handleInput} style={{width:'100%',padding:'10px 14px',fontFamily:'var(--fm)',fontSize:'.82rem',background:'var(--s1)',border:`1.5px solid ${input.length>0&&input===target.slice(0,input.length)?'var(--g)':'var(--bd2)'}`,borderRadius:7,color:'var(--text)',outline:'none',marginBottom:12}} placeholder="Start typing..." spellCheck={false} autoCorrect="off" autoCapitalize="off"/>{flash==='correct'&&<div style={{fontSize:'.82rem',color:'var(--g)',fontWeight:700}}>✅ Correct! Moving on...</div>}<div style={{textAlign:'right',marginTop:7}}><button className="btn-secondary" onClick={()=>{setInput('');if(idx+1>=challenges.length)setDone(true);else setIdx(i=>i+1);}} style={{fontSize:'.72rem',padding:'5px 12px'}}>Skip →</button></div></div></div></div>);
-}
-
-// Helper: save-on-mount for games that don't use GameResult
-function SaveScoreOnMount({gameId, score}) {
-  const [status, setStatus] = useState(null);
-  useEffect(()=>{if(score===0)return;setStatus('saving');saveHighScore(gameId,score).then(ok=>setStatus(ok?'saved':'failed'));},[]);
-  return <SaveNotice status={status}/>;
-}
-
-// ─── CODE INSPECTOR ──────────────────────────────────────────────
-const ABAP_RULES = [
-  {id:'R001',severity:'ERROR',category:'RAP',check:code=>/COMMIT\s+WORK/.test(code)&&/save_modified|RAP|bdef/i.test(code),msg:'COMMIT WORK inside RAP implementation',detail:'RAP controls the LUW — manual COMMIT WORK causes runtime error.',fix:'Remove COMMIT WORK. The framework commits automatically after save_modified.'},
-  {id:'R002',severity:'ERROR',category:'ABAP Syntax',check:code=>/SELECT\s+\*\s+FROM\s+\w+\s+INTO\s+TABLE\s+\w+[^@]/.test(code.replace(/\n/g,' ')),msg:'Missing @ symbol for host variable in INTO TABLE',detail:'ABAP 7.40+ syntax requires @ before host variables.',fix:'Change INTO TABLE lt_tab → INTO TABLE @lt_tab'},
-  {id:'R003',severity:'WARNING',category:'Performance',check:code=>code.split('\n').some(l=>/^\s*SELECT\b/i.test(l)&&/FROM\s+(mara|vbak|vbap|ekko|ekpo|bseg|bkpf)\b/i.test(l)),msg:'Direct SELECT from physical table instead of CDS view',detail:'Selecting from physical tables bypasses buffer and authorization.',fix:'Use CDS views: MARA→I_Material, VBAK→I_SalesOrder, EKKO→I_PurchaseOrder'},
-  {id:'R004',severity:'WARNING',category:'Performance',check:code=>{const m=code.match(/SELECT\b[\s\S]*?FROM\s+\w+/gi);return m?m.some(s=>!/WHERE\b/i.test(s)&&!/UP\s+TO\b/i.test(s)&&!/SINGLE\b/i.test(s)):false;},msg:'SELECT without WHERE clause — full table scan risk',detail:'SELECT without WHERE reads all records.',fix:'Add a WHERE clause or at least UP TO n ROWS.'},
-  {id:'R005',severity:'WARNING',category:'ABAP Best Practice',check:code=>/SELECT\s+\*/i.test(code),msg:'SELECT * — avoid selecting all columns',detail:'SELECT * fetches unnecessary data.',fix:'Specify only the columns you need.'},
-  {id:'R008',severity:'WARNING',category:'ABAP Best Practice',check:code=>/LOOP\s+AT\s+\w+\s*\.\s*\n.*SELECT/i.test(code),msg:'SELECT inside a LOOP — N+1 query problem',detail:'Executing SELECT inside LOOP causes one DB call per row.',fix:'Move the SELECT outside the loop and use JOINs or READ TABLE.'},
-  {id:'R009',severity:'INFO',category:'CDS',check:code=>/define\s+view/i.test(code)&&!/@AbapCatalog\.sqlViewName/i.test(code),msg:'CDS view missing @AbapCatalog.sqlViewName annotation',detail:'Every CDS view needs an underlying SQL view name.',fix:"Add @AbapCatalog.sqlViewName: 'ZSQLVIEWNAME' before DEFINE VIEW."},
-];
-function runStaticAnalysis(code){if(!code.trim())return[];return ABAP_RULES.filter(rule=>{try{return rule.check(code);}catch(e){return false;}});}
-
-function CodeInspector({onBack}) {
-  const [code,setCode]=useState('');
-  const [findings,setFindings]=useState(null);
-  const [analyzing,setAnalyzing]=useState(false);
-  const analyze=async()=>{setAnalyzing(true);setFindings(null);await new Promise(r=>setTimeout(r,400));const results=runStaticAnalysis(code);setFindings(results);setAnalyzing(false);};
-  const sevOrder={ERROR:0,WARNING:1,INFO:2};
-  const sorted=findings?[...findings].sort((a,b)=>(sevOrder[a.severity]||2)-(sevOrder[b.severity]||2)):[];
-  const counts=findings?{ERROR:findings.filter(f=>f.severity==='ERROR').length,WARNING:findings.filter(f=>f.severity==='WARNING').length,INFO:findings.filter(f=>f.severity==='INFO').length}:{};
-  return(<div className="game-wrap" style={{maxWidth:880}}><div className="game-header"><div><div className="game-title">🔍 Code Inspector</div><div className="game-subtitle">Static ABAP/CDS rule engine</div></div><button className="btn-danger" onClick={onBack}>← Back</button></div><div className="panel-card"><div className="panel-card-head"><span className="panel-tag tag-green">Paste Code</span></div><div className="panel-card-body"><textarea className="code-textarea-dark" style={{minHeight:190}} value={code} onChange={e=>setCode(e.target.value)} placeholder="Paste ABAP, CDS, or BDEF code here..."/></div></div><div style={{textAlign:'center',marginBottom:22}}><button className="btn-action" onClick={analyze} disabled={!code.trim()||analyzing} style={{fontSize:'.95rem',padding:'11px 28px'}}>{analyzing?'⏳ Analyzing...':'🔍 Run Inspector'}</button></div>{findings!==null&&<div className="panel-card"><div className="panel-card-head"><span className="panel-tag tag-purple">Results</span><span className="panel-card-title">{sorted.length} finding{sorted.length!==1?'s':''}</span>{sorted.length>0&&<div style={{display:'flex',gap:5,marginLeft:'auto'}}>{counts.ERROR>0&&<span className="finding-sev sev-error">{counts.ERROR} Error{counts.ERROR!==1?'s':''}</span>}{counts.WARNING>0&&<span className="finding-sev sev-warning">{counts.WARNING} Warn</span>}{counts.INFO>0&&<span className="finding-sev sev-info">{counts.INFO} Info</span>}</div>}</div><div className="panel-card-body">{sorted.length===0?<div className="no-issues">✅ No issues found — clean code!</div>:sorted.map((f,i)=><div key={i} className="finding-row"><span className={`finding-sev ${f.severity==='ERROR'?'sev-error':f.severity==='WARNING'?'sev-warning':'sev-info'}`}>{f.severity}</span><div className="finding-body"><div className="finding-msg">{f.msg}</div><div className="finding-detail">{f.id} · {f.category}</div>{f.detail&&<div style={{fontSize:'.72rem',color:'var(--gr)',marginTop:2}}>{f.detail}</div>}{f.fix&&<div className="finding-fix">💡 Fix: {f.fix}</div>}</div></div>)}</div></div>}</div>);
-}
-
-// ─── HUB ─────────────────────────────────────────────────────────
-function Hub({onSelect, gameData, scores, lbLoading}) {
+function Hub({onSelect, gameData, scores}) {
   const totalQ=gameData?.quiz?.length||0;
-  const totalT=gameData?.tables?.length||0;
-  const totalA=gameData?.annotations?.length||0;
   return (
     <>
       <div className="hub-hero">
         <div className="hub-badge">🎮 Learning Arena</div>
         <h1>ABAP <span>Learning Games</span></h1>
-        <p>Eight games — quiz driven by your Google Sheet. Add questions, tables, annotations directly in the sheet.</p>
+        <p>Games driven by your Google Sheet — add questions directly in the sheet and they appear here instantly.</p>
       </div>
       <div className="hub-stats">
-        <div className="hub-stat"><div className="hub-stat-val">8</div><div className="hub-stat-lbl">Games</div></div>
+        <div className="hub-stat"><div className="hub-stat-val">3</div><div className="hub-stat-lbl">Games</div></div>
         <div className="hub-stat"><div className="hub-stat-val">{totalQ}</div><div className="hub-stat-lbl">Questions</div></div>
-        <div className="hub-stat"><div className="hub-stat-val">{totalT}</div><div className="hub-stat-lbl">Table Cases</div></div>
-        <div className="hub-stat"><div className="hub-stat-val">{totalA}</div><div className="hub-stat-lbl">Annotations</div></div>
       </div>
       <div className="hub-grid">
-        {/* ── Runner card (full width) ── */}
-        <div className="game-card-runner" onClick={()=>window.open('abap-runner','_blank')}>
+        {/* Runner card (full width) */}
+        <div className="game-card-runner" onClick={()=>window.open('subway-abaper.html','_blank')}>
           <div className="runner-top">
             <div className="runner-icon-wrap">🏃</div>
             <div className="runner-content">
               <div className="runner-title">SAPZCODES <span>Runner</span></div>
-              <div className="runner-desc">Run through an endless ABAP world. Jump over bugs and dumps — each obstacle fires a fill-in-the-blank question from your sheet.</div>
+              <div className="runner-desc">Run through an endless ABAP world. Jump over bugs and dumps — answer questions to score!</div>
               <div className="runner-meta">
                 <span className="runner-badge">🏃 Endless Runner</span>
-                <span className="runner-badge">❤️ 5 Lives</span>
-                <span className="runner-badge">🎓 Certificate</span>
-                <button className="runner-play-btn" onClick={e=>{e.stopPropagation();window.open('abap-runner','_blank');}}>▶ Play Now</button>
+                <span className="runner-badge">❤️ 3 Lives</span>
+                <button className="runner-play-btn" onClick={e=>{e.stopPropagation();window.open('subway-abaper.html','_blank');}}>▶ Play Now</button>
+                <button className="runner-play-btn" style={{background:'#1565c0'}} onClick={e=>{e.stopPropagation();window.open('abap-runner.html','_blank');}}>▶ ABAP Runner</button>
               </div>
             </div>
           </div>
-          {/* Leaderboard section at the bottom of runner card */}
           <div className="runner-lb-wrap">
             <MiniLeaderboard scores={scores} gameId="abap-runner" dark={true}/>
             <MiniLeaderboard scores={scores} gameId="subway" dark={true}/>
           </div>
         </div>
 
-        {/* ── Regular game cards ── */}
         {GAMES_META.map(g => (
-          <div key={g.id} className="game-card" style={{'--card-color':g.color}}
-               onClick={()=>onSelect(g.id)}>
+          <div key={g.id} className="game-card" style={{'--card-color':g.color}} onClick={()=>onSelect(g.id)}>
             <span className="game-card-icon">{g.icon}</span>
             <div className="game-card-title">{g.title}</div>
             <div className="game-card-desc">{g.desc}</div>
@@ -675,10 +416,7 @@ function Hub({onSelect, gameData, scores, lbLoading}) {
               <span className="game-card-tag">{g.tag}</span>
               <span className="game-card-play">Play →</span>
             </div>
-            {/* Per-card leaderboard */}
-            {g.id !== 'inspector' && (
-              <MiniLeaderboard scores={scores} gameId={g.id} dark={false}/>
-            )}
+            <MiniLeaderboard scores={scores} gameId={g.id} dark={false}/>
           </div>
         ))}
       </div>
@@ -686,28 +424,24 @@ function Hub({onSelect, gameData, scores, lbLoading}) {
   );
 }
 
-// ─── APP ─────────────────────────────────────────────────────────
 function App() {
   const [activeGame, setActiveGame] = useState(null);
   const { data, loading, error }    = useGameData();
-  const { scores, lbLoading, reload } = useHighScores();
-
-  // Reload leaderboard when returning to hub
+  const { scores, reload }          = useHighScores();
   const goBack = useCallback(() => { setActiveGame(null); reload(); }, [reload]);
 
   const topbar = (
     <div className="topbar">
-      <a className="topbar-logo" href="games">
+      <a className="topbar-logo" href="games.html">
         <img src="logo.png" alt="SAPZCODES"/>
       </a>
       <span className="topbar-sep">/</span>
       <span className="topbar-page">Learning Games</span>
       <div className="topbar-right">
         <span className="topbar-user">👤 {STUDENT_NAME}</span>
-        <a className="topbar-btn" href="abap-runner" target="_blank">🏃 Runner</a>
-        <a className="topbar-btn" href="executor">🖥️ Executor</a>
+        <a className="topbar-btn" href="abap-runner.html" target="_blank">🏃 Runner</a>
         <button className="topbar-btn" onClick={()=>{sessionStorage.removeItem('szc_gamedata');window.location.reload();}}>↺ Refresh</button>
-        <a className="topbar-btn danger" href="index" onClick={()=>sessionStorage.clear()}>Sign Out</a>
+        <a className="topbar-btn danger" href="index.html" onClick={()=>sessionStorage.clear()}>Sign Out</a>
       </div>
     </div>
   );
@@ -719,17 +453,8 @@ function App() {
     <>
       {topbar}
       <div className="main-body">
-        {!activeGame && <Hub onSelect={id=>{
-          if (id==='subway') { window.open('subway-abaper','_blank'); return; }
-          setActiveGame(id);
-        }} gameData={data} scores={scores} lbLoading={lbLoading}/>}
-        {activeGame==='quiz'      && <QuizGame       onBack={goBack} allQuestions={data.quiz}/>}
-        {activeGame==='debug'     && <DebugGame       onBack={goBack}/>}
-        {activeGame==='match'     && <AnnotationMatch onBack={goBack} allPairs={data.annotations}/>}
-        {activeGame==='detective' && <TableDetective  onBack={goBack} allTables={data.tables}/>}
-        {activeGame==='sorter'    && <RAPSorter       onBack={goBack}/>}
-        {activeGame==='speed'     && <SpeedCoder      onBack={goBack}/>}
-        {activeGame==='inspector' && <CodeInspector   onBack={goBack}/>}
+        {!activeGame && <Hub onSelect={setActiveGame} gameData={data} scores={scores}/>}
+        {activeGame==='quiz' && <QuizGame onBack={goBack} allQuestions={data.quiz}/>}
       </div>
     </>
   );
