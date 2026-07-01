@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>SAPZCodes — Dashboard</title>
+<link rel="icon" href="favicon.png"/>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+<link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@500;600;700&family=Exo+2:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet"/>
+<style>
+:root {
+  --g:#22a032; --g2:#1a8028; --bg:#0a0f0a; --s1:#0d1410; --s2:#111a13;
+  --text:#e8f0e8; --mu:rgba(232,240,232,.4); --gr:rgba(232,240,232,.65);
+  --bd:rgba(34,160,50,.15); --bd2:rgba(34,160,50,.28);
+  --fh:'Rajdhani',sans-serif; --fb:'Exo 2',sans-serif; --fm:'JetBrains Mono',monospace;
+  --r:14px; --shadow:0 4px 20px rgba(0,0,0,.25); --glow-s:0 0 0 3px rgba(34,160,50,.08);
+}
+* { box-sizing:border-box; margin:0; padding:0; }
+body { background:var(--bg); color:var(--text); font-family:var(--fb); min-height:100vh; }
+
+.topbar {
+  height: 58px; background: var(--s1); border-bottom: 1px solid var(--bd);
+  display: flex; align-items: center; padding: 0 24px; gap: 12px;
+  position: sticky; top: 0; z-index: 100; box-shadow: var(--shadow);
+}
+.topbar-logo-text { font-family: var(--fh); font-size: 1.05rem; font-weight: 700; color: var(--text); letter-spacing: .04em; }
+.topbar-logo-text span { color: var(--g); }
+.topbar-right { margin-left: auto; display: flex; align-items: center; gap: 8px; }
+.topbar-user { font-family: var(--fm); font-size: .65rem; color: var(--mu); }
+.topbar-btn {
+  padding: 5px 12px; border-radius: 6px; font-size: .72rem; font-weight: 600;
+  font-family: var(--fb); cursor: pointer; border: 1px solid var(--bd);
+  background: var(--bg); color: var(--mu); transition: all .18s;
+  display: inline-flex; align-items: center; gap: 5px; text-decoration: none;
+}
+.topbar-btn:hover { border-color: var(--g); color: var(--g); background: rgba(34,160,50,.06); }
+.topbar-btn.danger { border-color: rgba(200,50,50,.2); color: rgba(200,50,50,.7); }
+.topbar-btn.danger:hover { background: rgba(200,50,50,.06); color: #c0392b; border-color: rgba(200,50,50,.4); }
+
+.hero {
+  background: var(--s1); border-bottom: 1px solid var(--bd);
+  padding: 46px 32px 40px; text-align: center; position: relative; overflow: hidden;
+}
+.hero::before {
+  content: ''; position: absolute; inset: 0;
+  background-image: radial-gradient(circle, rgba(34,160,50,.07) 1px, transparent 1px);
+  background-size: 26px 26px; pointer-events: none;
+}
+.hero h1 { font-family: var(--fh); font-size: clamp(1.7rem,4vw,2.4rem); font-weight: 700; margin-bottom: 8px; position:relative; z-index:1; }
+.hero h1 span { color: var(--g); }
+.hero p { font-size: .88rem; color: var(--gr); max-width: 480px; margin: 0 auto; line-height: 1.7; position:relative; z-index:1; }
+
+.tiles-wrap { max-width: 900px; margin: 44px auto; padding: 0 22px; display: grid; grid-template-columns: repeat(auto-fit,minmax(300px,1fr)); gap: 22px; }
+.tile {
+  background: var(--s1); border: 1px solid var(--bd2); border-radius: var(--r);
+  padding: 34px 28px; cursor: pointer; transition: all .2s; text-align: left;
+  position: relative; overflow: hidden; display: flex; flex-direction: column; gap: 10px;
+  text-decoration: none; color: inherit;
+}
+.tile::before { content:''; position:absolute; top:0; left:0; right:0; height:3px; background: var(--tile-color,var(--g)); transform: scaleX(0); transition: transform .2s; transform-origin:left; }
+.tile:hover { transform: translateY(-4px); box-shadow: 0 12px 34px rgba(34,160,50,.14); border-color: rgba(34,160,50,.35); }
+.tile:hover::before { transform: scaleX(1); }
+.tile-icon { font-size: 2.4rem; }
+.tile-title { font-family: var(--fh); font-size: 1.3rem; font-weight: 700; letter-spacing: .02em; }
+.tile-desc { font-size: .84rem; color: var(--gr); line-height: 1.6; }
+.tile-cta { margin-top: 6px; font-size: .8rem; font-weight: 700; color: var(--g); }
+
+.footnote { text-align:center; padding: 10px 20px 40px; font-size:.68rem; color:var(--mu); font-family:var(--fm); }
+</style>
+</head>
+<body>
+
+<div class="topbar">
+  <span class="topbar-logo-text">SAPZ<span>CODES</span></span>
+  <div class="topbar-right">
+    <span class="topbar-user" id="topbar-user">👤 Student</span>
+    <button class="topbar-btn danger" onclick="signOut()">Sign Out</button>
+  </div>
+</div>
+
+<div class="hero">
+  <h1>Welcome to your <span>Dashboard</span></h1>
+  <p>Pick up where you left off — practice with the learning games or catch up on the latest study material from your trainer.</p>
+</div>
+
+<div class="tiles-wrap">
+  <a class="tile" href="games.html" style="--tile-color:#22a032">
+    <span class="tile-icon">🎮</span>
+    <span class="tile-title">Learning Games</span>
+    <span class="tile-desc">Quizzes, debugging challenges, the ABAP Runner, Subway Runner and more — all driven by your training sheet, with live leaderboards.</span>
+    <span class="tile-cta">Open Games →</span>
+  </a>
+  <a class="tile" href="study-materials.html" style="--tile-color:#2563eb">
+    <span class="tile-icon">📚</span>
+    <span class="tile-title">Study Materials</span>
+    <span class="tile-desc">Notes, PDFs and links posted by your trainer. New material appears here as soon as it's published.</span>
+    <span class="tile-cta">Open Materials →</span>
+  </a>
+</div>
+
+<div class="footnote">SAPZCODES · ABAP · RAP · CDS · Fiori · HANA</div>
+
+<script>
+if (!sessionStorage.getItem('szc_token') && !localStorage.getItem('szc_token')) {
+  window.location.href = 'index.html';
+}
+const name = sessionStorage.getItem('szc_name') || localStorage.getItem('szc_name') || 'Student';
+document.getElementById('topbar-user').textContent = '👤 ' + name;
+
+function signOut() {
+  sessionStorage.clear();
+  localStorage.removeItem('szc_token');
+  localStorage.removeItem('szc_email');
+  localStorage.removeItem('szc_name');
+  window.location.href = 'index.html';
+}
+</script>
+</body>
+</html>

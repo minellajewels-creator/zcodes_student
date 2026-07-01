@@ -1,0 +1,314 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>SAPZCodes — Admin</title>
+<link rel="icon" href="favicon.png"/>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@500;600;700&family=Exo+2:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet"/>
+<style>
+:root {
+  --g:#22a032; --g2:#1a8028; --bg:#0a0f0a; --s1:#0d1410; --s2:#111a13;
+  --text:#e8f0e8; --mu:rgba(232,240,232,.4); --gr:rgba(232,240,232,.65);
+  --bd:rgba(34,160,50,.15); --bd2:rgba(34,160,50,.28);
+  --fh:'Rajdhani',sans-serif; --fb:'Exo 2',sans-serif; --fm:'JetBrains Mono',monospace;
+  --r:12px; --shadow:0 4px 20px rgba(0,0,0,.25);
+}
+* { box-sizing:border-box; margin:0; padding:0; }
+body { background:var(--bg); color:var(--text); font-family:var(--fb); min-height:100vh; }
+
+/* ── Gate ── */
+#gate { min-height:100vh; display:flex; align-items:center; justify-content:center; padding:20px; }
+.gate-card { background:var(--s1); border:1px solid var(--bd); border-radius:var(--r); padding:34px 32px; width:380px; max-width:92vw; box-shadow:var(--shadow); }
+.gate-title { font-family:var(--fh); font-size:1.3rem; font-weight:700; margin-bottom:6px; }
+.gate-title span { color: var(--g); }
+.gate-sub { font-size:.78rem; color:var(--mu); margin-bottom:20px; }
+.gate-input { width:100%; padding:11px 14px; background:var(--bg); border:1.5px solid var(--bd2); border-radius:8px; color:var(--text); font-family:var(--fm); font-size:.9rem; outline:none; margin-bottom:12px; }
+.gate-input:focus { border-color: var(--g); }
+.gate-btn { width:100%; padding:11px; background:var(--g); border:none; border-radius:8px; color:#fff; font-family:var(--fh); font-weight:700; font-size:.95rem; cursor:pointer; }
+.gate-btn:hover { background:var(--g2); }
+.gate-err { font-size:.78rem; color:#c0392b; margin-top:10px; display:none; }
+
+/* ── App shell ── */
+#app { display:none; }
+.topbar {
+  height: 56px; background: var(--s1); border-bottom: 1px solid var(--bd);
+  display:flex; align-items:center; padding:0 20px; gap:12px; position:sticky; top:0; z-index:50;
+}
+.topbar-logo { font-family: var(--fh); font-size: 1.02rem; font-weight: 700; }
+.topbar-logo span { color: var(--g); }
+.topbar-tag { font-family: var(--fm); font-size:.6rem; color: var(--mu); letter-spacing:.1em; text-transform:uppercase; }
+.topbar-right { margin-left:auto; }
+.topbar-btn { padding:5px 12px; border-radius:6px; font-size:.72rem; font-weight:600; border:1px solid rgba(200,50,50,.25); background:var(--bg); color:#c0392b; cursor:pointer; }
+.topbar-btn:hover { background: rgba(200,50,50,.08); }
+
+.layout { display:flex; min-height: calc(100vh - 56px); }
+.sidebar { width: 220px; flex-shrink:0; background: var(--s1); border-right:1px solid var(--bd); padding: 16px 10px; }
+.sb-item { display:block; width:100%; text-align:left; padding:9px 12px; border-radius:8px; background:none; border:none; color:var(--mu); font-family:var(--fb); font-size:.82rem; font-weight:600; cursor:pointer; margin-bottom:3px; }
+.sb-item:hover { background: rgba(34,160,50,.06); color: var(--g); }
+.sb-item.active { background: rgba(34,160,50,.12); color: var(--g); }
+
+.main { flex:1; padding: 22px 26px; overflow-x:auto; }
+.main-hdr { display:flex; align-items:center; gap:12px; margin-bottom:16px; flex-wrap:wrap; }
+.main-title { font-family: var(--fh); font-size:1.3rem; font-weight:700; }
+.main-count { font-family: var(--fm); font-size:.68rem; color: var(--mu); }
+.btn { padding:8px 16px; border-radius:7px; font-family:var(--fb); font-size:.8rem; font-weight:700; cursor:pointer; border:none; }
+.btn-primary { background: var(--g); color:#fff; }
+.btn-primary:hover { background: var(--g2); }
+.btn-ghost { background: var(--bg); border:1px solid var(--bd2); color: var(--mu); }
+.btn-ghost:hover { border-color: var(--g); color: var(--g); }
+.btn-danger { background: rgba(200,50,50,.08); border:1px solid rgba(200,50,50,.25); color:#c0392b; padding:6px 12px; font-size:.72rem; }
+.btn-danger:hover { background: rgba(200,50,50,.16); }
+.btn-save { background: rgba(34,160,50,.12); border:1px solid rgba(34,160,50,.3); color: var(--g); padding:6px 12px; font-size:.72rem; }
+.btn-save:hover { background: rgba(34,160,50,.22); }
+
+table { border-collapse: collapse; width:100%; background: var(--s1); border-radius: var(--r); overflow:hidden; }
+th { background: var(--s2); font-family: var(--fm); font-size:.6rem; text-transform:uppercase; letter-spacing:.08em; color: var(--mu); padding:9px 10px; text-align:left; white-space:nowrap; border-bottom:1px solid var(--bd); }
+td { padding:6px 8px; border-bottom:1px solid rgba(255,255,255,.04); vertical-align: top; }
+td input, td textarea { width:100%; min-width:120px; padding:6px 8px; background: var(--bg); border:1px solid var(--bd2); border-radius:6px; color: var(--text); font-family: var(--fb); font-size:.78rem; outline:none; resize:vertical; }
+td input:focus, td textarea:focus { border-color: var(--g); }
+tr.new-row td { background: rgba(34,160,50,.04); }
+tr.dirty td input, tr.dirty td textarea { border-color: #d97706; }
+.row-actions { display:flex; gap:6px; white-space:nowrap; }
+
+.loading-state, .empty-state { padding: 40px; text-align:center; color: var(--mu); font-family: var(--fm); font-size:.8rem; }
+.spinner { width:28px; height:28px; border:2.5px solid var(--bd); border-top-color: var(--g); border-radius:50%; animation: spin .7s linear infinite; margin:0 auto 12px; }
+@keyframes spin { to { transform: rotate(360deg); } }
+.toast { position:fixed; bottom:20px; right:20px; padding:12px 18px; border-radius:8px; font-size:.82rem; font-weight:600; z-index:200; display:none; box-shadow: var(--shadow); }
+.toast.ok { background: rgba(34,160,50,.15); border:1px solid rgba(34,160,50,.35); color:#58ff80; }
+.toast.err { background: rgba(200,50,50,.15); border:1px solid rgba(200,50,50,.35); color:#ff8080; }
+</style>
+</head>
+<body>
+
+<div id="gate">
+  <div class="gate-card">
+    <div class="gate-title">SAPZ<span>CODES</span> Admin</div>
+    <div class="gate-sub">Enter the admin password to manage all sheet tabs.</div>
+    <input class="gate-input" type="password" id="gate-pw" placeholder="Admin password" autocomplete="off"/>
+    <button class="gate-btn" onclick="doGateLogin()">Unlock →</button>
+    <div class="gate-err" id="gate-err">Incorrect password.</div>
+  </div>
+</div>
+
+<div id="app">
+  <div class="topbar">
+    <span class="topbar-logo">SAPZ<span>CODES</span></span>
+    <span class="topbar-tag">Admin Panel</span>
+    <div class="topbar-right">
+      <button class="topbar-btn" onclick="lockOut()">Lock</button>
+    </div>
+  </div>
+  <div class="layout">
+    <div class="sidebar" id="sidebar"></div>
+    <div class="main" id="main">
+      <div class="loading-state"><div class="spinner"></div>Select a tab from the left.</div>
+    </div>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+const GAS_URL = 'https://script.google.com/macros/s/AKfycbx4H_6v2nNH_Xa0FajhKQKCZgHgwuupi2CD6NdC4YuatcE0f451IFgXbNES-7sYRF4Hog/exec';
+
+let ADMIN_PW = '';
+let TABS = [];
+let currentTab = null;
+let currentHeaders = [];
+let currentRows = [];    // [{rowIndex, values:[...], dirty:bool}]
+let newRowValues = null; // array while composing a new row
+
+function toast(msg, ok) {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.className = 'toast ' + (ok ? 'ok' : 'err');
+  t.style.display = 'block';
+  setTimeout(() => { t.style.display = 'none'; }, 2600);
+}
+
+async function doGateLogin() {
+  const pw = document.getElementById('gate-pw').value;
+  if (!pw) return;
+  try {
+    const res = await fetch(GAS_URL, {
+      method: 'POST',
+      headers: { 'Content-Type': 'text/plain' },
+      body: JSON.stringify({ action: 'adminAuth', password: pw }),
+      redirect: 'follow',
+    });
+    const data = await res.json();
+    if (data.status === 'ok') {
+      ADMIN_PW = pw;
+      TABS = data.tabs;
+      document.getElementById('gate').style.display = 'none';
+      document.getElementById('app').style.display = 'block';
+      buildSidebar();
+    } else {
+      document.getElementById('gate-err').style.display = 'block';
+      document.getElementById('gate-err').textContent = data.message || 'Incorrect password.';
+    }
+  } catch (err) {
+    document.getElementById('gate-err').style.display = 'block';
+    document.getElementById('gate-err').textContent = 'Connection error.';
+  }
+}
+document.getElementById('gate-pw').addEventListener('keydown', e => { if (e.key === 'Enter') doGateLogin(); });
+
+function lockOut() {
+  ADMIN_PW = ''; TABS = []; currentTab = null;
+  document.getElementById('app').style.display = 'none';
+  document.getElementById('gate').style.display = 'flex';
+  document.getElementById('gate-pw').value = '';
+}
+
+function buildSidebar() {
+  const sb = document.getElementById('sidebar');
+  sb.innerHTML = TABS.map(t =>
+    `<button class="sb-item" id="sb-${cssId(t)}" onclick="openTab('${t}')">${t}</button>`
+  ).join('');
+}
+function cssId(s) { return s.replace(/[^a-zA-Z0-9]/g, ''); }
+
+async function openTab(tab) {
+  currentTab = tab;
+  newRowValues = null;
+  document.querySelectorAll('.sb-item').forEach(el => el.classList.remove('active'));
+  const btn = document.getElementById('sb-' + cssId(tab));
+  if (btn) btn.classList.add('active');
+
+  const main = document.getElementById('main');
+  main.innerHTML = `<div class="loading-state"><div class="spinner"></div>Loading ${tab}…</div>`;
+
+  try {
+    const url = `${GAS_URL}?action=adminGetData&tab=${encodeURIComponent(tab)}&password=${encodeURIComponent(ADMIN_PW)}`;
+    const res = await fetch(url);
+    const data = await res.json();
+    if (data.status !== 'ok') throw new Error(data.message || 'Failed to load');
+    currentHeaders = data.data.headers;
+    currentRows = data.data.rows.map(r => ({ rowIndex: r.rowIndex, values: r.values.slice(), dirty: false }));
+    renderTable();
+  } catch (err) {
+    main.innerHTML = `<div class="empty-state">⚠️ ${esc(err.message)}</div>`;
+  }
+}
+
+function esc(s) { return String(s == null ? '' : s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
+
+function renderTable() {
+  const main = document.getElementById('main');
+  const headers = currentHeaders.length ? currentHeaders : ['Col A'];
+
+  let html = `
+    <div class="main-hdr">
+      <span class="main-title">${currentTab}</span>
+      <span class="main-count">${currentRows.length} rows</span>
+      <button class="btn btn-primary" onclick="startNewRow()">+ Add Row</button>
+      <button class="btn btn-ghost" onclick="openTab(currentTab)">↺ Refresh</button>
+    </div>
+    <table>
+      <thead><tr>${headers.map(h => `<th>${esc(h)}</th>`).join('')}<th>Actions</th></tr></thead>
+      <tbody>
+  `;
+
+  if (newRowValues) {
+    html += `<tr class="new-row">` +
+      headers.map((h, ci) => `<td>${cellInput('new', ci, newRowValues[ci] || '')}</td>`).join('') +
+      `<td class="row-actions">
+        <button class="btn-save" onclick="saveNewRow()">💾 Save</button>
+        <button class="btn-danger" onclick="cancelNewRow()">✕ Cancel</button>
+      </td></tr>`;
+  }
+
+  currentRows.forEach((row, ri) => {
+    html += `<tr class="${row.dirty ? 'dirty' : ''}" id="row-${ri}">` +
+      headers.map((h, ci) => `<td>${cellInput(ri, ci, row.values[ci])}</td>`).join('') +
+      `<td class="row-actions">
+        <button class="btn-save" onclick="saveRow(${ri})">💾 Save</button>
+        <button class="btn-danger" onclick="deleteRow(${ri})">🗑 Delete</button>
+      </td></tr>`;
+  });
+
+  html += `</tbody></table>`;
+  if (currentRows.length === 0 && !newRowValues) {
+    html += `<div class="empty-state">No rows yet — click "+ Add Row" to create one.</div>`;
+  }
+  main.innerHTML = html;
+}
+
+function cellInput(ri, ci, val) {
+  const long = String(val || '').length > 60;
+  const idAttr = `data-ri="${ri}" data-ci="${ci}"`;
+  if (long) return `<textarea rows="2" ${idAttr} onchange="onCellChange(this)">${esc(val)}</textarea>`;
+  return `<input type="text" value="${esc(val)}" ${idAttr} onchange="onCellChange(this)"/>`;
+}
+
+function onCellChange(el) {
+  const ri = el.getAttribute('data-ri');
+  const ci = parseInt(el.getAttribute('data-ci'), 10);
+  if (ri === 'new') {
+    if (!newRowValues) newRowValues = [];
+    newRowValues[ci] = el.value;
+  } else {
+    const row = currentRows[parseInt(ri, 10)];
+    row.values[ci] = el.value;
+    row.dirty = true;
+    document.getElementById('row-' + ri).classList.add('dirty');
+  }
+}
+
+function startNewRow() {
+  newRowValues = currentHeaders.map(() => '');
+  renderTable();
+}
+function cancelNewRow() { newRowValues = null; renderTable(); }
+
+async function saveNewRow() {
+  if (!newRowValues) return;
+  try {
+    const res = await fetch(GAS_URL, {
+      method: 'POST',
+      headers: { 'Content-Type': 'text/plain' },
+      body: JSON.stringify({ action: 'adminSaveRow', password: ADMIN_PW, tab: currentTab, values: newRowValues }),
+      redirect: 'follow',
+    });
+    const data = await res.json();
+    if (data.status === 'ok') { toast('Row added ✓', true); newRowValues = null; openTab(currentTab); }
+    else toast(data.message || 'Failed to save', false);
+  } catch (err) { toast('Connection error', false); }
+}
+
+async function saveRow(ri) {
+  const row = currentRows[ri];
+  try {
+    const res = await fetch(GAS_URL, {
+      method: 'POST',
+      headers: { 'Content-Type': 'text/plain' },
+      body: JSON.stringify({ action: 'adminSaveRow', password: ADMIN_PW, tab: currentTab, rowIndex: row.rowIndex, values: row.values }),
+      redirect: 'follow',
+    });
+    const data = await res.json();
+    if (data.status === 'ok') { toast('Saved ✓', true); row.dirty = false; renderTable(); }
+    else toast(data.message || 'Failed to save', false);
+  } catch (err) { toast('Connection error', false); }
+}
+
+async function deleteRow(ri) {
+  const row = currentRows[ri];
+  if (!confirm('Delete this row? This cannot be undone.')) return;
+  try {
+    const res = await fetch(GAS_URL, {
+      method: 'POST',
+      headers: { 'Content-Type': 'text/plain' },
+      body: JSON.stringify({ action: 'adminDeleteRow', password: ADMIN_PW, tab: currentTab, rowIndex: row.rowIndex }),
+      redirect: 'follow',
+    });
+    const data = await res.json();
+    if (data.status === 'ok') { toast('Row deleted ✓', true); openTab(currentTab); }
+    else toast(data.message || 'Failed to delete', false);
+  } catch (err) { toast('Connection error', false); }
+}
+</script>
+</body>
+</html>
