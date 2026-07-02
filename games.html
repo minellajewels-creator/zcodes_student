@@ -13,7 +13,7 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/babel-standalone/7.23.2/babel.min.js"></script>
 <link rel="stylesheet" href="style.css"/>
 <style>
-body { cursor: default; overflow-x: hidden; background: var(--bg); color: var(--text); }
+body { cursor: default; overflow-x: hidden; }
 #cur, #ring { display: none; }
 
 .topbar {
@@ -76,8 +76,45 @@ body { cursor: default; overflow-x: hidden; background: var(--bg); color: var(--
 .hub-stat-val { font-family: var(--fh); font-size: 1.5rem; font-weight: 700; color: var(--g); line-height: 1; }
 .hub-stat-lbl { font-family: var(--fm); font-size: .58rem; color: var(--mu); text-transform: uppercase; letter-spacing: .1em; margin-top: 2px; }
 
-.hub-grid { max-width: 1060px; margin: 36px auto 56px; padding: 0 22px; display: grid; grid-template-columns: repeat(auto-fill, minmax(272px, 1fr)); gap: 16px; }
+.hub-grid { max-width: 1060px; margin: 36px auto 56px; padding: 0 22px; display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 18px; }
 
+/* ── Runner Cards (full width) ── */
+.runner-card {
+  grid-column: 1 / -1;
+  background: var(--text); border: 1px solid rgba(34,160,50,.3);
+  border-radius: var(--r); padding: 26px;
+  transition: all .2s; box-shadow: 0 4px 20px rgba(34,160,50,.1);
+  position: relative; overflow: hidden;
+  display: grid; grid-template-columns: 1fr 1fr; gap: 24px;
+}
+.runner-card::before { content: ''; position: absolute; inset: 0; background: linear-gradient(135deg, rgba(34,160,50,.07) 0%, transparent 60%); pointer-events: none; }
+.runner-card:hover { box-shadow: 0 10px 36px rgba(34,160,50,.2); border-color: rgba(34,160,50,.5); }
+
+.runner-half { display: flex; flex-direction: column; gap: 12px; position: relative; z-index: 1; }
+.runner-half + .runner-half { border-left: 1px solid rgba(255,255,255,.08); padding-left: 24px; }
+
+.runner-icon-wrap { width: 52px; height: 52px; background: rgba(34,160,50,.12); border: 1px solid rgba(34,160,50,.22); border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 1.6rem; flex-shrink: 0; }
+.runner-head { display: flex; align-items: center; gap: 14px; }
+.runner-title { font-family: var(--fh); font-size: 1.15rem; font-weight: 700; color: #fff; letter-spacing: .03em; margin-bottom: 3px; }
+.runner-title span { color: var(--g); }
+.runner-desc { font-size: .78rem; color: rgba(255,255,255,.45); line-height: 1.6; }
+.runner-meta { display: flex; align-items: center; gap: 7px; flex-wrap: wrap; margin-top: 4px; }
+.runner-badge { font-family: var(--fm); font-size: .55rem; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; padding: 3px 8px; border-radius: 20px; background: rgba(34,160,50,.15); color: var(--g); border: 1px solid rgba(34,160,50,.25); }
+.runner-play-btn { padding: 8px 18px; background: var(--g); border: none; border-radius: 7px; color: #fff; font-family: var(--fh); font-size: .85rem; font-weight: 700; cursor: pointer; transition: all .18s; display: inline-flex; align-items: center; gap: 5px; box-shadow: 0 3px 12px rgba(34,160,50,.3); }
+.runner-play-btn:hover { background: #1a8028; transform: translateY(-1px); }
+
+/* Mini leaderboard inside runner half */
+.runner-lb { margin-top: 10px; border-top: 1px solid rgba(255,255,255,.07); padding-top: 10px; }
+.runner-lb-title { font-family: var(--fm); font-size: .52rem; font-weight: 700; letter-spacing: .14em; text-transform: uppercase; color: rgba(255,255,255,.28); margin-bottom: 7px; }
+.runner-lb-row { display: flex; align-items: center; gap: 7px; padding: 3px 0; font-family: var(--fm); font-size: .68rem; border-bottom: 1px solid rgba(255,255,255,.04); }
+.runner-lb-row:last-child { border-bottom: none; }
+.runner-lb-rank { width: 18px; text-align: center; font-size: .6rem; font-weight: 700; flex-shrink: 0; }
+.runner-lb-name { flex: 1; color: rgba(255,255,255,.65); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.runner-lb-score { font-weight: 700; color: var(--g); flex-shrink: 0; }
+.runner-lb-you { color: #60a5fa !important; }
+.runner-lb-empty { font-size: .65rem; color: rgba(255,255,255,.22); font-style: italic; padding: 2px 0; }
+
+/* ── Game Cards ── */
 .game-card {
   background: var(--s1); border: 1px solid var(--bd2);
   border-radius: var(--r); padding: 22px; cursor: pointer;
@@ -100,7 +137,7 @@ body { cursor: default; overflow-x: hidden; background: var(--bg); color: var(--
 
 .card-leaderboard { margin-top: 14px; border-top: 1px solid var(--bd); padding-top: 11px; }
 .card-lb-title { font-family: var(--fm); font-size: .55rem; font-weight: 700; letter-spacing: .12em; text-transform: uppercase; color: var(--mu); margin-bottom: 7px; }
-.card-lb-row { display: flex; align-items: center; gap: 7px; padding: 4px 0; border-bottom: 1px solid rgba(0,0,0,.05); font-family: var(--fm); font-size: .68rem; }
+.card-lb-row { display: flex; align-items: center; gap: 7px; padding: 4px 0; border-bottom: 1px solid rgba(0,0,0,.04); font-family: var(--fm); font-size: .68rem; }
 .card-lb-row:last-child { border-bottom: none; }
 .card-lb-rank { width: 18px; text-align: center; font-size: .6rem; font-weight: 700; flex-shrink: 0; }
 .rank-1 { color: #f59e0b; } .rank-2 { color: #94a3b8; } .rank-3 { color: #cd7c4b; } .rank-n { color: var(--mu); }
@@ -109,46 +146,11 @@ body { cursor: default; overflow-x: hidden; background: var(--bg); color: var(--
 .card-lb-you { color: #2563eb !important; }
 .card-lb-empty { font-size: .68rem; color: var(--mu); font-family: var(--fm); font-style: italic; padding: 2px 0; }
 
-/* Runner card */
-.game-card-runner {
-  background: var(--text); border: 1px solid rgba(34,160,50,.3);
-  border-radius: var(--r); padding: 26px; cursor: pointer;
-  transition: all .2s; box-shadow: 0 4px 20px rgba(34,160,50,.1);
-  position: relative; overflow: hidden; grid-column: 1 / -1;
-  display: flex; align-items: flex-start; gap: 24px; flex-direction: column;
-}
-.runner-top { display: flex; align-items: center; gap: 24px; width: 100%; }
-.game-card-runner::before { content: ''; position: absolute; inset: 0; background: linear-gradient(135deg, rgba(34,160,50,.07) 0%, transparent 60%); pointer-events: none; }
-.game-card-runner::after { content: '◉ SAPZCODES RUNNER'; position: absolute; top: 14px; right: 18px; font-family: var(--fm); font-size: .58rem; font-weight: 700; letter-spacing: .2em; color: rgba(34,160,50,.35); }
-.game-card-runner:hover { transform: translateY(-2px); box-shadow: 0 10px 36px rgba(34,160,50,.2); border-color: rgba(34,160,50,.5); }
-.runner-icon-wrap { flex-shrink: 0; width: 64px; height: 64px; background: rgba(34,160,50,.12); border: 1px solid rgba(34,160,50,.22); border-radius: 14px; display: flex; align-items: center; justify-content: center; font-size: 2rem; }
-.runner-content { flex: 1; }
-.runner-title { font-family: var(--fh); font-size: 1.3rem; font-weight: 700; color: #fff; letter-spacing: .03em; margin-bottom: 5px; }
-.runner-title span { color: var(--g); }
-.runner-desc { font-size: .8rem; color: rgba(255,255,255,.45); line-height: 1.65; margin-bottom: 12px; max-width: 520px; }
-.runner-meta { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
-.runner-badge { font-family: var(--fm); font-size: .58rem; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; padding: 3px 9px; border-radius: 20px; background: rgba(34,160,50,.15); color: var(--g); border: 1px solid rgba(34,160,50,.25); }
-.runner-play-btn { padding: 8px 20px; background: var(--g); border: none; border-radius: 7px; color: #fff; font-family: var(--fh); font-size: .88rem; font-weight: 700; cursor: pointer; transition: all .18s; display: inline-flex; align-items: center; gap: 6px; box-shadow: 0 3px 12px rgba(34,160,50,.3); }
-.runner-play-btn:hover { background: #1a8028; transform: translateY(-1px); }
-.runner-lb-wrap { width: 100%; border-top: 1px solid rgba(255,255,255,.07); padding-top: 14px; display: flex; gap: 24px; flex-wrap: wrap; }
-.runner-lb-col { flex: 1; min-width: 200px; }
-.runner-lb-col-title { font-family: var(--fm); font-size: .55rem; font-weight: 700; letter-spacing: .14em; text-transform: uppercase; color: rgba(255,255,255,.28); margin-bottom: 8px; }
-.runner-lb-row { display: flex; align-items: center; gap: 7px; padding: 4px 0; border-bottom: 1px solid rgba(255,255,255,.04); font-family: var(--fm); font-size: .7rem; }
-.runner-lb-row:last-child { border-bottom: none; }
-.runner-lb-rank { width: 18px; text-align: center; font-size: .62rem; font-weight: 700; flex-shrink: 0; }
-.runner-lb-name { flex: 1; color: rgba(255,255,255,.7); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-.runner-lb-score { font-weight: 700; color: var(--g); flex-shrink: 0; }
-.runner-lb-you { color: #60a5fa !important; }
-.runner-lb-empty { font-size: .68rem; color: rgba(255,255,255,.25); font-family: var(--fm); font-style: italic; padding: 2px 0; }
-
-/* Game content wrappers */
+/* ── Game content wrappers ── */
 .game-wrap { flex: 1; overflow-y: auto; padding: 28px 18px; max-width: 840px; margin: 0 auto; width: 100%; }
-.back-btn { display: inline-flex; align-items: center; gap: 6px; padding: 6px 14px; border-radius: 6px; font-size: .75rem; font-weight: 700; font-family: var(--fb); cursor: pointer; border: 1px solid var(--bd); background: var(--bg); color: var(--mu); transition: all .15s; }
-.back-btn:hover { border-color: var(--g); color: var(--g); background: rgba(34,160,50,.06); }
 .game-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 20px; flex-wrap: wrap; gap: 10px; }
 .game-title { font-family: var(--fh); font-size: 1.3rem; font-weight: 700; color: var(--text); letter-spacing: .03em; }
 .game-subtitle { font-size: .78rem; color: var(--mu); margin-top: 2px; }
-
 .progress-bar-wrap { height: 3px; background: var(--bd); border-radius: 4px; margin-bottom: 20px; overflow: hidden; }
 .progress-bar-fill { height: 100%; background: var(--g); border-radius: 4px; transition: width .4s ease; }
 .score-badge { display: inline-flex; align-items: center; gap: 6px; padding: 5px 12px; background: rgba(34,160,50,.08); border: 1px solid rgba(34,160,50,.2); border-radius: 20px; font-family: var(--fm); font-size: .78rem; font-weight: 700; color: var(--g); }
@@ -160,7 +162,6 @@ body { cursor: default; overflow-x: hidden; background: var(--bg); color: var(--
 
 .panel-tag { font-family: var(--fm); font-size: .58rem; font-weight: 700; letter-spacing: .12em; text-transform: uppercase; padding: 3px 8px; border-radius: 20px; }
 .tag-green { background: rgba(34,160,50,.08); color: var(--g); border: 1px solid rgba(34,160,50,.18); }
-.tag-warn { background: rgba(217,119,6,.07); color: #d97706; border: 1px solid rgba(217,119,6,.18); }
 .panel-card-title { font-family: var(--fh); font-size: .92rem; font-weight: 700; color: var(--text); }
 
 .option-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 9px; }
@@ -205,13 +206,18 @@ body { cursor: default; overflow-x: hidden; background: var(--bg); color: var(--
 .result-save-notice.saving { color: #d97706; }
 .result-save-notice.saved  { color: var(--g); }
 .result-save-notice.failed { color: #c0392b; }
+
+@media(max-width: 640px) {
+  .runner-card { grid-template-columns: 1fr; }
+  .runner-half + .runner-half { border-left: none; padding-left: 0; border-top: 1px solid rgba(255,255,255,.08); padding-top: 20px; }
+}
 </style>
 </head>
 <body>
 <div id="cur"></div>
 <div id="root"></div>
 <script type="text/babel">
-const { useState, useEffect, useRef, useCallback } = React;
+const { useState, useEffect, useCallback } = React;
 
 if (!sessionStorage.getItem('szc_token')) { window.location.href = 'index.html'; }
 const STUDENT_NAME  = sessionStorage.getItem('szc_name')  || 'Student';
@@ -255,37 +261,21 @@ function SaveNotice({ status }) {
   return <div className={`result-save-notice ${status}`}>{labels[status]}</div>;
 }
 
-function MiniLeaderboard({ scores, gameId, dark }) {
+// ── Leaderboard for runner card (dark bg) ──
+function RunnerLB({ scores, gameId, title }) {
   const list = (scores[gameId] || []).slice(0, 3);
   const rankIcons = ['🥇','🥈','🥉'];
-  const rankClass = ['rank-1','rank-2','rank-3','rank-n'];
-  if (dark) {
-    return (
-      <div className="runner-lb-col">
-        <div className="runner-lb-col-title">🏆 Top Scores</div>
-        {list.length === 0
-          ? <div className="runner-lb-empty">No scores yet — be first!</div>
-          : list.map((r,i) => (
-              <div key={i} className="runner-lb-row">
-                <span className={`runner-lb-rank ${rankClass[i]}`}>{rankIcons[i]||i+1}</span>
-                <span className={`runner-lb-name${r.email===STUDENT_EMAIL?' runner-lb-you':''}`}>{r.name}</span>
-                <span className="runner-lb-score">{r.score.toLocaleString()}</span>
-              </div>
-            ))
-        }
-      </div>
-    );
-  }
+  const rankClass = ['rank-1','rank-2','rank-3'];
   return (
-    <div className="card-leaderboard" onClick={e=>e.stopPropagation()}>
-      <div className="card-lb-title">🏆 Top Scores</div>
+    <div className="runner-lb">
+      <div className="runner-lb-title">🏆 {title}</div>
       {list.length === 0
-        ? <div className="card-lb-empty">No scores yet — be first!</div>
-        : list.map((r,i) => (
-            <div key={i} className="card-lb-row">
-              <span className={`card-lb-rank ${rankClass[i]}`}>{rankIcons[i]||i+1}</span>
-              <span className={`card-lb-name${r.email===STUDENT_EMAIL?' card-lb-you':''}`}>{r.name}</span>
-              <span className="card-lb-score">{r.score.toLocaleString()}</span>
+        ? <div className="runner-lb-empty">No scores yet — be first!</div>
+        : list.map((r, i) => (
+            <div key={i} className="runner-lb-row">
+              <span className={`runner-lb-rank ${rankClass[i]||'rank-n'}`}>{rankIcons[i]||i+1}</span>
+              <span className={`runner-lb-name${r.email===STUDENT_EMAIL?' runner-lb-you':''}`}>{r.name}</span>
+              <span className="runner-lb-score">{Number(r.score).toLocaleString()}</span>
             </div>
           ))
       }
@@ -293,10 +283,27 @@ function MiniLeaderboard({ scores, gameId, dark }) {
   );
 }
 
-// Only 2 games remain: Quiz + the two runners
-const GAMES_META = [
-  {id:'quiz', icon:'🧠', title:'ABAP Quiz', desc:'Adaptive quiz with topic filter — choose what you have covered and practice on it.', tag:'Database-Driven', color:'#22a032'},
-];
+// ── Leaderboard for game card (light bg) ──
+function CardLB({ scores, gameId }) {
+  const list = (scores[gameId] || []).slice(0, 3);
+  const rankIcons = ['🥇','🥈','🥉'];
+  const rankClass = ['rank-1','rank-2','rank-3','rank-n'];
+  return (
+    <div className="card-leaderboard" onClick={e=>e.stopPropagation()}>
+      <div className="card-lb-title">🏆 Top Scores</div>
+      {list.length === 0
+        ? <div className="card-lb-empty">No scores yet — be first!</div>
+        : list.map((r, i) => (
+            <div key={i} className="card-lb-row">
+              <span className={`card-lb-rank ${rankClass[i]}`}>{rankIcons[i]||i+1}</span>
+              <span className={`card-lb-name${r.email===STUDENT_EMAIL?' card-lb-you':''}`}>{r.name}</span>
+              <span className="card-lb-score">{Number(r.score).toLocaleString()}</span>
+            </div>
+          ))
+      }
+    </div>
+  );
+}
 
 function useGameData() {
   const [data, setData]       = useState(null);
@@ -307,7 +314,10 @@ function useGameData() {
     if (cached) { try { setData(JSON.parse(cached)); setLoading(false); return; } catch(e){} }
     fetch(`${GAS_URL}?action=getGameData&key=${encodeURIComponent(API_SECRET)}`)
       .then(r => r.json())
-      .then(res => { if(res.status==='ok'){sessionStorage.setItem('szc_gamedata',JSON.stringify(res.data));setData(res.data);}else{setError(res.message||'Failed');} })
+      .then(res => {
+        if (res.status==='ok') { sessionStorage.setItem('szc_gamedata', JSON.stringify(res.data)); setData(res.data); }
+        else setError(res.message||'Failed');
+      })
       .catch(err => setError('Could not connect: '+err.message))
       .finally(() => setLoading(false));
   }, []);
@@ -315,18 +325,21 @@ function useGameData() {
 }
 
 function useHighScores() {
-  const [scores, setScores]   = useState({});
-  const [lbLoading, setLbLoading] = useState(true);
+  const [scores, setScores] = useState({});
   const reload = useCallback(() => {
-    setLbLoading(true);
-    fetchHighScores().then(s => { setScores(s); setLbLoading(false); });
+    fetchHighScores().then(s => setScores(s));
   }, []);
   useEffect(() => { reload(); }, []);
-  return { scores, lbLoading, reload };
+  return { scores, reload };
 }
 
-function ScoreBadge({score,total}) { const pct=total>0?Math.round((score/total)*100):0; return <span className="score-badge">{score}/{total} · {pct}%</span>; }
-function ProgressBar({current,total}) { return <div className="progress-bar-wrap"><div className="progress-bar-fill" style={{width:`${(current/total)*100}%`}}/></div>; }
+function ScoreBadge({score,total}) {
+  const pct = total>0 ? Math.round((score/total)*100) : 0;
+  return <span className="score-badge">{score}/{total} · {pct}%</span>;
+}
+function ProgressBar({current,total}) {
+  return <div className="progress-bar-wrap"><div className="progress-bar-fill" style={{width:`${(current/total)*100}%`}}/></div>;
+}
 
 function GameResult({score,total,gameName,gameId,onBack,onReplay}) {
   const pct   = total>0 ? Math.round((score/total)*100) : 0;
@@ -334,9 +347,9 @@ function GameResult({score,total,gameName,gameId,onBack,onReplay}) {
   const msg   = pct>=80?'Outstanding! You clearly know your ABAP.':pct>=50?'Good effort! Review the tricky ones.':'Keep practicing — ABAP mastery takes repetition!';
   const [saveStatus, setSaveStatus] = useState(null);
   useEffect(() => {
-    if (!gameId || score === 0) return;
+    if (!gameId || score===0) return;
     setSaveStatus('saving');
-    saveHighScore(gameId, score).then(ok => setSaveStatus(ok ? 'saved' : 'failed'));
+    saveHighScore(gameId, score).then(ok => setSaveStatus(ok?'saved':'failed'));
   }, []);
   return (
     <div className="result-wrap">
@@ -354,26 +367,98 @@ function GameResult({score,total,gameName,gameId,onBack,onReplay}) {
   );
 }
 
-function QuizGame({onBack,allQuestions}) {
-  const topics=[...new Set(allQuestions.map(q=>q.topic))].sort();
-  const [phase,setPhase]=useState('topic');
-  const [selectedTopics,setSelectedTopics]=useState(new Set(topics));
-  const [questions,setQuestions]=useState([]);
-  const [idx,setIdx]=useState(0);
-  const [selected,setSelected]=useState(null);
-  const [score,setScore]=useState(0);
-  const toggleTopic=t=>setSelectedTopics(prev=>{const n=new Set(prev);n.has(t)?n.delete(t):n.add(t);return n;});
-  const startQuiz=()=>{const pool=allQuestions.filter(q=>selectedTopics.has(q.topic));const sh=[...pool].sort(()=>Math.random()-.5).slice(0,Math.min(15,pool.length));setQuestions(sh);setIdx(0);setScore(0);setSelected(null);setPhase('playing');};
-  if(phase==='topic'){const pool=allQuestions.filter(q=>selectedTopics.has(q.topic));return(<div className="topic-selector"><button className="btn-danger" style={{marginBottom:18}} onClick={onBack}>← Back</button><h2>🧠 ABAP Quiz</h2><p>Select the topics you have covered.</p><div className="topic-chips"><div className="topic-chip active" style={{background:'var(--g)',color:'#fff',borderColor:'var(--g)'}} onClick={()=>setSelectedTopics(new Set(topics))}>All Topics</div><div className="topic-chip" style={{background:'rgba(200,50,50,.06)',color:'#c0392b',borderColor:'rgba(200,50,50,.2)'}} onClick={()=>setSelectedTopics(new Set())}>Clear All</div>{topics.map(t=><div key={t} className={`topic-chip${selectedTopics.has(t)?' active':''}`} onClick={()=>toggleTopic(t)}>{t}</div>)}</div><div className="topic-count">{pool.length} questions available</div><button className="btn-action" onClick={startQuiz} disabled={pool.length===0}>Start Quiz ({Math.min(15,pool.length)} Questions) →</button></div>);}
-  if(phase==='done') return <GameResult score={score} total={questions.length} gameName="ABAP Quiz" gameId="quiz" onBack={onBack} onReplay={()=>setPhase('topic')}/>;
-  const q=questions[idx];
-  const choose=i=>{if(selected!==null)return;setSelected(i);if(i===q.ans)setScore(s=>s+1);};
-  const next=()=>{if(idx+1>=questions.length){setPhase('done');return;}setIdx(i=>i+1);setSelected(null);};
-  return(<div className="game-wrap"><div className="game-header"><div><div className="game-title">🧠 ABAP Quiz</div><div className="game-subtitle">Q {idx+1} of {questions.length} · {q.topic}</div></div><ScoreBadge score={score} total={idx+(selected!==null?1:0)}/><button className="btn-danger" onClick={()=>setPhase('topic')}>← Topics</button></div><ProgressBar current={idx+1} total={questions.length}/><div className="panel-card"><div className="panel-card-head"><span className="panel-tag tag-green">Question</span><span className="panel-card-title" style={{flex:1}}>{q.q}</span></div><div className="panel-card-body"><div className="option-grid">{q.opts.map((opt,i)=>{let cls='option-btn';if(selected!==null){if(i===q.ans)cls+=' correct';else if(i===selected&&i!==q.ans)cls+=' wrong';}return<button key={i} className={cls} onClick={()=>choose(i)} disabled={selected!==null}><span className="option-letter">{'ABCD'[i]}.</span>{opt}</button>;})}</div>{selected!==null&&<div className={`feedback-box${selected===q.ans?' correct':' wrong'}`}><div className="feedback-title">{selected===q.ans?'✅ Correct!':`❌ Wrong — Answer: ${q.opts[q.ans]}`}</div><div className="feedback-text">{q.exp}</div></div>}{selected!==null&&<div style={{textAlign:'right',marginTop:12}}><button className="btn-action" onClick={next}>{idx+1>=questions.length?'See Results →':'Next →'}</button></div>}</div></div></div>);
+// ── QUIZ GAME ──
+function QuizGame({onBack, allQuestions}) {
+  const topics = [...new Set(allQuestions.map(q=>q.topic))].sort();
+  const [phase, setPhase]               = useState('topic');
+  const [selectedTopics, setSelectedTopics] = useState(new Set(topics));
+  const [questions, setQuestions]       = useState([]);
+  const [idx, setIdx]                   = useState(0);
+  const [selected, setSelected]         = useState(null);
+  const [score, setScore]               = useState(0);
+
+  const toggleTopic = t => setSelectedTopics(prev => {
+    const n = new Set(prev); n.has(t) ? n.delete(t) : n.add(t); return n;
+  });
+
+  const startQuiz = () => {
+    const pool = allQuestions.filter(q => selectedTopics.has(q.topic));
+    const sh   = [...pool].sort(()=>Math.random()-.5).slice(0, Math.min(15,pool.length));
+    setQuestions(sh); setIdx(0); setScore(0); setSelected(null); setPhase('playing');
+  };
+
+  if (phase==='topic') {
+    const pool = allQuestions.filter(q => selectedTopics.has(q.topic));
+    return (
+      <div className="topic-selector">
+        <button className="btn-danger" style={{marginBottom:18}} onClick={onBack}>← Back</button>
+        <h2>🧠 ABAP Quiz</h2>
+        <p>Select the topics you have covered.</p>
+        <div className="topic-chips">
+          <div className="topic-chip active" style={{background:'var(--g)',color:'#fff',borderColor:'var(--g)'}} onClick={()=>setSelectedTopics(new Set(topics))}>All Topics</div>
+          <div className="topic-chip" style={{background:'rgba(200,50,50,.06)',color:'#c0392b',borderColor:'rgba(200,50,50,.2)'}} onClick={()=>setSelectedTopics(new Set())}>Clear All</div>
+          {topics.map(t => <div key={t} className={`topic-chip${selectedTopics.has(t)?' active':''}`} onClick={()=>toggleTopic(t)}>{t}</div>)}
+        </div>
+        <div className="topic-count">{pool.length} questions available</div>
+        <button className="btn-action" onClick={startQuiz} disabled={pool.length===0}>Start Quiz ({Math.min(15,pool.length)} Questions) →</button>
+      </div>
+    );
+  }
+
+  if (phase==='done') return <GameResult score={score} total={questions.length} gameName="ABAP Quiz" gameId="quiz" onBack={onBack} onReplay={()=>setPhase('topic')}/>;
+
+  const q = questions[idx];
+  const choose = i => { if (selected!==null) return; setSelected(i); if (i===q.ans) setScore(s=>s+1); };
+  const next   = () => { if (idx+1>=questions.length) { setPhase('done'); return; } setIdx(i=>i+1); setSelected(null); };
+
+  return (
+    <div className="game-wrap">
+      <div className="game-header">
+        <div>
+          <div className="game-title">🧠 ABAP Quiz</div>
+          <div className="game-subtitle">Q {idx+1} of {questions.length} · {q.topic}</div>
+        </div>
+        <ScoreBadge score={score} total={idx+(selected!==null?1:0)}/>
+        <button className="btn-danger" onClick={()=>setPhase('topic')}>← Topics</button>
+      </div>
+      <ProgressBar current={idx+1} total={questions.length}/>
+      <div className="panel-card">
+        <div className="panel-card-head">
+          <span className="panel-tag tag-green">Question</span>
+          <span className="panel-card-title" style={{flex:1}}>{q.q}</span>
+        </div>
+        <div className="panel-card-body">
+          <div className="option-grid">
+            {q.opts.map((opt,i) => {
+              let cls = 'option-btn';
+              if (selected!==null) { if (i===q.ans) cls+=' correct'; else if (i===selected&&i!==q.ans) cls+=' wrong'; }
+              return (
+                <button key={i} className={cls} onClick={()=>choose(i)} disabled={selected!==null}>
+                  <span className="option-letter">{'ABCD'[i]}.</span>{opt}
+                </button>
+              );
+            })}
+          </div>
+          {selected!==null && (
+            <div className={`feedback-box${selected===q.ans?' correct':' wrong'}`}>
+              <div className="feedback-title">{selected===q.ans?'✅ Correct!':`❌ Wrong — Answer: ${q.opts[q.ans]}`}</div>
+              <div className="feedback-text">{q.exp}</div>
+            </div>
+          )}
+          {selected!==null && (
+            <div style={{textAlign:'right',marginTop:12}}>
+              <button className="btn-action" onClick={next}>{idx+1>=questions.length?'See Results →':'Next →'}</button>
+            </div>
+          )}
+        </div>
+      </div>
+    </div>
+  );
 }
 
+// ── HUB ──
 function Hub({onSelect, gameData, scores}) {
-  const totalQ=gameData?.quiz?.length||0;
+  const totalQ = gameData?.quiz?.length || 0;
   return (
     <>
       <div className="hub-hero">
@@ -385,45 +470,66 @@ function Hub({onSelect, gameData, scores}) {
         <div className="hub-stat"><div className="hub-stat-val">3</div><div className="hub-stat-lbl">Games</div></div>
         <div className="hub-stat"><div className="hub-stat-val">{totalQ}</div><div className="hub-stat-lbl">Questions</div></div>
       </div>
+
       <div className="hub-grid">
-        {/* Runner card (full width) */}
-        <div className="game-card-runner" onClick={()=>window.open('subway-abaper.html','_blank')}>
-          <div className="runner-top">
-            <div className="runner-icon-wrap">🏃</div>
-            <div className="runner-content">
-              <div className="runner-title">SAPZCODES <span>Runner</span></div>
-              <div className="runner-desc">Run through an endless ABAP world. Jump over bugs and dumps — answer questions to score!</div>
-              <div className="runner-meta">
-                <span className="runner-badge">🏃 Endless Runner</span>
-                <span className="runner-badge">❤️ 3 Lives</span>
-                <button className="runner-play-btn" onClick={e=>{e.stopPropagation();window.open('subway-abaper.html','_blank');}}>▶ Play Now</button>
-                <button className="runner-play-btn" style={{background:'#1565c0'}} onClick={e=>{e.stopPropagation();window.open('abap-runner.html','_blank');}}>▶ ABAP Runner</button>
+
+        {/* ── Full-width dual runner card ── */}
+        <div className="runner-card">
+
+          {/* ABAP Runner half */}
+          <div className="runner-half">
+            <div className="runner-head">
+              <div className="runner-icon-wrap">🏃</div>
+              <div>
+                <div className="runner-title">ABAP <span>Runner</span></div>
+                <div className="runner-desc">Jump over obstacles — each one fires an ABAP fill-in-the-blank question. Certificate on completion.</div>
               </div>
             </div>
+            <div className="runner-meta">
+              <span className="runner-badge">❤️ 5 Lives</span>
+              <span className="runner-badge">🎓 Certificate</span>
+              <button className="runner-play-btn" onClick={e=>{e.stopPropagation();window.open('abap-runner.html','_blank');}}>▶ Play</button>
+            </div>
+            <RunnerLB scores={scores} gameId="abap-runner" title="ABAP Runner Top Scores"/>
           </div>
-          <div className="runner-lb-wrap">
-            <MiniLeaderboard scores={scores} gameId="abap-runner" dark={true}/>
-            <MiniLeaderboard scores={scores} gameId="subway" dark={true}/>
+
+          {/* Subway Runner half */}
+          <div className="runner-half">
+            <div className="runner-head">
+              <div className="runner-icon-wrap">🚇</div>
+              <div>
+                <div className="runner-title">Subway <span>Runner</span></div>
+                <div className="runner-desc">3D endless runner — dodge bugs and dumps, move to the lane with the correct answer to score.</div>
+              </div>
+            </div>
+            <div className="runner-meta">
+              <span className="runner-badge">❤️ 3 Lives</span>
+              <span className="runner-badge">🎮 3D World</span>
+              <button className="runner-play-btn" onClick={e=>{e.stopPropagation();window.open('subway-abaper.html','_blank');}}>▶ Play</button>
+            </div>
+            <RunnerLB scores={scores} gameId="subway" title="Subway Runner Top Scores"/>
           </div>
+
         </div>
 
-        {GAMES_META.map(g => (
-          <div key={g.id} className="game-card" style={{'--card-color':g.color}} onClick={()=>onSelect(g.id)}>
-            <span className="game-card-icon">{g.icon}</span>
-            <div className="game-card-title">{g.title}</div>
-            <div className="game-card-desc">{g.desc}</div>
-            <div className="game-card-footer">
-              <span className="game-card-tag">{g.tag}</span>
-              <span className="game-card-play">Play →</span>
-            </div>
-            <MiniLeaderboard scores={scores} gameId={g.id} dark={false}/>
+        {/* ── ABAP Quiz card ── */}
+        <div className="game-card" style={{'--card-color':'#22a032'}} onClick={()=>onSelect('quiz')}>
+          <span className="game-card-icon">🧠</span>
+          <div className="game-card-title">ABAP Quiz</div>
+          <div className="game-card-desc">Adaptive quiz with topic filter — choose what you have covered and practice on it.</div>
+          <div className="game-card-footer">
+            <span className="game-card-tag">Database-Driven</span>
+            <span className="game-card-play">Play →</span>
           </div>
-        ))}
+          <CardLB scores={scores} gameId="quiz"/>
+        </div>
+
       </div>
     </>
   );
 }
 
+// ── APP ──
 function App() {
   const [activeGame, setActiveGame] = useState(null);
   const { data, loading, error }    = useGameData();
@@ -439,15 +545,33 @@ function App() {
       <span className="topbar-page">Learning Games</span>
       <div className="topbar-right">
         <span className="topbar-user">👤 {STUDENT_NAME}</span>
-        <a className="topbar-btn" href="abap-runner.html" target="_blank">🏃 Runner</a>
         <button className="topbar-btn" onClick={()=>{sessionStorage.removeItem('szc_gamedata');window.location.reload();}}>↺ Refresh</button>
         <a className="topbar-btn danger" href="index.html" onClick={()=>sessionStorage.clear()}>Sign Out</a>
       </div>
     </div>
   );
 
-  if (loading) return <>{topbar}<div className="main-body"><div className="loading-screen"><div className="spinner"/><div className="loading-text">Loading game data…</div></div></div></>;
-  if (error)   return <>{topbar}<div className="main-body"><div className="loading-screen"><div style={{fontSize:'2rem'}}>⚠️</div><div style={{fontWeight:700,color:'#c0392b',fontFamily:'var(--fh)'}}>Could not load game data</div><div style={{fontSize:'.78rem',color:'var(--mu)',maxWidth:380,textAlign:'center'}}>{error}</div><button className="btn-secondary" onClick={()=>{sessionStorage.removeItem('szc_gamedata');window.location.reload();}}>↺ Retry</button></div></div></>;
+  if (loading) return (
+    <>{topbar}
+    <div className="main-body">
+      <div className="loading-screen">
+        <div className="spinner"/>
+        <div className="loading-text">Loading game data…</div>
+      </div>
+    </div></>
+  );
+
+  if (error) return (
+    <>{topbar}
+    <div className="main-body">
+      <div className="loading-screen">
+        <div style={{fontSize:'2rem'}}>⚠️</div>
+        <div style={{fontWeight:700,color:'#c0392b',fontFamily:'var(--fh)'}}>Could not load game data</div>
+        <div style={{fontSize:'.78rem',color:'var(--mu)',maxWidth:380,textAlign:'center'}}>{error}</div>
+        <button className="btn-secondary" onClick={()=>{sessionStorage.removeItem('szc_gamedata');window.location.reload();}}>↺ Retry</button>
+      </div>
+    </div></>
+  );
 
   return (
     <>
