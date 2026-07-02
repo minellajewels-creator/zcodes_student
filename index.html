@@ -10,165 +10,113 @@
 <link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@400;500;600;700&family=Exo+2:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet"/>
 <link rel="stylesheet" href="style.css"/>
 <style>
-body { cursor:default; overflow-x:hidden; }
-#cur,#ring { display:none; }
+body { cursor: default; overflow-x: hidden; }
+#cur, #ring { display: none; }
 
 .auth-wrap {
   min-height: 100vh;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  padding: 24px 16px;
-  position: relative;
+  display: flex; align-items: center; justify-content: center;
+  padding: 24px 16px; position: relative; background: var(--bg);
 }
 .auth-bg {
   position: fixed; inset: 0;
   background-image:
     linear-gradient(rgba(34,160,50,.055) 1px, transparent 1px),
     linear-gradient(90deg, rgba(34,160,50,.055) 1px, transparent 1px);
-  background-size: 44px 44px;
-  pointer-events: none;
+  background-size: 44px 44px; pointer-events: none;
 }
 .auth-card {
-  background: var(--s1);
-  border: 1px solid var(--bd);
-  border-radius: var(--r);
-  box-shadow: 0 8px 40px rgba(0,0,0,.09);
-  width: 100%;
-  max-width: 480px;
-  overflow: hidden;
-  position: relative;
-  z-index: 1;
+  background: var(--s1); border: 1px solid var(--bd);
+  border-radius: var(--r); box-shadow: 0 8px 40px rgba(0,0,0,.09);
+  width: 100%; max-width: 460px; overflow: hidden;
+  position: relative; z-index: 1;
   animation: authIn .45s cubic-bezier(.16,1,.3,1) both;
 }
 @keyframes authIn { from{opacity:0;transform:translateY(20px) scale(.97)} to{opacity:1;transform:none} }
 
 .auth-head {
-  background: var(--text);
-  padding: 28px 32px 24px;
-  position: relative;
-  overflow: hidden;
+  background: var(--text); padding: 24px 28px 20px;
+  position: relative; overflow: hidden;
 }
 .auth-head::before {
-  content: '';
-  position: absolute; inset: 0;
+  content: ''; position: absolute; inset: 0;
   background: radial-gradient(ellipse at 80% 50%, rgba(34,160,50,.12), transparent 60%);
   pointer-events: none;
 }
-.auth-logo {
-  display: flex; align-items: center; gap: 10px;
-  margin-bottom: 18px; text-decoration: none;
-}
-.auth-logo img { height: 30px; }
-.auth-logo-text {
-  font-family: var(--fh); font-size: 1.1rem; font-weight: 700;
-  color: #fff; letter-spacing: .04em;
-}
+.auth-logo { display: flex; align-items: center; gap: 10px; margin-bottom: 14px; text-decoration: none; }
+.auth-logo img { height: 28px; }
+.auth-logo-text { font-family: var(--fh); font-size: 1.05rem; font-weight: 700; color: #fff; letter-spacing: .04em; }
 .auth-logo-text span { color: var(--g); }
-.auth-head-title {
-  font-family: var(--fh); font-size: 1.5rem; font-weight: 700;
-  color: #fff; letter-spacing: .03em; margin-bottom: 5px;
-  position: relative; z-index: 1;
-}
-.auth-head-sub {
-  font-size: .78rem; color: rgba(255,255,255,.4);
-  font-family: var(--fm); position: relative; z-index: 1;
-}
+.auth-head-title { font-family: var(--fh); font-size: 1.35rem; font-weight: 700; color: #fff; letter-spacing: .03em; margin-bottom: 4px; position: relative; z-index: 1; }
+.auth-head-sub { font-size: .75rem; color: rgba(255,255,255,.4); font-family: var(--fm); position: relative; z-index: 1; }
 
-.auth-tabs {
-  display: flex;
-  border-bottom: 1px solid var(--bd);
-  background: var(--bg);
-}
-.auth-tab {
-  flex: 1; padding: 13px 8px;
-  font-family: var(--fm); font-size: .6rem; font-weight: 700;
-  letter-spacing: .08em; text-transform: uppercase;
-  color: var(--mu); background: none; border: none;
-  cursor: pointer; transition: all .2s;
-  border-bottom: 2px solid transparent;
-  position: relative; bottom: -1px;
-}
-.auth-tab:hover { color: var(--g); }
-.auth-tab.active {
-  color: var(--g); border-bottom-color: var(--g);
-  background: var(--s1);
-}
+.auth-body { padding: 24px 28px 28px; }
 
-.auth-body { padding: 28px 32px 32px; }
+.panel { display: none; }
+.panel.active { display: block; }
 
-.form-group { margin-bottom: 18px; }
-.form-label {
-  display: block; font-family: var(--fm); font-size: .6rem;
-  font-weight: 700; letter-spacing: .12em; text-transform: uppercase;
-  color: var(--mu); margin-bottom: 7px;
-}
+.panel-title { font-family: var(--fh); font-size: 1rem; font-weight: 700; color: var(--text); margin-bottom: 4px; letter-spacing: .03em; }
+.panel-sub { font-size: .76rem; color: var(--mu); margin-bottom: 18px; line-height: 1.55; }
+
+.form-group { margin-bottom: 15px; }
+.form-label { display: block; font-family: var(--fm); font-size: .58rem; font-weight: 700; letter-spacing: .12em; text-transform: uppercase; color: var(--mu); margin-bottom: 6px; }
 .form-input {
-  width: 100%; padding: 10px 14px;
+  width: 100%; padding: 10px 13px;
   background: var(--bg); border: 1.5px solid var(--bd2);
   border-radius: 7px; color: var(--text);
-  font-family: var(--fb); font-size: .88rem;
+  font-family: var(--fb); font-size: .87rem;
   outline: none; transition: border-color .18s, box-shadow .18s;
 }
-.form-input:focus {
-  border-color: var(--g);
-  box-shadow: 0 0 0 3px rgba(34,160,50,.1);
-}
-.form-input::placeholder { color: var(--mu); opacity: .7; }
+.form-input:focus { border-color: var(--g); box-shadow: 0 0 0 3px rgba(34,160,50,.1); }
+.form-input::placeholder { color: var(--mu); opacity: .65; }
 .form-input.error { border-color: #c0392b; }
 select.form-input { cursor: pointer; }
 
-.alert {
-  padding: 11px 14px; border-radius: 7px;
-  font-size: .8rem; line-height: 1.55; margin-bottom: 16px;
-  display: none;
-}
+.hint { font-family: var(--fm); font-size: .6rem; color: var(--mu); margin-top: 5px; letter-spacing: .03em; line-height: 1.5; }
+.hint b { color: var(--g); font-weight: 700; }
+
+.alert { padding: 10px 13px; border-radius: 7px; font-size: .79rem; line-height: 1.55; margin-bottom: 14px; display: none; }
 .alert.show { display: block; }
-.alert-error {
-  background: rgba(192,57,43,.07); border: 1px solid rgba(192,57,43,.22);
-  color: #c0392b;
-}
-.alert-success {
-  background: rgba(34,160,50,.07); border: 1px solid rgba(34,160,50,.22);
-  color: #16a34a;
-}
-.alert-title { font-weight: 700; margin-bottom: 3px; font-size: .82rem; }
-.alert-body  { font-size: .76rem; color: var(--gr); }
+.alert-error { background: rgba(192,57,43,.07); border: 1px solid rgba(192,57,43,.22); color: #c0392b; }
+.alert-success { background: rgba(34,160,50,.07); border: 1px solid rgba(34,160,50,.22); color: #16a34a; }
+.alert-title { font-weight: 700; margin-bottom: 2px; font-size: .8rem; }
+.alert-body { font-size: .74rem; color: var(--gr); }
 
 .btn-submit {
-  width: 100%; padding: 12px 24px;
+  width: 100%; padding: 11px 24px;
   background: var(--g); border: none; border-radius: 8px;
-  color: #fff; font-family: var(--fh); font-size: 1rem;
+  color: #fff; font-family: var(--fh); font-size: .97rem;
   font-weight: 700; letter-spacing: .04em;
   cursor: pointer; transition: all .2s;
   display: flex; align-items: center; justify-content: center; gap: 8px;
-  box-shadow: 0 4px 14px rgba(34,160,50,.25);
+  box-shadow: 0 4px 14px rgba(34,160,50,.22); margin-bottom: 14px;
 }
 .btn-submit:hover:not(:disabled) { background: #1a8028; transform: translateY(-1px); }
-.btn-submit:disabled { opacity: .55; cursor: not-allowed; transform: none; }
-.btn-submit .spinner-sm {
-  width: 16px; height: 16px;
-  border: 2px solid rgba(255,255,255,.3);
-  border-top-color: #fff; border-radius: 50%;
-  animation: spin .6s linear infinite; display: none;
-}
+.btn-submit:disabled { opacity: .5; cursor: not-allowed; transform: none; }
+.btn-submit .spinner-sm { width: 15px; height: 15px; border: 2px solid rgba(255,255,255,.3); border-top-color: #fff; border-radius: 50%; animation: spin .6s linear infinite; display: none; }
 .btn-submit.loading .spinner-sm { display: block; }
 .btn-submit.loading .btn-text { opacity: .7; }
 @keyframes spin { to { transform: rotate(360deg); } }
 
-.token-hint {
-  font-family: var(--fm); font-size: .62rem;
-  color: var(--mu); margin-top: 5px; letter-spacing: .04em;
-}
-.token-hint span { color: var(--g); font-weight: 700; }
+.links-row { display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 6px; margin-top: 2px; }
+.link-btn { background: none; border: none; font-family: var(--fm); font-size: .64rem; color: var(--g); cursor: pointer; padding: 0; letter-spacing: .04em; text-decoration: underline; text-underline-offset: 2px; }
+.link-btn:hover { color: #1a8028; }
+.link-sep { font-size: .6rem; color: var(--bd); }
 
-.auth-footer {
-  text-align: center; padding: 14px 32px 20px;
-  font-size: .72rem; color: var(--mu);
-  border-top: 1px solid var(--bd);
-  font-family: var(--fm); letter-spacing: .03em;
-}
+.divider { display: flex; align-items: center; gap: 10px; margin: 16px 0; }
+.divider::before, .divider::after { content: ''; flex: 1; height: 1px; background: var(--bd); }
+.divider span { font-family: var(--fm); font-size: .58rem; color: var(--mu); letter-spacing: .08em; text-transform: uppercase; }
+
+.auth-footer { text-align: center; padding: 12px 28px 16px; font-size: .7rem; color: var(--mu); border-top: 1px solid var(--bd); font-family: var(--fm); }
 .auth-footer a { color: var(--g); text-decoration: none; }
+
+/* Force-set-password notice */
+.force-notice {
+  background: rgba(37,99,235,.06); border: 1px solid rgba(37,99,235,.18);
+  border-radius: 8px; padding: 10px 13px; margin-bottom: 16px;
+  font-size: .76rem; color: #2563eb; line-height: 1.55;
+}
+.force-notice b { font-weight: 700; }
 </style>
 </head>
 <body>
@@ -176,125 +124,158 @@ select.form-input { cursor: pointer; }
 
 <div class="auth-wrap">
   <div class="auth-bg"></div>
-
   <div class="auth-card">
+
     <div class="auth-head">
       <a class="auth-logo" href="#">
         <img src="logowhite.png" alt="SAPZCodes" onerror="this.style.display='none'"/>
+        <span class="auth-logo-text">SAPZ<span>CODES</span></span>
       </a>
-      <div class="auth-head-title">Learning Platform</div>
-      <div class="auth-head-sub">ABAP · RAP · CDS · Fiori · HANA</div>
+      <div class="auth-head-title" id="head-title">Learning Platform</div>
+      <div class="auth-head-sub" id="head-sub">ABAP · RAP · CDS · Fiori · HANA</div>
     </div>
 
-    <!-- Tabs -->
-    <div class="auth-tabs">
-      <button class="auth-tab active" id="tab-login" onclick="switchTab('login')">▶ Enter Platform</button>
-      <button class="auth-tab" id="tab-setpw" onclick="switchTab('setpw')">🔑 Set Password</button>
-      <button class="auth-tab" id="tab-request" onclick="switchTab('request')">✉ Request Access</button>
-    </div>
+    <div class="auth-body">
 
-    <!-- LOGIN PANEL -->
-    <div id="panel-login">
-      <div class="auth-body">
+      <!-- ══ LOGIN PANEL ══ -->
+      <div class="panel active" id="panel-login">
         <div class="alert alert-error" id="login-err">
           <div class="alert-title" id="login-err-title">Login Failed</div>
           <div class="alert-body" id="login-err-body"></div>
         </div>
-        <div class="alert alert-success" id="login-ok" style="display:none">
+        <div class="alert alert-success" id="login-ok">
           <div class="alert-title">✅ Access Granted!</div>
           <div class="alert-body" id="login-ok-body">Redirecting…</div>
         </div>
-
         <div class="form-group">
-          <label class="form-label" for="login-email">Email Address</label>
-          <input class="form-input" type="email" id="login-email"
-            placeholder="your@email.com" autocomplete="email"/>
+          <label class="form-label">Email Address</label>
+          <input class="form-input" type="email" id="login-email" placeholder="your@email.com" autocomplete="email"/>
         </div>
-
         <div class="form-group">
-          <label class="form-label" for="login-cred">Access Token or Password</label>
-          <input class="form-input" type="text" id="login-cred"
-            placeholder="SZC-XXXX-XXXX-XXXX  or  your password" autocomplete="off"/>
-          <div class="token-hint">First time? Use the <span>token</span> from your approval email, then set a password in the tab above.</div>
+          <label class="form-label">Access Token or Password</label>
+          <input class="form-input" type="text" id="login-cred" placeholder="SZC-XXXX-XXXX-XXXX  or  your password" autocomplete="off"/>
+          <div class="hint">First time? Enter the <b>token</b> from your approval email.</div>
         </div>
-
         <button class="btn-submit" id="btn-login" onclick="doLogin()">
-          <span class="spinner-sm"></span>
-          <span class="btn-text">Enter Platform →</span>
+          <span class="spinner-sm"></span><span class="btn-text">Enter Platform →</span>
         </button>
+        <div class="links-row">
+          <button class="link-btn" onclick="showPanel('forgot')">Forgot password?</button>
+          <span class="link-sep">·</span>
+          <button class="link-btn" onclick="showPanel('setpw')">Set / Change password</button>
+          <span class="link-sep">·</span>
+          <button class="link-btn" onclick="showPanel('request')">Request access</button>
+        </div>
       </div>
-      <div class="auth-footer">
-        Don't have access? <a href="#" onclick="switchTab('request');return false;">Request it here</a> &nbsp;·&nbsp;
-        <a href="mailto:hr@sapzcodes.com">hr@sapzcodes.com</a>
-      </div>
-    </div>
 
-    <!-- SET PASSWORD PANEL -->
-    <div id="panel-setpw" style="display:none">
-      <div class="auth-body">
+      <!-- ══ FORCE SET PASSWORD (after first token login) ══ -->
+      <div class="panel" id="panel-force-setpw">
+        <div class="force-notice">
+          <b>🔑 One more step!</b> You logged in with your access token. Please set a personal password — you'll use it for all future logins.
+        </div>
+        <div class="alert alert-error" id="force-err">
+          <div class="alert-body" id="force-err-body"></div>
+        </div>
+        <div class="form-group">
+          <label class="form-label">New Password</label>
+          <input class="form-input" type="password" id="force-pass1" placeholder="At least 6 characters"/>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Confirm Password</label>
+          <input class="form-input" type="password" id="force-pass2" placeholder="Re-enter password"/>
+        </div>
+        <button class="btn-submit" id="btn-force-setpw" onclick="doForceSetPassword()">
+          <span class="spinner-sm"></span><span class="btn-text">Set Password & Continue →</span>
+        </button>
+        <div class="links-row" style="justify-content:center">
+          <button class="link-btn" onclick="proceedToDashboard()">Skip for now →</button>
+        </div>
+      </div>
+
+      <!-- ══ SET / CHANGE PASSWORD ══ -->
+      <div class="panel" id="panel-setpw">
+        <div class="panel-title">🔑 Set / Change Password</div>
+        <div class="panel-sub">Use your access token to set a personal password for future logins.</div>
         <div class="alert alert-error" id="setpw-err">
-          <div class="alert-title">Error</div>
           <div class="alert-body" id="setpw-err-body"></div>
         </div>
-        <div class="alert alert-success" id="setpw-ok" style="display:none">
+        <div class="alert alert-success" id="setpw-ok">
           <div class="alert-title">✅ Password Set!</div>
-          <div class="alert-body">You can now log in with your email + this password any time — the token still works too.</div>
+          <div class="alert-body">You can now log in with your email + password anytime.</div>
         </div>
-
         <div class="form-group">
-          <label class="form-label" for="setpw-email">Email Address</label>
+          <label class="form-label">Email Address</label>
           <input class="form-input" type="email" id="setpw-email" placeholder="your@email.com"/>
         </div>
         <div class="form-group">
-          <label class="form-label" for="setpw-token">Access Token</label>
+          <label class="form-label">Access Token</label>
           <input class="form-input" type="text" id="setpw-token" placeholder="SZC-XXXX-XXXX-XXXX"/>
-          <div class="token-hint">From your approval email — needed once to prove it's you.</div>
+          <div class="hint">From your approval email — needed once to verify identity.</div>
         </div>
         <div class="form-group">
-          <label class="form-label" for="setpw-pass1">New Password</label>
+          <label class="form-label">New Password</label>
           <input class="form-input" type="password" id="setpw-pass1" placeholder="At least 6 characters"/>
         </div>
         <div class="form-group">
-          <label class="form-label" for="setpw-pass2">Confirm New Password</label>
+          <label class="form-label">Confirm Password</label>
           <input class="form-input" type="password" id="setpw-pass2" placeholder="Re-enter password"/>
         </div>
-
         <button class="btn-submit" id="btn-setpw" onclick="doSetPassword()">
-          <span class="spinner-sm"></span>
-          <span class="btn-text">Set Password →</span>
+          <span class="spinner-sm"></span><span class="btn-text">Set Password →</span>
         </button>
+        <div class="links-row" style="justify-content:center">
+          <button class="link-btn" onclick="showPanel('login')">← Back to Login</button>
+        </div>
       </div>
-      <div class="auth-footer">
-        Ready to login? <a href="#" onclick="switchTab('login');return false;">Enter Platform →</a>
-      </div>
-    </div>
 
-    <!-- REQUEST PANEL -->
-    <div id="panel-request" style="display:none">
-      <div class="auth-body">
+      <!-- ══ FORGOT PASSWORD ══ -->
+      <div class="panel" id="panel-forgot">
+        <div class="panel-title">🔓 Forgot Password</div>
+        <div class="panel-sub">Enter your email and we'll send a password reset link to it.</div>
+        <div class="alert alert-error" id="forgot-err">
+          <div class="alert-body" id="forgot-err-body"></div>
+        </div>
+        <div class="alert alert-success" id="forgot-ok">
+          <div class="alert-title">✅ Reset Email Sent!</div>
+          <div class="alert-body">Check your inbox for the reset link. It contains a temporary token — use it to set a new password.</div>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Email Address</label>
+          <input class="form-input" type="email" id="forgot-email" placeholder="your@email.com"/>
+        </div>
+        <button class="btn-submit" id="btn-forgot" onclick="doForgotPassword()">
+          <span class="spinner-sm"></span><span class="btn-text">Send Reset Link →</span>
+        </button>
+        <div class="links-row" style="justify-content:center">
+          <button class="link-btn" onclick="showPanel('login')">← Back to Login</button>
+        </div>
+      </div>
+
+      <!-- ══ REQUEST ACCESS ══ -->
+      <div class="panel" id="panel-request">
+        <div class="panel-title">✉ Request Access</div>
+        <div class="panel-sub">Fill in your details and we'll review your request.</div>
         <div class="alert alert-error" id="req-err">
-          <div class="alert-title">Error</div>
           <div class="alert-body" id="req-err-body"></div>
         </div>
         <div class="alert alert-success" id="req-ok">
           <div class="alert-title">✅ Request Submitted!</div>
           <div class="alert-body">Your request is under review. You'll receive an email with your access token once approved.</div>
         </div>
-
         <div class="form-group">
-          <label class="form-label" for="req-name">Full Name</label>
+          <label class="form-label">Full Name</label>
           <input class="form-input" type="text" id="req-name" placeholder="Your full name"/>
         </div>
         <div class="form-group">
-          <label class="form-label" for="req-email">Email Address</label>
+          <label class="form-label">Email Address</label>
           <input class="form-input" type="email" id="req-email" placeholder="your@email.com"/>
         </div>
         <div class="form-group">
-          <label class="form-label" for="req-batch">Batch / Cohort</label>
-          <input class="form-input" type="text" id="req-batch" placeholder="e.g. Batch 12 / Nov 2024"/>
+          <label class="form-label">Batch / Cohort</label>
+          <input class="form-input" type="text" id="req-batch" placeholder="e.g. Batch 4 / Jul 2026"/>
         </div>
         <div class="form-group">
-          <label class="form-label" for="req-level">Experience Level</label>
+          <label class="form-label">Experience Level</label>
           <select class="form-input" id="req-level">
             <option value="">— Select your level —</option>
             <option value="Beginner">Beginner (0–1 yr)</option>
@@ -303,19 +284,21 @@ select.form-input { cursor: pointer; }
           </select>
         </div>
         <div class="form-group">
-          <label class="form-label" for="req-reason">Why do you want access?</label>
-          <textarea class="form-input" id="req-reason" rows="3"
-            placeholder="Brief reason…" style="resize:vertical"></textarea>
+          <label class="form-label">Why do you want access?</label>
+          <textarea class="form-input" id="req-reason" rows="3" placeholder="Brief reason…" style="resize:vertical"></textarea>
         </div>
-
         <button class="btn-submit" id="btn-req" onclick="doRequest()">
-          <span class="spinner-sm"></span>
-          <span class="btn-text">Submit Request →</span>
+          <span class="spinner-sm"></span><span class="btn-text">Submit Request →</span>
         </button>
+        <div class="links-row" style="justify-content:center">
+          <button class="link-btn" onclick="showPanel('login')">← Back to Login</button>
+        </div>
       </div>
-      <div class="auth-footer">
-        Already have a token? <a href="#" onclick="switchTab('login');return false;">Enter Platform →</a>
-      </div>
+
+    </div><!-- /auth-body -->
+
+    <div class="auth-footer">
+      Need help? <a href="mailto:hr@sapzcodes.com">hr@sapzcodes.com</a>
     </div>
   </div><!-- /auth-card -->
 </div>
@@ -323,209 +306,205 @@ select.form-input { cursor: pointer; }
 <script>
 document.addEventListener('contextmenu', e => e.preventDefault());
 document.addEventListener('keydown', e => {
-  if (e.key === 'F12' ||
-     (e.ctrlKey && e.shiftKey && ['I','J','C','K'].includes(e.key)) ||
-     (e.ctrlKey && e.key === 'U') ||
-     (e.ctrlKey && e.key === 's') ||
-     (e.ctrlKey && e.key === 'S')) { e.preventDefault(); }
+  if (e.key==='F12'||(e.ctrlKey&&e.shiftKey&&['I','J','C','K'].includes(e.key))||(e.ctrlKey&&e.key==='U')||(e.ctrlKey&&['s','S'].includes(e.key))) e.preventDefault();
 });
 document.addEventListener('copy',  e => { if (!e.target.matches('input,textarea')) e.preventDefault(); });
 document.addEventListener('cut',   e => { if (!e.target.matches('input,textarea')) e.preventDefault(); });
-
-(function devtoolsBlock() {
-  const threshold = 160;
-  setInterval(() => {
-    if (window.outerWidth - window.innerWidth > threshold ||
-        window.outerHeight - window.innerHeight > threshold) {
-      document.body.innerHTML = '<div style="display:flex;align-items:center;justify-content:center;height:100vh;font-family:monospace;color:#c0392b;font-size:1.2rem;">⛔ DevTools detected. Please close DevTools to continue.</div>';
+(function(){
+  setInterval(()=>{
+    if(window.outerWidth-window.innerWidth>160||window.outerHeight-window.innerHeight>160){
+      document.body.innerHTML='<div style="display:flex;align-items:center;justify-content:center;height:100vh;font-family:monospace;color:#c0392b;font-size:1.1rem;">⛔ DevTools detected.</div>';
     }
-  }, 1000);
+  },1000);
 })();
 
 const GAS_URL    = 'https://script.google.com/macros/s/AKfycbx4H_6v2nNH_Xa0FajhKQKCZgHgwuupi2CD6NdC4YuatcE0f451IFgXbNES-7sYRF4Hog/exec';
 const API_SECRET = 'SZC-INTERNAL-2025-XK9';
 
-if (sessionStorage.getItem('szc_token') || localStorage.getItem('szc_token')) {
-  window.location.href = 'dashboard.html';
+// State for post-login force-setpw
+let _pendingName='', _pendingEmail='', _pendingToken='', _pendingBatch='';
+
+if (sessionStorage.getItem('szc_token')||localStorage.getItem('szc_token')) {
+  window.location.href='dashboard.html';
 }
 
-function switchTab(tab) {
-  document.getElementById('panel-login').style.display   = tab === 'login'   ? '' : 'none';
-  document.getElementById('panel-setpw').style.display    = tab === 'setpw'   ? '' : 'none';
-  document.getElementById('panel-request').style.display = tab === 'request' ? '' : 'none';
-  document.getElementById('tab-login').classList.toggle('active',   tab === 'login');
-  document.getElementById('tab-setpw').classList.toggle('active',   tab === 'setpw');
-  document.getElementById('tab-request').classList.toggle('active', tab === 'request');
+// ── Panel switcher ──────────────────────────────────────────────
+const HEAD_TITLES = {
+  login:       ['Learning Platform',          'ABAP · RAP · CDS · Fiori · HANA'],
+  'force-setpw':['Set Your Password',         'One last step before you continue'],
+  setpw:       ['Set / Change Password',      'Use your token to set a password'],
+  forgot:      ['Forgot Password',            'We\'ll email you a reset link'],
+  request:     ['Request Access',             'Get approved for the platform'],
+};
+function showPanel(name) {
+  document.querySelectorAll('.panel').forEach(p=>p.classList.remove('active'));
+  document.getElementById('panel-'+name).classList.add('active');
+  const [t,s] = HEAD_TITLES[name]||['Learning Platform','ABAP · RAP · CDS · Fiori · HANA'];
+  document.getElementById('head-title').textContent = t;
+  document.getElementById('head-sub').textContent   = s;
   hideAlerts();
 }
 
 function hideAlerts() {
-  ['login-err','login-ok','setpw-err','setpw-ok','req-err','req-ok'].forEach(id => {
-    const el = document.getElementById(id);
-    if (el) el.classList.remove('show'), el.style.display = '';
-  });
+  document.querySelectorAll('.alert').forEach(el=>{ el.classList.remove('show'); el.style.display=''; });
 }
+
+function showAlert(id, show=true) {
+  const el=document.getElementById(id);
+  if(!el)return;
+  if(show){ el.classList.add('show'); el.style.display='block'; }
+  else { el.classList.remove('show'); el.style.display=''; }
+}
+
+function setBody(id, text) { const el=document.getElementById(id); if(el) el.textContent=text; }
 
 function setLoading(btnId, on) {
-  const btn = document.getElementById(btnId);
-  if (!btn) return;
-  btn.disabled = on;
-  btn.classList.toggle('loading', on);
+  const btn=document.getElementById(btnId);
+  if(!btn)return; btn.disabled=on; btn.classList.toggle('loading',on);
 }
 
-function showError(titleId, bodyId, title, body) {
-  const te = document.getElementById(titleId);
-  const be = document.getElementById(bodyId);
-  const container = te ? te.closest('.alert') : null;
-  if (te) te.textContent = title;
-  if (be) be.textContent = body;
-  if (container) { container.classList.add('show'); container.style.display = 'block'; }
-}
-
-// ── Login (token OR password) ──────────────────────────────────
+// ── LOGIN ───────────────────────────────────────────────────────
 async function doLogin() {
   const email = document.getElementById('login-email').value.trim().toLowerCase();
   const cred  = document.getElementById('login-cred').value.trim();
-
   hideAlerts();
   if (!email) { document.getElementById('login-email').classList.add('error'); document.getElementById('login-email').focus(); return; }
   if (!cred)  { document.getElementById('login-cred').classList.add('error'); document.getElementById('login-cred').focus(); return; }
-
   document.getElementById('login-email').classList.remove('error');
   document.getElementById('login-cred').classList.remove('error');
   setLoading('btn-login', true);
-
   try {
-    const res = await fetch(GAS_URL, {
-      method: 'POST',
-      headers: { 'Content-Type': 'text/plain' },
-      body: JSON.stringify({ action: 'verify', email, credential: cred, apiKey: API_SECRET }),
-      redirect: 'follow',
-    });
+    const res  = await fetch(GAS_URL, { method:'POST', headers:{'Content-Type':'text/plain'}, body:JSON.stringify({action:'verify',email,credential:cred,apiKey:API_SECRET}), redirect:'follow' });
     const data = await res.json();
-
-    if (data.status === 'ok') {
+    if (data.status==='ok') {
+      // Store all session data
       sessionStorage.setItem('szc_token', data.token);
       sessionStorage.setItem('szc_email', email);
-      sessionStorage.setItem('szc_name',  data.name  || 'Student');
-      sessionStorage.setItem('szc_batch', data.batch || '');
+      sessionStorage.setItem('szc_name',  data.name||'Student');
+      sessionStorage.setItem('szc_batch', data.batch||'');
       localStorage.setItem('szc_token', data.token);
       localStorage.setItem('szc_email', email);
-      localStorage.setItem('szc_name', data.name || 'Student');
+      localStorage.setItem('szc_name',  data.name||'Student');
 
-      const okEl = document.getElementById('login-ok');
-      document.getElementById('login-ok-body').textContent =
-        'Welcome back, ' + (data.name || 'Student') + '! Redirecting…';
-      okEl.style.display = 'block'; okEl.classList.add('show');
-      setTimeout(() => { window.location.href = 'dashboard.html'; }, 900);
+      // Check if they logged in with a raw token (no password set yet)
+      const credUpper = cred.toUpperCase();
+      const isToken   = credUpper === data.token;
+      if (isToken && !data.hasPassword) {
+        // Force set password
+        _pendingName  = data.name||'Student';
+        _pendingEmail = email;
+        _pendingToken = data.token;
+        _pendingBatch = data.batch||'';
+        showPanel('force-setpw');
+      } else {
+        proceedToDashboard(data.name);
+      }
     } else {
-      showError('login-err-title', 'login-err-body', '❌ Login Failed', data.message || 'Invalid email or credential.');
+      setBody('login-err-title','❌ Login Failed');
+      setBody('login-err-body', data.message||'Invalid email or credential.');
+      showAlert('login-err');
     }
-  } catch (err) {
-    showError('login-err-title', 'login-err-body', '⚠️ Connection Error', 'Could not reach the server. Check your internet connection and try again.');
-  } finally {
-    setLoading('btn-login', false);
-  }
+  } catch(err) {
+    setBody('login-err-title','⚠️ Connection Error');
+    setBody('login-err-body','Could not reach the server. Check your internet and try again.');
+    showAlert('login-err');
+  } finally { setLoading('btn-login',false); }
 }
 
-// ── Set Password ────────────────────────────────────────────────
+function proceedToDashboard(name) {
+  const n = name||sessionStorage.getItem('szc_name')||'Student';
+  setBody('login-ok-body','Welcome, '+n+'! Redirecting…');
+  showAlert('login-ok');
+  setTimeout(()=>{ window.location.href='dashboard.html'; }, 900);
+}
+
+// ── FORCE SET PASSWORD (after first token login) ────────────────
+async function doForceSetPassword() {
+  const p1 = document.getElementById('force-pass1').value;
+  const p2 = document.getElementById('force-pass2').value;
+  hideAlerts();
+  if (!p1||!p2) { setBody('force-err-body','Please fill in both fields.'); showAlert('force-err'); return; }
+  if (p1!==p2)  { setBody('force-err-body','Passwords do not match.'); showAlert('force-err'); return; }
+  if (p1.length<6) { setBody('force-err-body','Password must be at least 6 characters.'); showAlert('force-err'); return; }
+  setLoading('btn-force-setpw',true);
+  try {
+    const res  = await fetch(GAS_URL, { method:'POST', headers:{'Content-Type':'text/plain'}, body:JSON.stringify({action:'setPassword',email:_pendingEmail,token:_pendingToken,newPassword:p1,apiKey:API_SECRET}), redirect:'follow' });
+    const data = await res.json();
+    if (data.status==='ok') { proceedToDashboard(_pendingName); }
+    else { setBody('force-err-body',data.message||'Could not set password.'); showAlert('force-err'); }
+  } catch { setBody('force-err-body','Connection error. Please try again.'); showAlert('force-err'); }
+  finally { setLoading('btn-force-setpw',false); }
+}
+
+// ── SET / CHANGE PASSWORD ───────────────────────────────────────
 async function doSetPassword() {
   hideAlerts();
   const email = document.getElementById('setpw-email').value.trim().toLowerCase();
   const token = document.getElementById('setpw-token').value.trim().toUpperCase();
   const p1    = document.getElementById('setpw-pass1').value;
   const p2    = document.getElementById('setpw-pass2').value;
-
-  if (!email || !token || !p1 || !p2) {
-    showError('setpw-err-title' in document ? 'setpw-err-title' : null, 'setpw-err-body', 'Error', 'Please fill in all fields.');
-    document.getElementById('setpw-err').classList.add('show'); document.getElementById('setpw-err').style.display='block';
-    return;
-  }
-  if (p1 !== p2) {
-    document.getElementById('setpw-err-body').textContent = 'Passwords do not match.';
-    document.getElementById('setpw-err').classList.add('show'); document.getElementById('setpw-err').style.display='block';
-    return;
-  }
-  if (p1.length < 6) {
-    document.getElementById('setpw-err-body').textContent = 'Password must be at least 6 characters.';
-    document.getElementById('setpw-err').classList.add('show'); document.getElementById('setpw-err').style.display='block';
-    return;
-  }
-
-  setLoading('btn-setpw', true);
+  if (!email||!token||!p1||!p2) { setBody('setpw-err-body','Please fill in all fields.'); showAlert('setpw-err'); return; }
+  if (p1!==p2) { setBody('setpw-err-body','Passwords do not match.'); showAlert('setpw-err'); return; }
+  if (p1.length<6) { setBody('setpw-err-body','Password must be at least 6 characters.'); showAlert('setpw-err'); return; }
+  setLoading('btn-setpw',true);
   try {
-    const res = await fetch(GAS_URL, {
-      method: 'POST',
-      headers: { 'Content-Type': 'text/plain' },
-      body: JSON.stringify({ action: 'setPassword', email, token, newPassword: p1, apiKey: API_SECRET }),
-      redirect: 'follow',
-    });
+    const res  = await fetch(GAS_URL, { method:'POST', headers:{'Content-Type':'text/plain'}, body:JSON.stringify({action:'setPassword',email,token,newPassword:p1,apiKey:API_SECRET}), redirect:'follow' });
     const data = await res.json();
-    if (data.status === 'ok') {
-      document.getElementById('setpw-ok').style.display = 'block';
-      document.getElementById('setpw-ok').classList.add('show');
-      document.getElementById('btn-setpw').style.display = 'none';
-    } else {
-      document.getElementById('setpw-err-body').textContent = data.message || 'Could not set password.';
-      document.getElementById('setpw-err').classList.add('show'); document.getElementById('setpw-err').style.display='block';
-    }
-  } catch (err) {
-    document.getElementById('setpw-err-body').textContent = 'Connection error. Please try again.';
-    document.getElementById('setpw-err').classList.add('show'); document.getElementById('setpw-err').style.display='block';
-  } finally {
-    setLoading('btn-setpw', false);
-  }
+    if (data.status==='ok') {
+      showAlert('setpw-ok');
+      document.getElementById('btn-setpw').style.display='none';
+    } else { setBody('setpw-err-body',data.message||'Could not set password.'); showAlert('setpw-err'); }
+  } catch { setBody('setpw-err-body','Connection error.'); showAlert('setpw-err'); }
+  finally { setLoading('btn-setpw',false); }
 }
 
-// ── Request access ────────────────────────────────────────────
+// ── FORGOT PASSWORD ─────────────────────────────────────────────
+async function doForgotPassword() {
+  hideAlerts();
+  const email = document.getElementById('forgot-email').value.trim().toLowerCase();
+  if (!email) { document.getElementById('forgot-email').classList.add('error'); document.getElementById('forgot-email').focus(); return; }
+  document.getElementById('forgot-email').classList.remove('error');
+  setLoading('btn-forgot',true);
+  try {
+    const res  = await fetch(GAS_URL, { method:'POST', headers:{'Content-Type':'text/plain'}, body:JSON.stringify({action:'forgotPassword',email,apiKey:API_SECRET}), redirect:'follow' });
+    const data = await res.json();
+    if (data.status==='ok') {
+      showAlert('forgot-ok');
+      document.getElementById('btn-forgot').style.display='none';
+    } else { setBody('forgot-err-body',data.message||'Could not send reset email.'); showAlert('forgot-err'); }
+  } catch { setBody('forgot-err-body','Connection error. Please try again.'); showAlert('forgot-err'); }
+  finally { setLoading('btn-forgot',false); }
+}
+
+// ── REQUEST ACCESS ──────────────────────────────────────────────
 async function doRequest() {
+  hideAlerts();
   const name   = document.getElementById('req-name').value.trim();
   const email  = document.getElementById('req-email').value.trim().toLowerCase();
   const batch  = document.getElementById('req-batch').value.trim();
   const level  = document.getElementById('req-level').value;
   const reason = document.getElementById('req-reason').value.trim();
-
-  hideAlerts();
-  if (!name || !email || !batch || !level || !reason) {
-    const reqErrEl = document.getElementById('req-err');
-    document.getElementById('req-err-body').textContent = 'Please fill in all fields.';
-    reqErrEl.style.display = 'block'; reqErrEl.classList.add('show');
-    return;
-  }
-
-  setLoading('btn-req', true);
+  if (!name||!email||!batch||!level||!reason) { setBody('req-err-body','Please fill in all fields.'); showAlert('req-err'); return; }
+  setLoading('btn-req',true);
   try {
-    const res = await fetch(GAS_URL, {
-      method: 'POST',
-      headers: { 'Content-Type': 'text/plain' },
-      body: JSON.stringify({ action: 'request', name, email, batch, level, reason, apiKey: API_SECRET }),
-      redirect: 'follow',
-    });
+    const res  = await fetch(GAS_URL, { method:'POST', headers:{'Content-Type':'text/plain'}, body:JSON.stringify({action:'request',name,email,batch,level,reason,apiKey:API_SECRET}), redirect:'follow' });
     const data = await res.json();
-
-    if (data.status === 'ok') {
-      const okEl = document.getElementById('req-ok');
-      okEl.style.display = 'block'; okEl.classList.add('show');
-      document.getElementById('btn-req').style.display = 'none';
-    } else {
-      const reqErrEl = document.getElementById('req-err');
-      document.getElementById('req-err-body').textContent = data.message || 'Failed to submit request.';
-      reqErrEl.style.display = 'block'; reqErrEl.classList.add('show');
-    }
-  } catch (err) {
-    const reqErrEl = document.getElementById('req-err');
-    document.getElementById('req-err-body').textContent = 'Connection error. Please try again.';
-    reqErrEl.style.display = 'block'; reqErrEl.classList.add('show');
-  } finally {
-    setLoading('btn-req', false);
-  }
+    if (data.status==='ok') { showAlert('req-ok'); document.getElementById('btn-req').style.display='none'; }
+    else { setBody('req-err-body',data.message||'Failed to submit.'); showAlert('req-err'); }
+  } catch { setBody('req-err-body','Connection error.'); showAlert('req-err'); }
+  finally { setLoading('btn-req',false); }
 }
 
+// Enter key
 document.addEventListener('keydown', e => {
-  if (e.key === 'Enter') {
-    if (document.getElementById('panel-login').style.display !== 'none') doLogin();
-    else if (document.getElementById('panel-setpw').style.display !== 'none') doSetPassword();
-  }
+  if (e.key!=='Enter') return;
+  const active = document.querySelector('.panel.active');
+  if (!active) return;
+  const id = active.id;
+  if (id==='panel-login')       doLogin();
+  else if (id==='panel-force-setpw') doForceSetPassword();
+  else if (id==='panel-setpw')  doSetPassword();
+  else if (id==='panel-forgot') doForgotPassword();
 });
 </script>
 </body>
