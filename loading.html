@@ -250,8 +250,8 @@ body::before {
   <!-- Success state -->
   <div class="welcome-msg" id="welcome">✅ Access Granted — Welcome Back!</div>
   <div class="nav-buttons" id="nav-btns">
-    <a class="nav-btn primary" href="executor.html">🖥️ ABAP Executor</a>
-    <a class="nav-btn secondary" href="games.html">🎮 Learning Games</a>
+    <a class="nav-btn primary" href="executor">🖥️ ABAP Executor</a>
+    <a class="nav-btn secondary" href="games">🎮 Learning Games</a>
   </div>
 </div>
 
@@ -260,7 +260,7 @@ body::before {
 const email = sessionStorage.getItem('szc_email');
 const token = sessionStorage.getItem('szc_token');
 const name  = sessionStorage.getItem('szc_name') || 'Student';
-if (!email || !token) window.location.href = 'index.html';
+if (!email || !token) window.location.href = 'index';
 
 const steps = [
   { pct:8,   label:'Authenticating session...',           log:'[SYS]  Session token validated',                         cls:'log-ok'   },
