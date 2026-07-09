@@ -9,108 +9,521 @@
 <link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@500;600;700&family=Exo+2:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet"/>
 <link rel="stylesheet" href="style.css"/>
 <style>
-body { cursor: default; min-height: 100vh; }
+*, *::before, *::after { box-sizing: border-box; }
+body { cursor: default; min-height: 100vh; background: var(--bg); color: var(--text); }
 #cur, #ring { display: none; }
 
-/* ── Gate ── */
-#gate { min-height: 100vh; display: flex; align-items: center; justify-content: center; padding: 20px; background: var(--bg); }
-.gate-card { background: var(--s1); border: 1px solid var(--bd); border-radius: var(--r); padding: 34px 32px; width: 380px; max-width: 92vw; box-shadow: var(--shadow); }
-.gate-title { font-family: var(--fh); font-size: 1.3rem; font-weight: 700; margin-bottom: 6px; color: var(--text); }
-.gate-title span { color: var(--g); }
-.gate-sub { font-size: .78rem; color: var(--mu); margin-bottom: 20px; }
-.gate-input { width: 100%; padding: 11px 14px; background: var(--bg); border: 1.5px solid var(--bd2); border-radius: 8px; color: var(--text); font-family: var(--fm); font-size: .9rem; outline: none; margin-bottom: 12px; }
+/* ══════════════════════════════════════
+   GATE
+══════════════════════════════════════ */
+#gate {
+  min-height: 100vh; display: flex; align-items: center;
+  justify-content: center; padding: 20px; background: var(--bg);
+}
+.gate-card {
+  background: var(--s1); border: 1px solid var(--bd); border-radius: 16px;
+  padding: 40px 36px; width: 400px; max-width: 92vw; box-shadow: var(--shadow);
+}
+.gate-logo { font-family: var(--fh); font-size: 1.5rem; font-weight: 700; margin-bottom: 4px; }
+.gate-logo span { color: var(--g); }
+.gate-sub { font-size: .78rem; color: var(--mu); margin-bottom: 28px; }
+.gate-label { font-family: var(--fm); font-size: .6rem; text-transform: uppercase; letter-spacing: .12em; color: var(--mu); margin-bottom: 6px; }
+.gate-input {
+  width: 100%; padding: 11px 14px; background: var(--bg); border: 1.5px solid var(--bd2);
+  border-radius: 8px; color: var(--text); font-family: var(--fm); font-size: .9rem;
+  outline: none; margin-bottom: 14px; transition: border-color .18s;
+}
 .gate-input:focus { border-color: var(--g); box-shadow: 0 0 0 3px rgba(34,160,50,.08); }
-.gate-btn { width: 100%; padding: 11px; background: var(--g); border: none; border-radius: 8px; color: #fff; font-family: var(--fh); font-weight: 700; font-size: .95rem; cursor: pointer; transition: background .18s; }
+.gate-btn {
+  width: 100%; padding: 12px; background: var(--g); border: none; border-radius: 8px;
+  color: #fff; font-family: var(--fh); font-weight: 700; font-size: 1rem; cursor: pointer; transition: background .18s;
+}
 .gate-btn:hover { background: #1a8028; }
 .gate-err { font-size: .78rem; color: #c0392b; margin-top: 10px; display: none; }
 
-/* ── App shell ── */
+/* ══════════════════════════════════════
+   APP SHELL
+══════════════════════════════════════ */
 #app { display: none; }
+
 .topbar {
   height: 56px; background: var(--s1); border-bottom: 1px solid var(--bd);
-  display: flex; align-items: center; padding: 0 20px; gap: 12px;
-  position: sticky; top: 0; z-index: 50; box-shadow: var(--shadow);
+  display: flex; align-items: center; padding: 0 24px; gap: 14px;
+  position: sticky; top: 0; z-index: 80; box-shadow: var(--shadow);
 }
-.topbar-logo { font-family: var(--fh); font-size: 1.02rem; font-weight: 700; color: var(--text); display: flex; align-items: center; gap: 8px; }
-.topbar-logo img { height: 26px; width: auto; }
+.topbar-logo { font-family: var(--fh); font-size: 1.05rem; font-weight: 700; color: var(--text); }
 .topbar-logo span { color: var(--g); }
-.topbar-tag { font-family: var(--fm); font-size: .6rem; color: var(--mu); letter-spacing: .1em; text-transform: uppercase; }
-.topbar-right { margin-left: auto; }
-.topbar-lockbtn { padding: 5px 14px; border-radius: 6px; font-size: .72rem; font-weight: 600; border: 1px solid rgba(200,50,50,.2); background: var(--bg); color: #c0392b; cursor: pointer; transition: all .18s; }
-.topbar-lockbtn:hover { background: rgba(200,50,50,.06); border-color: rgba(200,50,50,.4); }
+.topbar-pill {
+  font-family: var(--fm); font-size: .55rem; letter-spacing: .12em; text-transform: uppercase;
+  padding: 3px 8px; border-radius: 20px; background: rgba(34,160,50,.1);
+  border: 1px solid rgba(34,160,50,.22); color: var(--g);
+}
+.topbar-right { margin-left: auto; display: flex; align-items: center; gap: 10px; }
+.session-counter {
+  display: flex; align-items: center; gap: 6px; padding: 5px 12px;
+  border-radius: 20px; background: var(--bg); border: 1px solid var(--bd);
+  font-family: var(--fm); font-size: .68rem; color: var(--mu); cursor: pointer;
+  transition: all .18s;
+}
+.session-counter:hover { border-color: var(--g); color: var(--g); }
+.session-dot { width: 7px; height: 7px; border-radius: 50%; background: var(--g); animation: pulse 1.6s ease-in-out infinite; }
+@keyframes pulse { 0%,100%{opacity:1;transform:scale(1);} 50%{opacity:.5;transform:scale(.8);} }
+.lock-btn {
+  padding: 6px 14px; border-radius: 7px; font-size: .72rem; font-weight: 700;
+  font-family: var(--fb); cursor: pointer; border: 1px solid rgba(200,50,50,.22);
+  background: rgba(200,50,50,.05); color: #c0392b; transition: all .18s;
+}
+.lock-btn:hover { background: rgba(200,50,50,.1); border-color: rgba(200,50,50,.4); }
 
-.layout { display: flex; min-height: calc(100vh - 56px); background: var(--bg); }
-.sidebar { width: 220px; flex-shrink: 0; background: var(--s1); border-right: 1px solid var(--bd); padding: 16px 10px; }
-.sb-label { font-family: var(--fm); font-size: .55rem; text-transform: uppercase; letter-spacing: .14em; color: var(--mu); padding: 8px 12px 4px; }
-.sb-item { display: block; width: 100%; text-align: left; padding: 9px 12px; border-radius: 8px; background: none; border: none; color: var(--mu); font-family: var(--fb); font-size: .82rem; font-weight: 600; cursor: pointer; margin-bottom: 2px; transition: all .15s; }
-.sb-item:hover { background: rgba(34,160,50,.06); color: var(--g); }
-.sb-item.active { background: rgba(34,160,50,.1); color: var(--g); border-left: 2px solid var(--g); padding-left: 10px; }
+/* ══════════════════════════════════════
+   TAB NAV
+══════════════════════════════════════ */
+.tab-nav {
+  background: var(--s1); border-bottom: 1px solid var(--bd);
+  padding: 0 24px; display: flex; gap: 2px; overflow-x: auto;
+}
+.tab-nav::-webkit-scrollbar { height: 0; }
+.tab-btn {
+  padding: 14px 18px; font-family: var(--fb); font-size: .78rem; font-weight: 700;
+  color: var(--mu); background: none; border: none; cursor: pointer;
+  border-bottom: 2.5px solid transparent; transition: all .16s; white-space: nowrap;
+  display: inline-flex; align-items: center; gap: 7px;
+}
+.tab-btn:hover { color: var(--text); }
+.tab-btn.active { color: var(--g); border-bottom-color: var(--g); }
+.tab-badge {
+  font-size: .6rem; font-weight: 700; padding: 2px 7px; border-radius: 20px;
+  background: rgba(34,160,50,.12); color: var(--g); min-width: 20px; text-align: center;
+}
+.tab-badge.warn { background: rgba(217,119,6,.1); color: #d97706; }
 
-.main { flex: 1; padding: 22px 26px; overflow-x: auto; background: var(--bg); }
-.main-hdr { display: flex; align-items: center; gap: 12px; margin-bottom: 16px; flex-wrap: wrap; }
-.main-title { font-family: var(--fh); font-size: 1.3rem; font-weight: 700; color: var(--text); }
-.main-count { font-family: var(--fm); font-size: .68rem; color: var(--mu); }
+/* ══════════════════════════════════════
+   MAIN CONTENT AREA
+══════════════════════════════════════ */
+.main-wrap { max-width: 1100px; margin: 0 auto; padding: 28px 24px 60px; }
 
-.btn { padding: 8px 16px; border-radius: 7px; font-family: var(--fb); font-size: .8rem; font-weight: 700; cursor: pointer; border: none; transition: all .18s; }
-.btn-primary { background: var(--g); color: #fff; }
+/* Sections */
+.section { display: none; }
+.section.active { display: block; }
+
+/* Section header */
+.sec-hdr { display: flex; align-items: center; gap: 14px; margin-bottom: 22px; flex-wrap: wrap; }
+.sec-title { font-family: var(--fh); font-size: 1.4rem; font-weight: 700; color: var(--text); }
+.sec-count { font-family: var(--fm); font-size: .7rem; color: var(--mu); }
+.sec-actions { margin-left: auto; display: flex; gap: 8px; }
+
+/* Stat cards */
+.stat-row { display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 14px; margin-bottom: 24px; }
+.stat-card {
+  background: var(--s1); border: 1px solid var(--bd); border-radius: 12px;
+  padding: 18px 20px;
+}
+.stat-label { font-family: var(--fm); font-size: .6rem; text-transform: uppercase; letter-spacing: .12em; color: var(--mu); margin-bottom: 8px; }
+.stat-val { font-family: var(--fh); font-size: 1.8rem; font-weight: 700; color: var(--text); }
+.stat-sub { font-size: .72rem; color: var(--mu); margin-top: 4px; }
+.stat-val.green { color: var(--g); }
+.stat-val.amber { color: #d97706; }
+.stat-val.red   { color: #dc2626; }
+
+/* Buttons */
+.btn { padding: 9px 18px; border-radius: 8px; font-family: var(--fb); font-size: .78rem; font-weight: 700; cursor: pointer; border: none; transition: all .18s; }
+.btn-primary   { background: var(--g); color: #fff; }
 .btn-primary:hover { background: #1a8028; }
-.btn-ghost { background: var(--bg); border: 1px solid var(--bd); color: var(--mu); }
+.btn-ghost     { background: var(--bg); border: 1px solid var(--bd2); color: var(--mu); }
 .btn-ghost:hover { border-color: var(--g); color: var(--g); }
-.btn-row-danger { background: rgba(200,50,50,.06); border: 1px solid rgba(200,50,50,.18); color: #c0392b; padding: 5px 11px; font-size: .7rem; border-radius: 6px; cursor: pointer; transition: all .15s; font-weight: 700; font-family: var(--fb); }
-.btn-row-danger:hover { background: rgba(200,50,50,.12); }
-.btn-row-save { background: rgba(34,160,50,.08); border: 1px solid rgba(34,160,50,.22); color: var(--g); padding: 5px 11px; font-size: .7rem; border-radius: 6px; cursor: pointer; transition: all .15s; font-weight: 700; font-family: var(--fb); }
-.btn-row-save:hover { background: rgba(34,160,50,.16); }
+.btn-sm        { padding: 6px 12px; font-size: .7rem; border-radius: 6px; }
+.btn-danger    { background: rgba(220,38,38,.07); border: 1px solid rgba(220,38,38,.2); color: #dc2626; }
+.btn-danger:hover { background: rgba(220,38,38,.14); border-color: rgba(220,38,38,.4); }
+.btn-approve   { background: rgba(34,160,50,.08); border: 1px solid rgba(34,160,50,.22); color: var(--g); }
+.btn-approve:hover { background: rgba(34,160,50,.16); }
+.btn-amber     { background: rgba(217,119,6,.08); border: 1px solid rgba(217,119,6,.2); color: #d97706; }
+.btn-amber:hover { background: rgba(217,119,6,.16); }
 
-table { border-collapse: collapse; width: 100%; background: var(--s1); border-radius: var(--r); overflow: hidden; box-shadow: var(--shadow); }
-th { background: var(--s2); font-family: var(--fm); font-size: .6rem; text-transform: uppercase; letter-spacing: .08em; color: var(--mu); padding: 10px 10px; text-align: left; white-space: nowrap; border-bottom: 1px solid var(--bd); }
-td { padding: 6px 8px; border-bottom: 1px solid var(--bd2); vertical-align: top; }
-tr:last-child td { border-bottom: none; }
-tr:hover td { background: rgba(34,160,50,.03); }
-td input, td textarea { width: 100%; min-width: 120px; padding: 6px 8px; background: var(--bg); border: 1px solid var(--bd); border-radius: 6px; color: var(--text); font-family: var(--fb); font-size: .78rem; outline: none; resize: vertical; transition: border-color .15s; }
-td input:focus, td textarea:focus { border-color: var(--g); box-shadow: 0 0 0 2px rgba(34,160,50,.08); }
-tr.new-row td { background: rgba(34,160,50,.03); }
-tr.dirty td input, tr.dirty td textarea { border-color: #d97706; }
-.row-actions { display: flex; gap: 6px; white-space: nowrap; }
+/* ══════════════════════════════════════
+   REQUEST CARDS
+══════════════════════════════════════ */
+.req-list { display: flex; flex-direction: column; gap: 12px; }
+.req-card {
+  background: var(--s1); border: 1px solid var(--bd); border-radius: 12px;
+  padding: 18px 20px; transition: border-color .18s;
+}
+.req-card:hover { border-color: rgba(34,160,50,.3); }
+.req-card-top { display: flex; align-items: flex-start; gap: 12px; margin-bottom: 10px; flex-wrap: wrap; }
+.req-name { font-family: var(--fh); font-size: 1rem; font-weight: 700; color: var(--text); }
+.req-email { font-family: var(--fm); font-size: .75rem; color: #2563eb; }
+.req-meta { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 4px; }
+.req-chip {
+  font-family: var(--fm); font-size: .62rem; font-weight: 600;
+  padding: 3px 9px; border-radius: 20px; border: 1px solid var(--bd2);
+  background: var(--bg); color: var(--mu);
+}
+.req-reason { font-size: .82rem; color: var(--gr); line-height: 1.6; margin-bottom: 12px; }
+.req-foot { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+.req-date { font-family: var(--fm); font-size: .62rem; color: var(--mu); margin-left: auto; }
+.status-pill {
+  font-family: var(--fm); font-size: .6rem; font-weight: 700; letter-spacing: .08em;
+  text-transform: uppercase; padding: 3px 9px; border-radius: 20px;
+}
+.status-pill.pending  { background: rgba(217,119,6,.1);  color: #d97706;  border: 1px solid rgba(217,119,6,.22); }
+.status-pill.approved { background: rgba(34,160,50,.1);  color: var(--g); border: 1px solid rgba(34,160,50,.22); }
+.status-pill.rejected { background: rgba(220,38,38,.07); color: #dc2626;  border: 1px solid rgba(220,38,38,.2); }
 
-.loading-state, .empty-state { padding: 40px; text-align: center; color: var(--mu); font-family: var(--fm); font-size: .8rem; }
+/* ══════════════════════════════════════
+   STUDENT TABLE
+══════════════════════════════════════ */
+.student-filters { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 16px; }
+.filter-chip {
+  padding: 5px 12px; border-radius: 20px; font-size: .72rem; font-weight: 600;
+  border: 1.5px solid var(--bd2); background: var(--s1); color: var(--mu);
+  cursor: pointer; transition: all .14s;
+}
+.filter-chip:hover, .filter-chip.active { border-color: var(--g); color: var(--g); background: rgba(34,160,50,.07); }
+
+.student-list { display: flex; flex-direction: column; gap: 10px; }
+.student-card {
+  background: var(--s1); border: 1px solid var(--bd); border-radius: 10px;
+  padding: 14px 18px; display: flex; align-items: center; gap: 14px;
+  flex-wrap: wrap; transition: border-color .18s;
+}
+.student-card:hover { border-color: rgba(34,160,50,.25); }
+.student-avatar {
+  width: 38px; height: 38px; border-radius: 50%; background: rgba(34,160,50,.12);
+  display: flex; align-items: center; justify-content: center;
+  font-family: var(--fh); font-size: 1rem; font-weight: 700; color: var(--g); flex-shrink: 0;
+}
+.student-info { flex: 1; min-width: 140px; }
+.student-name { font-family: var(--fh); font-size: .95rem; font-weight: 700; color: var(--text); }
+.student-email { font-size: .74rem; color: var(--mu); margin-top: 2px; }
+.student-meta { display: flex; gap: 6px; flex-wrap: wrap; margin-top: 6px; }
+.student-actions { display: flex; gap: 6px; flex-wrap: wrap; margin-left: auto; }
+
+/* Session info */
+.session-info {
+  font-family: var(--fm); font-size: .68rem; color: var(--mu);
+  display: flex; align-items: center; gap: 5px;
+}
+.session-info.active-now { color: var(--g); }
+.session-dot-sm { width: 6px; height: 6px; border-radius: 50%; background: currentColor; }
+
+/* ══════════════════════════════════════
+   LEADERBOARD
+══════════════════════════════════════ */
+.lb-game-tabs { display: flex; gap: 6px; flex-wrap: wrap; margin-bottom: 18px; }
+.lb-game-chip {
+  padding: 6px 14px; border-radius: 8px; font-size: .74rem; font-weight: 700;
+  border: 1.5px solid var(--bd2); background: var(--s1); color: var(--mu);
+  cursor: pointer; transition: all .14s;
+}
+.lb-game-chip.active { border-color: var(--g); color: var(--g); background: rgba(34,160,50,.08); }
+
+.lb-table { width: 100%; border-collapse: collapse; }
+.lb-table thead th {
+  font-family: var(--fm); font-size: .6rem; text-transform: uppercase; letter-spacing: .1em;
+  color: var(--mu); padding: 10px 14px; text-align: left; border-bottom: 1px solid var(--bd);
+}
+.lb-table tbody tr { transition: background .12s; }
+.lb-table tbody tr:hover td { background: rgba(34,160,50,.03); }
+.lb-table td { padding: 11px 14px; border-bottom: 1px solid var(--bd2); font-size: .82rem; color: var(--text); }
+.lb-table td:last-child { border-bottom: none; }
+.lb-rank { font-family: var(--fh); font-weight: 700; font-size: 1rem; }
+.lb-rank.r1 { color: #f59e0b; }
+.lb-rank.r2 { color: #94a3b8; }
+.lb-rank.r3 { color: #b45309; }
+.lb-score { font-family: var(--fm); font-weight: 700; color: var(--g); }
+
+/* ══════════════════════════════════════
+   STUDY MATERIALS ADMIN
+══════════════════════════════════════ */
+.mat-admin-list { display: flex; flex-direction: column; gap: 12px; }
+.mat-admin-card {
+  background: var(--s1); border: 1px solid var(--bd); border-radius: 12px;
+  padding: 18px 20px; transition: border-color .18s;
+}
+.mat-admin-card:hover { border-color: rgba(34,160,50,.3); }
+.mat-admin-top { display: flex; align-items: flex-start; gap: 10px; margin-bottom: 8px; flex-wrap: wrap; }
+.mat-admin-title { font-family: var(--fh); font-size: 1rem; font-weight: 700; color: var(--text); flex: 1; }
+.mat-cat-badge {
+  font-family: var(--fm); font-size: .58rem; font-weight: 700; letter-spacing: .1em;
+  text-transform: uppercase; padding: 3px 9px; border-radius: 20px;
+  background: rgba(37,99,235,.08); color: #2563eb; border: 1px solid rgba(37,99,235,.18);
+}
+.mat-admin-desc { font-size: .8rem; color: var(--gr); line-height: 1.6; margin-bottom: 10px; }
+.mat-admin-links { display: flex; gap: 6px; flex-wrap: wrap; margin-bottom: 10px; }
+.mat-link-tag {
+  font-family: var(--fm); font-size: .65rem; font-weight: 600; padding: 3px 8px;
+  border-radius: 5px; background: var(--bg); border: 1px solid var(--bd2); color: var(--mu);
+  display: inline-flex; align-items: center; gap: 4px; max-width: 260px;
+  overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+}
+.mat-admin-foot { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+.mat-admin-date { font-family: var(--fm); font-size: .62rem; color: var(--mu); margin-left: auto; }
+
+/* Email send panel inside Study Materials */
+.email-send-panel {
+  background: var(--bg); border: 1.5px dashed var(--bd2); border-radius: 12px;
+  padding: 22px 24px; margin-bottom: 24px;
+}
+.email-send-title { font-family: var(--fh); font-size: 1rem; font-weight: 700; color: var(--text); margin-bottom: 4px; }
+.email-send-sub { font-size: .77rem; color: var(--mu); margin-bottom: 16px; }
+.batch-chips-grid { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 14px; }
+.batch-chip-btn {
+  padding: 6px 14px; border-radius: 20px; font-size: .76rem; font-weight: 600;
+  border: 1.5px solid var(--bd2); background: var(--s1); color: var(--mu);
+  cursor: pointer; transition: all .15s; user-select: none;
+}
+.batch-chip-btn:hover { border-color: var(--g); color: var(--g); }
+.batch-chip-btn.sel { border-color: var(--g); background: rgba(34,160,50,.1); color: var(--g); }
+.mat-select {
+  width: 100%; max-width: 480px; padding: 10px 12px; background: var(--s1);
+  border: 1.5px solid var(--bd2); border-radius: 8px; color: var(--text);
+  font-family: var(--fb); font-size: .85rem; outline: none; margin-bottom: 14px;
+}
+.mat-select:focus { border-color: var(--g); }
+.email-status {
+  margin-top: 10px; font-size: .78rem; padding: 9px 13px; border-radius: 7px; display: none;
+}
+.email-status.ok      { background: rgba(34,160,50,.08);  border: 1px solid rgba(34,160,50,.2);  color: var(--g); display:block; }
+.email-status.err     { background: rgba(220,38,38,.06);  border: 1px solid rgba(220,38,38,.2);  color: #dc2626; display:block; }
+.email-status.sending { background: rgba(217,119,6,.07);  border: 1px solid rgba(217,119,6,.18); color: #d97706; display:block; }
+
+/* Add Material Modal */
+.modal-overlay {
+  position: fixed; inset: 0; background: rgba(0,0,0,.55); z-index: 200;
+  display: flex; align-items: center; justify-content: center; padding: 20px;
+  display: none;
+}
+.modal-overlay.open { display: flex; }
+.modal {
+  background: var(--s1); border: 1px solid var(--bd); border-radius: 16px;
+  padding: 28px 30px; width: 540px; max-width: 96vw; max-height: 90vh;
+  overflow-y: auto; box-shadow: 0 24px 60px rgba(0,0,0,.3);
+}
+.modal-title { font-family: var(--fh); font-size: 1.2rem; font-weight: 700; color: var(--text); margin-bottom: 20px; }
+.field-group { margin-bottom: 14px; }
+.field-label { font-family: var(--fm); font-size: .6rem; text-transform: uppercase; letter-spacing: .12em; color: var(--mu); margin-bottom: 6px; }
+.field-input {
+  width: 100%; padding: 10px 12px; background: var(--bg); border: 1.5px solid var(--bd2);
+  border-radius: 8px; color: var(--text); font-family: var(--fb); font-size: .85rem;
+  outline: none; transition: border-color .15s;
+}
+.field-input:focus { border-color: var(--g); box-shadow: 0 0 0 3px rgba(34,160,50,.07); }
+textarea.field-input { resize: vertical; min-height: 80px; }
+.modal-actions { display: flex; gap: 10px; justify-content: flex-end; margin-top: 20px; }
+
+/* ══════════════════════════════════════
+   SESSIONS PANEL (inside Students)
+══════════════════════════════════════ */
+.sessions-modal .modal { max-width: 620px; }
+.session-row {
+  display: flex; align-items: flex-start; gap: 12px; padding: 12px 0;
+  border-bottom: 1px solid var(--bd2);
+}
+.session-row:last-child { border-bottom: none; }
+.session-device { font-family: var(--fm); font-size: .72rem; color: var(--text); }
+.session-device .session-loc { color: var(--mu); font-size: .68rem; margin-top: 3px; }
+
+/* ══════════════════════════════════════
+   SHARED
+══════════════════════════════════════ */
+.loading-state, .empty-state {
+  padding: 48px 20px; text-align: center; color: var(--mu);
+  font-family: var(--fm); font-size: .82rem;
+}
 .spinner { width: 28px; height: 28px; border: 2.5px solid var(--bd); border-top-color: var(--g); border-radius: 50%; animation: spin .7s linear infinite; margin: 0 auto 12px; }
 @keyframes spin { to { transform: rotate(360deg); } }
+.divider { height: 1px; background: var(--bd); margin: 20px 0; }
+.esc { font-family: var(--fm); font-size: .7rem; }
 
-.toast { position: fixed; bottom: 20px; right: 20px; padding: 12px 18px; border-radius: 8px; font-size: .82rem; font-weight: 600; z-index: 200; display: none; box-shadow: var(--shadow); }
-.toast.ok  { background: rgba(34,160,50,.1); border: 1px solid rgba(34,160,50,.28); color: #16a34a; }
-.toast.err { background: rgba(200,50,50,.08); border: 1px solid rgba(200,50,50,.22); color: #c0392b; }
+/* Toast */
+.toast {
+  position: fixed; bottom: 22px; right: 22px; padding: 12px 18px;
+  border-radius: 9px; font-size: .82rem; font-weight: 600; z-index: 300;
+  display: none; box-shadow: 0 8px 24px rgba(0,0,0,.18);
+}
+.toast.ok  { background: rgba(34,160,50,.1);  border: 1px solid rgba(34,160,50,.28);  color: #16a34a; display:block; }
+.toast.err { background: rgba(220,38,38,.08); border: 1px solid rgba(220,38,38,.22); color: #dc2626; display:block; }
+
+/* Search */
+.search-bar {
+  width: 100%; max-width: 340px; padding: 9px 12px; background: var(--s1);
+  border: 1.5px solid var(--bd2); border-radius: 8px; color: var(--text);
+  font-family: var(--fb); font-size: .84rem; outline: none; transition: border-color .15s;
+}
+.search-bar:focus { border-color: var(--g); }
 </style>
 </head>
 <body>
 <div id="cur"></div>
 
+<!-- ══════ GATE ══════ -->
 <div id="gate">
   <div class="gate-card">
-    <div class="gate-title">SAPZ<span>CODES</span> Admin</div>
-    <div class="gate-sub">Enter the admin password to manage all sheet tabs.</div>
-    <input class="gate-input" type="password" id="gate-pw" placeholder="Admin password" autocomplete="off"/>
-    <button class="gate-btn" onclick="doGateLogin()">Unlock →</button>
+    <div class="gate-logo">SAPZ<span>CODES</span></div>
+    <div class="gate-sub">Admin portal — authorised access only.</div>
+    <div class="gate-label">Password</div>
+    <input class="gate-input" type="password" id="gate-pw" placeholder="Enter admin password" autocomplete="off"/>
+    <button class="gate-btn" onclick="doGateLogin()">Unlock Admin →</button>
     <div class="gate-err" id="gate-err">Incorrect password.</div>
   </div>
 </div>
 
+<!-- ══════ APP ══════ -->
 <div id="app">
+
+  <!-- Top bar -->
   <div class="topbar">
-    <span class="topbar-logo">
-      <img src="logo.png" alt="SAPZCODES" onerror="this.style.display='none'"/>
-      SAPZ<span>CODES</span>
-    </span>
-    <span class="topbar-tag">Admin Panel</span>
+    <span class="topbar-logo">SAPZ<span>CODES</span></span>
+    <span class="topbar-pill">Admin</span>
     <div class="topbar-right">
-      <button class="topbar-lockbtn" onclick="lockOut()">🔒 Lock</button>
+      <div class="session-counter" onclick="showTab('students')" title="View active sessions">
+        <span class="session-dot"></span>
+        <span id="active-session-count">—</span> active
+      </div>
+      <button class="lock-btn" onclick="lockOut()">🔒 Lock</button>
     </div>
   </div>
-  <div class="layout">
-    <div class="sidebar" id="sidebar">
-      <div class="sb-label">Sheet Tabs</div>
+
+  <!-- Tab nav -->
+  <div class="tab-nav">
+    <button class="tab-btn active" data-tab="overview"   onclick="showTab('overview')">Overview</button>
+    <button class="tab-btn"        data-tab="requests"   onclick="showTab('requests')">Access Requests <span class="tab-badge warn" id="badge-requests">…</span></button>
+    <button class="tab-btn"        data-tab="students"   onclick="showTab('students')">Students <span class="tab-badge" id="badge-students">…</span></button>
+    <button class="tab-btn"        data-tab="leaderboard" onclick="showTab('leaderboard')">Leaderboard</button>
+    <button class="tab-btn"        data-tab="materials"  onclick="showTab('materials')">Study Materials <span class="tab-badge" id="badge-materials">…</span></button>
+  </div>
+
+  <!-- Content -->
+  <div class="main-wrap">
+
+    <!-- ── OVERVIEW ── -->
+    <div class="section active" id="sec-overview">
+      <div class="sec-hdr">
+        <span class="sec-title">Overview</span>
+        <div class="sec-actions">
+          <button class="btn btn-ghost btn-sm" onclick="loadAll()">↺ Refresh</button>
+        </div>
+      </div>
+      <div class="stat-row" id="overview-stats">
+        <div class="stat-card"><div class="stat-label">Total Students</div><div class="stat-val green" id="ov-total">…</div></div>
+        <div class="stat-card"><div class="stat-label">Pending Requests</div><div class="stat-val amber" id="ov-pending">…</div></div>
+        <div class="stat-card"><div class="stat-label">Active Sessions</div><div class="stat-val" id="ov-sessions">…</div></div>
+        <div class="stat-card"><div class="stat-label">Study Materials</div><div class="stat-val" id="ov-materials">…</div></div>
+      </div>
+      <div class="divider"></div>
+      <div style="font-family:var(--fh);font-size:1rem;font-weight:700;margin-bottom:14px;">Pending Requests</div>
+      <div id="ov-req-list"><div class="loading-state"><div class="spinner"></div></div></div>
     </div>
-    <div class="main" id="main">
-      <div class="loading-state"><div class="spinner"></div>Select a tab from the left.</div>
+
+    <!-- ── REQUESTS ── -->
+    <div class="section" id="sec-requests">
+      <div class="sec-hdr">
+        <span class="sec-title">Access Requests</span>
+        <div class="sec-actions">
+          <button class="btn btn-ghost btn-sm" onclick="loadRequests()">↺ Refresh</button>
+        </div>
+      </div>
+      <div class="student-filters" id="req-filters">
+        <div class="filter-chip active" onclick="filterReqs(this,'all')">All</div>
+        <div class="filter-chip" onclick="filterReqs(this,'pending')">Pending</div>
+        <div class="filter-chip" onclick="filterReqs(this,'approved')">Approved</div>
+        <div class="filter-chip" onclick="filterReqs(this,'rejected')">Rejected</div>
+      </div>
+      <div id="req-list"><div class="loading-state"><div class="spinner"></div>Loading…</div></div>
+    </div>
+
+    <!-- ── STUDENTS ── -->
+    <div class="section" id="sec-students">
+      <div class="sec-hdr">
+        <span class="sec-title">Students</span>
+        <div class="sec-actions">
+          <input class="search-bar" type="text" id="student-search" placeholder="Search by name or email…" oninput="filterStudents()"/>
+          <button class="btn btn-ghost btn-sm" onclick="loadStudents()">↺ Refresh</button>
+        </div>
+      </div>
+      <div class="student-filters" id="batch-filter-row"></div>
+      <div id="student-list"><div class="loading-state"><div class="spinner"></div>Loading…</div></div>
+    </div>
+
+    <!-- ── LEADERBOARD ── -->
+    <div class="section" id="sec-leaderboard">
+      <div class="sec-hdr">
+        <span class="sec-title">Leaderboard</span>
+        <div class="sec-actions">
+          <button class="btn btn-ghost btn-sm" onclick="loadLeaderboard()">↺ Refresh</button>
+        </div>
+      </div>
+      <div class="lb-game-tabs" id="lb-game-tabs"></div>
+      <div id="lb-content"><div class="loading-state"><div class="spinner"></div>Loading…</div></div>
+    </div>
+
+    <!-- ── STUDY MATERIALS ── -->
+    <div class="section" id="sec-materials">
+      <div class="sec-hdr">
+        <span class="sec-title">Study Materials</span>
+        <div class="sec-actions">
+          <button class="btn btn-primary btn-sm" onclick="openAddMaterial()">+ Add Material</button>
+          <button class="btn btn-ghost btn-sm" onclick="loadMaterials()">↺ Refresh</button>
+        </div>
+      </div>
+
+      <!-- Email send panel -->
+      <div class="email-send-panel">
+        <div class="email-send-title">📧 Send Material to Batches</div>
+        <div class="email-send-sub">Select batches → pick a material → send. CC is automatically sent to hr@sapzcodes.com.</div>
+        <div style="font-family:var(--fm);font-size:.6rem;text-transform:uppercase;letter-spacing:.12em;color:var(--mu);margin-bottom:8px;">Batches</div>
+        <div class="batch-chips-grid" id="email-batch-chips"><span style="font-size:.78rem;color:var(--mu);">Loading…</span></div>
+        <div style="font-family:var(--fm);font-size:.6rem;text-transform:uppercase;letter-spacing:.12em;color:var(--mu);margin-bottom:6px;">Material</div>
+        <select class="mat-select" id="email-mat-select">
+          <option value="">— Select a material —</option>
+        </select>
+        <button class="btn btn-primary" id="email-send-btn" onclick="doSendEmail()" disabled>Send Email →</button>
+        <div class="email-status" id="email-status"></div>
+      </div>
+
+      <div id="mat-admin-list"><div class="loading-state"><div class="spinner"></div>Loading…</div></div>
+    </div>
+
+  </div><!-- /main-wrap -->
+</div><!-- /app -->
+
+<!-- ══════ ADD MATERIAL MODAL ══════ -->
+<div class="modal-overlay" id="modal-add-mat">
+  <div class="modal">
+    <div class="modal-title" id="modal-title">Add Study Material</div>
+    <div class="field-group">
+      <div class="field-label">Title *</div>
+      <input class="field-input" type="text" id="mat-f-title" placeholder="e.g. ABAP Basics — Lecture 3"/>
+    </div>
+    <div class="field-group">
+      <div class="field-label">Category</div>
+      <input class="field-input" type="text" id="mat-f-cat" placeholder="e.g. Recordings, CDS Views, RAP…"/>
+    </div>
+    <div class="field-group">
+      <div class="field-label">Description</div>
+      <textarea class="field-input" id="mat-f-desc" placeholder="Short description or topics covered…"></textarea>
+    </div>
+    <div class="field-group">
+      <div class="field-label">Link URL (recording share link, doc link…)</div>
+      <input class="field-input" type="url" id="mat-f-link" placeholder="https://…"/>
+    </div>
+    <div class="field-group">
+      <div class="field-label">File URL (PDF, PPT drive link…)</div>
+      <input class="field-input" type="url" id="mat-f-file" placeholder="https://…"/>
+    </div>
+    <div class="modal-actions">
+      <button class="btn btn-ghost" onclick="closeModal()">Cancel</button>
+      <button class="btn btn-primary" onclick="saveMaterial()" id="modal-save-btn">Save Material</button>
+    </div>
+  </div>
+</div>
+
+<!-- ══════ SESSIONS MODAL ══════ -->
+<div class="modal-overlay sessions-modal" id="modal-sessions">
+  <div class="modal">
+    <div class="modal-title" id="sessions-modal-title">Sessions</div>
+    <div id="sessions-modal-body"><div class="loading-state"><div class="spinner"></div></div></div>
+    <div class="modal-actions">
+      <button class="btn btn-ghost" onclick="closeSessionsModal()">Close</button>
     </div>
   </div>
 </div>
@@ -118,147 +531,554 @@ tr.dirty td input, tr.dirty td textarea { border-color: #d97706; }
 <div class="toast" id="toast"></div>
 
 <script>
-const GAS_URL = 'https://script.google.com/macros/s/AKfycbx4H_6v2nNH_Xa0FajhKQKCZgHgwuupi2CD6NdC4YuatcE0f451IFgXbNES-7sYRF4Hog/exec';
+const GAS_URL    = 'https://script.google.com/macros/s/AKfycbx4H_6v2nNH_Xa0FajhKQKCZgHgwuupi2CD6NdC4YuatcE0f451IFgXbNES-7sYRF4Hog/exec';
+let ADMIN_PW     = '';
+let allRequests  = [];
+let allStudents  = [];
+let allLB        = [];
+let allMaterials = [];
+let allBatches   = [];
+let selectedEmailBatches = new Set();
+let editingMatId = null;
+let reqFilter    = 'all';
 
-let ADMIN_PW = '', TABS = [], currentTab = null;
-let currentHeaders = [], currentRows = [], newRowValues = null;
-
-function toast(msg, ok) {
-  const t = document.getElementById('toast');
-  t.textContent = msg; t.className = 'toast ' + (ok?'ok':'err');
-  t.style.display = 'block';
-  setTimeout(() => { t.style.display = 'none'; }, 2600);
-}
-
+// ── Gate ─────────────────────────────────────────────────────────
 async function doGateLogin() {
-  const pw = document.getElementById('gate-pw').value;
+  const pw = document.getElementById('gate-pw').value.trim();
   if (!pw) return;
+  const errEl = document.getElementById('gate-err');
+  errEl.style.display = 'none';
   try {
-    const res  = await fetch(GAS_URL, { method:'POST', headers:{'Content-Type':'text/plain'}, body: JSON.stringify({action:'adminAuth',password:pw}), redirect:'follow' });
+    const res  = await post({ action: 'adminAuth', password: pw });
     const data = await res.json();
-    if (data.status==='ok') {
-      ADMIN_PW = pw; TABS = data.tabs;
-      document.getElementById('gate').style.display = 'none';
-      document.getElementById('app').style.display  = 'block';
-      buildSidebar();
+    if (data.status === 'ok') {
+      ADMIN_PW = pw;
+      document.getElementById('gate').style.display  = 'none';
+      document.getElementById('app').style.display   = 'block';
+      loadAll();
     } else {
-      const el = document.getElementById('gate-err');
-      el.textContent = data.message||'Incorrect password.'; el.style.display = 'block';
+      errEl.textContent = data.message || 'Incorrect password.';
+      errEl.style.display = 'block';
     }
   } catch(e) {
-    const el = document.getElementById('gate-err'); el.textContent = 'Connection error.'; el.style.display = 'block';
+    errEl.textContent = 'Connection error.'; errEl.style.display = 'block';
   }
 }
-document.getElementById('gate-pw').addEventListener('keydown', e => { if (e.key==='Enter') doGateLogin(); });
-
+document.getElementById('gate-pw').addEventListener('keydown', e => { if (e.key === 'Enter') doGateLogin(); });
 function lockOut() {
-  ADMIN_PW=''; TABS=[]; currentTab=null;
+  ADMIN_PW = ''; allRequests = []; allStudents = []; allLB = []; allMaterials = [];
   document.getElementById('app').style.display  = 'none';
   document.getElementById('gate').style.display = 'flex';
-  document.getElementById('gate-pw').value = '';
-  document.getElementById('gate-err').style.display = 'none';
+  document.getElementById('gate-pw').value      = '';
 }
 
-function cssId(s) { return s.replace(/[^a-zA-Z0-9]/g,''); }
-
-function buildSidebar() {
-  const sb = document.getElementById('sidebar');
-  sb.innerHTML = '<div class="sb-label">Sheet Tabs</div>' +
-    TABS.map(t => `<button class="sb-item" id="sb-${cssId(t)}" onclick="openTab('${t}')">${t}</button>`).join('');
-}
-
-async function openTab(tab) {
-  currentTab = tab; newRowValues = null;
-  document.querySelectorAll('.sb-item').forEach(el => el.classList.remove('active'));
-  const btn = document.getElementById('sb-'+cssId(tab));
-  if (btn) btn.classList.add('active');
-  const main = document.getElementById('main');
-  main.innerHTML = `<div class="loading-state"><div class="spinner"></div>Loading ${tab}…</div>`;
-  try {
-    const res  = await fetch(`${GAS_URL}?action=adminGetData&tab=${encodeURIComponent(tab)}&password=${encodeURIComponent(ADMIN_PW)}`);
-    const data = await res.json();
-    if (data.status!=='ok') throw new Error(data.message||'Failed to load');
-    currentHeaders = data.data.headers;
-    currentRows    = data.data.rows.map(r => ({ rowIndex:r.rowIndex, values:r.values.slice(), dirty:false }));
-    renderTable();
-  } catch(err) { main.innerHTML = `<div class="empty-state">⚠️ ${esc(err.message)}</div>`; }
-}
-
-function esc(s) { return String(s==null?'':s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
-
-function renderTable() {
-  const main    = document.getElementById('main');
-  const headers = currentHeaders.length ? currentHeaders : ['Col A'];
-  let html = `
-    <div class="main-hdr">
-      <span class="main-title">${currentTab}</span>
-      <span class="main-count">${currentRows.length} rows</span>
-      <button class="btn btn-primary" onclick="startNewRow()">+ Add Row</button>
-      <button class="btn btn-ghost"   onclick="openTab(currentTab)">↺ Refresh</button>
-    </div>
-    <table>
-      <thead><tr>${headers.map(h=>`<th>${esc(h)}</th>`).join('')}<th>Actions</th></tr></thead>
-      <tbody>`;
-
-  if (newRowValues) {
-    html += `<tr class="new-row">${headers.map((_,ci)=>`<td>${cellInput('new',ci,newRowValues[ci]||'')}</td>`).join('')}<td class="row-actions"><button class="btn-row-save" onclick="saveNewRow()">💾 Save</button><button class="btn-row-danger" onclick="cancelNewRow()">✕</button></td></tr>`;
-  }
-  currentRows.forEach((row,ri) => {
-    html += `<tr class="${row.dirty?'dirty':''}" id="row-${ri}">${headers.map((_,ci)=>`<td>${cellInput(ri,ci,row.values[ci])}</td>`).join('')}<td class="row-actions"><button class="btn-row-save" onclick="saveRow(${ri})">💾 Save</button><button class="btn-row-danger" onclick="deleteRow(${ri})">🗑</button></td></tr>`;
+// ── Helpers ───────────────────────────────────────────────────────
+function post(body) {
+  return fetch(GAS_URL, {
+    method: 'POST', headers: { 'Content-Type': 'text/plain' },
+    body: JSON.stringify(body), redirect: 'follow',
   });
-  html += `</tbody></table>`;
-  if (currentRows.length===0 && !newRowValues)
-    html += `<div class="empty-state">No rows yet — click "+ Add Row" to create one.</div>`;
-  main.innerHTML = html;
+}
+function get(params) {
+  const qs = new URLSearchParams({ ...params, password: ADMIN_PW }).toString();
+  return fetch(`${GAS_URL}?${qs}`);
+}
+function esc(s) { return String(s == null ? '' : s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
+function fmtDate(d) {
+  try { return new Date(d).toLocaleDateString('en-IN',{day:'numeric',month:'short',year:'numeric',hour:'2-digit',minute:'2-digit'}); }
+  catch(e){ return String(d||''); }
+}
+function initials(name) {
+  const p = name.trim().split(' ');
+  return (p[0]?.[0]||'') + (p[1]?.[0]||'');
+}
+function toast(msg, ok=true) {
+  const t = document.getElementById('toast');
+  t.textContent = msg; t.className = 'toast ' + (ok ? 'ok' : 'err');
+  setTimeout(() => { t.className = 'toast'; }, 2800);
 }
 
-function cellInput(ri, ci, val) {
-  const long   = String(val||'').length > 60;
-  const idAttr = `data-ri="${ri}" data-ci="${ci}"`;
-  if (long) return `<textarea rows="2" ${idAttr} onchange="onCellChange(this)">${esc(val)}</textarea>`;
-  return `<input type="text" value="${esc(val)}" ${idAttr} onchange="onCellChange(this)"/>`;
+// ── Tabs ─────────────────────────────────────────────────────────
+function showTab(tab) {
+  document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+  document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+  document.getElementById('sec-' + tab).classList.add('active');
+  document.querySelector(`.tab-btn[data-tab="${tab}"]`).classList.add('active');
+  if (tab === 'requests')    loadRequests();
+  if (tab === 'students')    loadStudents();
+  if (tab === 'leaderboard') loadLeaderboard();
+  if (tab === 'materials')   loadMaterials();
 }
 
-function onCellChange(el) {
-  const ri = el.getAttribute('data-ri');
-  const ci = parseInt(el.getAttribute('data-ci'), 10);
-  if (ri==='new') { if (!newRowValues) newRowValues=[]; newRowValues[ci]=el.value; }
-  else { const row=currentRows[parseInt(ri,10)]; row.values[ci]=el.value; row.dirty=true; document.getElementById('row-'+ri).classList.add('dirty'); }
+// ── Load all ─────────────────────────────────────────────────────
+async function loadAll() {
+  await Promise.all([loadRequests(), loadStudents(), loadMaterials()]);
+  // overview stats
+  const pending = allRequests.filter(r => r.status === 'Pending').length;
+  setText('ov-total', allStudents.length);
+  setText('ov-pending', pending);
+  setText('ov-materials', allMaterials.length);
+  setText('badge-requests', pending);
+  setText('badge-students', allStudents.length);
+  setText('badge-materials', allMaterials.length);
+  if (pending > 0) document.getElementById('badge-requests').classList.add('warn');
+  renderOverviewRequests();
+  loadSessionCount();
 }
 
-function startNewRow()  { newRowValues = currentHeaders.map(()=>''); renderTable(); }
-function cancelNewRow() { newRowValues = null; renderTable(); }
+function setText(id, val) { const el=document.getElementById(id); if(el) el.textContent=val; }
 
-async function saveNewRow() {
-  if (!newRowValues) return;
+async function loadSessionCount() {
   try {
-    const res  = await fetch(GAS_URL, { method:'POST', headers:{'Content-Type':'text/plain'}, body:JSON.stringify({action:'adminSaveRow',password:ADMIN_PW,tab:currentTab,values:newRowValues}), redirect:'follow' });
+    const res  = await get({ action: 'adminGetSessionCount' });
     const data = await res.json();
-    if (data.status==='ok') { toast('Row added ✓', true); newRowValues=null; openTab(currentTab); }
-    else toast(data.message||'Failed', false);
-  } catch { toast('Connection error', false); }
+    if (data.status === 'ok') {
+      const n = data.count || 0;
+      setText('ov-sessions', n);
+      setText('active-session-count', n);
+    }
+  } catch(e){}
 }
 
-async function saveRow(ri) {
-  const row = currentRows[ri];
+// ── REQUESTS ─────────────────────────────────────────────────────
+async function loadRequests() {
   try {
-    const res  = await fetch(GAS_URL, { method:'POST', headers:{'Content-Type':'text/plain'}, body:JSON.stringify({action:'adminSaveRow',password:ADMIN_PW,tab:currentTab,rowIndex:row.rowIndex,values:row.values}), redirect:'follow' });
+    const res  = await get({ action: 'adminGetData', tab: 'AccessRequests' });
     const data = await res.json();
-    if (data.status==='ok') { toast('Saved ✓', true); row.dirty=false; renderTable(); }
-    else toast(data.message||'Failed', false);
-  } catch { toast('Connection error', false); }
+    if (data.status !== 'ok') throw new Error(data.message);
+    const h = data.data.headers;
+    allRequests = data.data.rows.map(r => ({
+      id:       r.values[0], name: r.values[1], email: r.values[2],
+      batch:    r.values[3], level: r.values[4], reason: r.values[5],
+      date:     r.values[6], status: r.values[7], rowIndex: r.rowIndex,
+    }));
+    renderRequests();
+  } catch(e) { document.getElementById('req-list').innerHTML = `<div class="empty-state">⚠️ ${esc(e.message)}</div>`; }
 }
 
-async function deleteRow(ri) {
-  const row = currentRows[ri];
-  if (!confirm('Delete this row? This cannot be undone.')) return;
-  try {
-    const res  = await fetch(GAS_URL, { method:'POST', headers:{'Content-Type':'text/plain'}, body:JSON.stringify({action:'adminDeleteRow',password:ADMIN_PW,tab:currentTab,rowIndex:row.rowIndex}), redirect:'follow' });
-    const data = await res.json();
-    if (data.status==='ok') { toast('Deleted ✓', true); openTab(currentTab); }
-    else toast(data.message||'Failed', false);
-  } catch { toast('Connection error', false); }
+function filterReqs(el, f) {
+  reqFilter = f;
+  document.querySelectorAll('#req-filters .filter-chip').forEach(c => c.classList.remove('active'));
+  el.classList.add('active');
+  renderRequests();
 }
+
+function renderRequests(target = 'req-list') {
+  const list = reqFilter === 'all' ? allRequests
+    : allRequests.filter(r => (r.status||'').toLowerCase() === reqFilter);
+  const el = document.getElementById(target);
+  if (list.length === 0) { el.innerHTML = '<div class="empty-state">No requests found.</div>'; return; }
+  el.className = 'req-list';
+  el.innerHTML = list.map(r => {
+    const s = (r.status||'Pending').toLowerCase();
+    return `
+    <div class="req-card">
+      <div class="req-card-top">
+        <div>
+          <div class="req-name">${esc(r.name)}</div>
+          <div class="req-email">${esc(r.email)}</div>
+          <div class="req-meta">
+            <span class="req-chip">${esc(r.batch)}</span>
+            <span class="req-chip">${esc(r.level)}</span>
+          </div>
+        </div>
+        <span class="status-pill ${s}">${esc(r.status||'Pending')}</span>
+      </div>
+      ${r.reason ? `<div class="req-reason">"${esc(r.reason)}"</div>` : ''}
+      <div class="req-foot">
+        ${s === 'pending' ? `
+          <button class="btn btn-sm btn-approve" onclick="doApprove('${esc(r.id)}')">✅ Approve</button>
+          <button class="btn btn-sm btn-danger"  onclick="doReject('${esc(r.id)}')">🚫 Reject</button>
+        ` : ''}
+        <span class="req-date">${fmtDate(r.date)}</span>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+function renderOverviewRequests() {
+  const list = allRequests.filter(r => (r.status||'').toLowerCase() === 'pending');
+  const el = document.getElementById('ov-req-list');
+  if (list.length === 0) { el.innerHTML = '<div class="empty-state" style="padding:20px">✅ No pending requests.</div>'; return; }
+  el.className = 'req-list';
+  el.innerHTML = list.map(r => `
+    <div class="req-card">
+      <div class="req-card-top">
+        <div>
+          <div class="req-name">${esc(r.name)}</div>
+          <div class="req-email">${esc(r.email)}</div>
+          <div class="req-meta"><span class="req-chip">${esc(r.batch)}</span><span class="req-chip">${esc(r.level)}</span></div>
+        </div>
+        <span class="status-pill pending">Pending</span>
+      </div>
+      ${r.reason ? `<div class="req-reason">"${esc(r.reason)}"</div>` : ''}
+      <div class="req-foot">
+        <button class="btn btn-sm btn-approve" onclick="doApprove('${esc(r.id)}')">✅ Approve</button>
+        <button class="btn btn-sm btn-danger"  onclick="doReject('${esc(r.id)}')">🚫 Reject</button>
+        <span class="req-date">${fmtDate(r.date)}</span>
+      </div>
+    </div>`).join('');
+}
+
+async function doApprove(reqId) {
+  if (!confirm(`Approve request ${reqId}?`)) return;
+  try {
+    const res  = await get({ action: 'approve', id: reqId });
+    const text = await res.text();
+    toast('✅ Approved! Approval email sent.', true);
+    setTimeout(loadAll, 1000);
+  } catch(e) { toast('Error: ' + e.message, false); }
+}
+
+async function doReject(reqId) {
+  if (!confirm(`Reject request ${reqId}? An email will be sent to the applicant.`)) return;
+  try {
+    await get({ action: 'reject', id: reqId });
+    toast('🚫 Rejected.', true);
+    setTimeout(loadAll, 1000);
+  } catch(e) { toast('Error: ' + e.message, false); }
+}
+
+// ── STUDENTS ─────────────────────────────────────────────────────
+async function loadStudents() {
+  try {
+    const res  = await get({ action: 'adminGetData', tab: 'ApprovedStudents' });
+    const data = await res.json();
+    if (data.status !== 'ok') throw new Error(data.message);
+    allStudents = data.data.rows.map(r => ({
+      id: r.values[0], email: r.values[1], name: r.values[2],
+      batch: r.values[3], token: r.values[4], status: r.values[5],
+      approvedOn: r.values[6], lastLogin: r.values[7],
+      hasPw: r.values[9], rowIndex: r.rowIndex,
+    }));
+    allBatches = [...new Set(allStudents.map(s => s.batch).filter(Boolean))].sort();
+    renderBatchFilterRow();
+    renderStudents();
+  } catch(e) { document.getElementById('student-list').innerHTML = `<div class="empty-state">⚠️ ${esc(e.message)}</div>`; }
+}
+
+let activeBatchFilter = 'all';
+function renderBatchFilterRow() {
+  const el = document.getElementById('batch-filter-row');
+  el.innerHTML = ['all', ...allBatches].map(b =>
+    `<div class="filter-chip${b === activeBatchFilter ? ' active' : ''}" onclick="setBatchFilter(this,'${esc(b)}')">${b === 'all' ? 'All Batches' : esc(b)}</div>`
+  ).join('');
+}
+function setBatchFilter(el, b) {
+  activeBatchFilter = b;
+  document.querySelectorAll('#batch-filter-row .filter-chip').forEach(c => c.classList.remove('active'));
+  el.classList.add('active');
+  renderStudents();
+}
+
+function filterStudents() { renderStudents(); }
+
+function renderStudents() {
+  const q = (document.getElementById('student-search')?.value || '').toLowerCase();
+  let list = allStudents;
+  if (activeBatchFilter !== 'all') list = list.filter(s => s.batch === activeBatchFilter);
+  if (q) list = list.filter(s => s.name.toLowerCase().includes(q) || s.email.toLowerCase().includes(q));
+  const el = document.getElementById('student-list');
+  if (list.length === 0) { el.innerHTML = '<div class="empty-state">No students found.</div>'; return; }
+  el.className = 'student-list';
+  el.innerHTML = list.map(s => {
+    const status = (s.status||'').toLowerCase();
+    return `
+    <div class="student-card">
+      <div class="student-avatar">${esc(initials(s.name || '?'))}</div>
+      <div class="student-info">
+        <div class="student-name">${esc(s.name)}</div>
+        <div class="student-email">${esc(s.email)}</div>
+        <div class="student-meta">
+          <span class="req-chip">${esc(s.batch)}</span>
+          <span class="status-pill ${status}" style="font-size:.55rem;padding:2px 7px;">${esc(s.status)}</span>
+          ${s.hasPw === true || s.hasPw === 'TRUE' || s.hasPw === 'true' ? '<span class="req-chip" style="color:var(--g);border-color:rgba(34,160,50,.3);">🔒 Has PW</span>' : '<span class="req-chip">Token only</span>'}
+        </div>
+        ${s.lastLogin ? `<div class="session-info" style="margin-top:5px;">Last login: ${fmtDate(s.lastLogin)}</div>` : ''}
+      </div>
+      <div class="student-actions">
+        <button class="btn btn-sm btn-ghost" onclick="viewSessions('${esc(s.email)}','${esc(s.name)}')">Sessions</button>
+        <button class="btn btn-sm btn-amber" onclick="forcePasswordReset('${esc(s.email)}','${esc(s.name)}')">Force Reset</button>
+        <button class="btn btn-sm btn-danger" onclick="deactivateStudent('${esc(s.email)}','${esc(s.name)}', ${s.rowIndex})">Deactivate</button>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+async function viewSessions(email, name) {
+  document.getElementById('sessions-modal-title').textContent = `Sessions — ${name}`;
+  document.getElementById('sessions-modal-body').innerHTML = '<div class="loading-state"><div class="spinner"></div></div>';
+  document.getElementById('modal-sessions').classList.add('open');
+  try {
+    const res  = await get({ action: 'adminGetSessions', email });
+    const data = await res.json();
+    const sessions = data.sessions || [];
+    if (sessions.length === 0) {
+      document.getElementById('sessions-modal-body').innerHTML = '<div class="empty-state">No active sessions found.</div>';
+      return;
+    }
+    document.getElementById('sessions-modal-body').innerHTML = sessions.map(s => `
+      <div class="session-row">
+        <div style="flex:1">
+          <div class="session-device">${esc(s.deviceInfo || 'Unknown device')}</div>
+          <div class="session-device session-loc">📍 ${esc(s.ip || 'Unknown IP')} &nbsp;·&nbsp; Logged in ${fmtDate(s.loginAt)}</div>
+          <div class="session-device session-loc">Last seen ${fmtDate(s.lastSeen)}</div>
+        </div>
+        <button class="btn btn-sm btn-danger" onclick="killSession('${esc(s.sessionToken)}','${esc(email)}')">Kick</button>
+      </div>`).join('');
+  } catch(e) {
+    document.getElementById('sessions-modal-body').innerHTML = `<div class="empty-state">Error: ${esc(e.message)}</div>`;
+  }
+}
+
+async function killSession(token, email) {
+  if (!confirm('Kick this session? The student will be logged out.')) return;
+  try {
+    const res  = await post({ action: 'adminKillSession', password: ADMIN_PW, sessionToken: token, email });
+    const data = await res.json();
+    if (data.status === 'ok') { toast('Session terminated.', true); viewSessions(email, ''); }
+    else toast(data.message || 'Failed', false);
+  } catch(e) { toast('Error', false); }
+}
+
+async function forcePasswordReset(email, name) {
+  if (!confirm(`Force password reset for ${name}? Their current password will be cleared — they must use their token to log in and set a new one.`)) return;
+  try {
+    const res  = await post({ action: 'adminForcePasswordReset', password: ADMIN_PW, email });
+    const data = await res.json();
+    if (data.status === 'ok') { toast(`Password reset for ${name}.`, true); loadStudents(); }
+    else toast(data.message || 'Failed', false);
+  } catch(e) { toast('Error', false); }
+}
+
+async function deactivateStudent(email, name, rowIndex) {
+  if (!confirm(`Deactivate ${name}? They won't be able to log in.`)) return;
+  try {
+    const res  = await post({ action: 'adminSaveRow', password: ADMIN_PW, tab: 'ApprovedStudents', rowIndex,
+      values: allStudents.find(s=>s.rowIndex===rowIndex)
+        ? (() => { const s=allStudents.find(s=>s.rowIndex===rowIndex); return [s.id,s.email,s.name,s.batch,s.token,'Inactive',s.approvedOn,s.lastLogin,'',(s.hasPw||false)]; })()
+        : null
+    });
+    const data = await res.json();
+    if (data.status === 'ok') { toast(`${name} deactivated.`, true); loadStudents(); }
+    else toast(data.message || 'Failed', false);
+  } catch(e) { toast('Error', false); }
+}
+
+function closeSessionsModal() { document.getElementById('modal-sessions').classList.remove('open'); }
+
+// ── LEADERBOARD ──────────────────────────────────────────────────
+async function loadLeaderboard() {
+  try {
+    const res  = await get({ action: 'adminGetData', tab: 'Leaderboard' });
+    const data = await res.json();
+    if (data.status !== 'ok') throw new Error(data.message);
+    allLB = data.data.rows.map(r => ({
+      email: r.values[0], name: r.values[1], game: r.values[2],
+      score: Number(r.values[3]), date: r.values[4],
+    }));
+    renderLeaderboard();
+  } catch(e) { document.getElementById('lb-content').innerHTML = `<div class="empty-state">⚠️ ${esc(e.message)}</div>`; }
+}
+
+let activeGame = '';
+function renderLeaderboard() {
+  const games = [...new Set(allLB.map(r => r.game).filter(Boolean))];
+  if (!activeGame && games.length) activeGame = games[0];
+  const tabsEl = document.getElementById('lb-game-tabs');
+  tabsEl.innerHTML = games.map(g =>
+    `<button class="lb-game-chip${g === activeGame ? ' active' : ''}" onclick="setLbGame('${esc(g)}')">${esc(g)}</button>`
+  ).join('');
+  const rows = allLB.filter(r => r.game === activeGame).sort((a,b) => b.score - a.score);
+  const el = document.getElementById('lb-content');
+  if (rows.length === 0) { el.innerHTML = '<div class="empty-state">No scores yet.</div>'; return; }
+  const rankClass = i => i === 0 ? 'r1' : i === 1 ? 'r2' : i === 2 ? 'r3' : '';
+  el.innerHTML = `
+    <table class="lb-table">
+      <thead><tr><th>#</th><th>Student</th><th>Email</th><th>Score</th><th>Date</th></tr></thead>
+      <tbody>${rows.map((r,i) => `
+        <tr>
+          <td><span class="lb-rank ${rankClass(i)}">${i+1}</span></td>
+          <td>${esc(r.name)}</td>
+          <td style="font-family:var(--fm);font-size:.72rem;color:var(--mu);">${esc(r.email)}</td>
+          <td><span class="lb-score">${r.score.toLocaleString()}</span></td>
+          <td style="font-size:.72rem;color:var(--mu);">${fmtDate(r.date)}</td>
+        </tr>`).join('')}
+      </tbody>
+    </table>`;
+}
+
+function setLbGame(g) {
+  activeGame = g;
+  document.querySelectorAll('.lb-game-chip').forEach(c => c.classList.remove('active'));
+  event.target.classList.add('active');
+  renderLeaderboard();
+}
+
+// ── STUDY MATERIALS ──────────────────────────────────────────────
+async function loadMaterials() {
+  try {
+    const [matRes, batchRes] = await Promise.all([
+      get({ action: 'adminGetData', tab: 'StudyMaterials' }),
+      get({ action: 'getBatches', key: 'SZC-INTERNAL-2025-XK9' }),
+    ]);
+    const matData   = await matRes.json();
+    const batchData = await batchRes.json();
+    if (matData.status !== 'ok') throw new Error(matData.message);
+    allMaterials = matData.data.rows.map(r => ({
+      id: r.values[0], title: r.values[1], category: r.values[2],
+      description: r.values[3], linkUrl: r.values[4], fileUrl: r.values[5],
+      postedOn: r.values[6], rowIndex: r.rowIndex,
+    })).filter(m => m.title);
+    allBatches = batchData.batches || [];
+    renderBatchChips();
+    populateMatSelect();
+    renderMaterials();
+  } catch(e) { document.getElementById('mat-admin-list').innerHTML = `<div class="empty-state">⚠️ ${esc(e.message)}</div>`; }
+}
+
+function renderBatchChips() {
+  const el = document.getElementById('email-batch-chips');
+  if (!allBatches.length) { el.innerHTML = '<span style="font-size:.78rem;color:var(--mu);">No batches found.</span>'; return; }
+  el.innerHTML = allBatches.map(b =>
+    `<button class="batch-chip-btn${selectedEmailBatches.has(b)?' sel':''}" onclick="toggleBatch(this,'${esc(b)}')">${esc(b)}</button>`
+  ).join('');
+}
+
+function toggleBatch(el, b) {
+  if (selectedEmailBatches.has(b)) { selectedEmailBatches.delete(b); el.classList.remove('sel'); }
+  else { selectedEmailBatches.add(b); el.classList.add('sel'); }
+  updateEmailBtn();
+}
+function updateEmailBtn() {
+  const matId = document.getElementById('email-mat-select')?.value;
+  const btn = document.getElementById('email-send-btn');
+  if (btn) btn.disabled = (selectedEmailBatches.size === 0 || !matId);
+}
+
+function populateMatSelect() {
+  const sel = document.getElementById('email-mat-select');
+  sel.innerHTML = '<option value="">— Select a material —</option>' +
+    allMaterials.map(m => `<option value="${esc(m.id)}">${esc(m.title)}</option>`).join('');
+  sel.onchange = updateEmailBtn;
+}
+
+function renderMaterials() {
+  const el = document.getElementById('mat-admin-list');
+  if (!allMaterials.length) { el.innerHTML = '<div class="empty-state">No materials yet — click "+ Add Material" to create one.</div>'; return; }
+  el.className = 'mat-admin-list';
+  el.innerHTML = allMaterials.map(m => `
+    <div class="mat-admin-card">
+      <div class="mat-admin-top">
+        <span class="mat-admin-title">${esc(m.title)}</span>
+        ${m.category ? `<span class="mat-cat-badge">${esc(m.category)}</span>` : ''}
+      </div>
+      ${m.description ? `<div class="mat-admin-desc">${esc(m.description)}</div>` : ''}
+      <div class="mat-admin-links">
+        ${m.linkUrl ? `<span class="mat-link-tag">🔗 ${esc(m.linkUrl)}</span>` : ''}
+        ${m.fileUrl ? `<span class="mat-link-tag">📄 ${esc(m.fileUrl)}</span>` : ''}
+      </div>
+      <div class="mat-admin-foot">
+        <button class="btn btn-sm btn-ghost"   onclick="editMaterial('${esc(m.id)}')">✏️ Edit</button>
+        <button class="btn btn-sm btn-danger"  onclick="deleteMaterial('${esc(m.id)}', ${m.rowIndex})">🗑 Delete</button>
+        <span class="mat-admin-date">${m.postedOn ? 'Posted ' + fmtDate(m.postedOn) : ''}</span>
+      </div>
+    </div>`).join('');
+}
+
+// Add / Edit modal
+function openAddMaterial() {
+  editingMatId = null;
+  document.getElementById('modal-title').textContent = 'Add Study Material';
+  document.getElementById('modal-save-btn').textContent = 'Save Material';
+  ['title','cat','desc','link','file'].forEach(f => document.getElementById('mat-f-'+f).value = '');
+  document.getElementById('modal-add-mat').classList.add('open');
+}
+
+function editMaterial(id) {
+  const m = allMaterials.find(m => m.id === id);
+  if (!m) return;
+  editingMatId = id;
+  document.getElementById('modal-title').textContent = 'Edit Material';
+  document.getElementById('modal-save-btn').textContent = 'Update Material';
+  document.getElementById('mat-f-title').value = m.title || '';
+  document.getElementById('mat-f-cat').value   = m.category || '';
+  document.getElementById('mat-f-desc').value  = m.description || '';
+  document.getElementById('mat-f-link').value  = m.linkUrl || '';
+  document.getElementById('mat-f-file').value  = m.fileUrl || '';
+  document.getElementById('modal-add-mat').classList.add('open');
+}
+
+function closeModal() { document.getElementById('modal-add-mat').classList.remove('open'); editingMatId = null; }
+
+async function saveMaterial() {
+  const title = document.getElementById('mat-f-title').value.trim();
+  if (!title) { alert('Title is required.'); return; }
+  const values = [
+    editingMatId || ('MAT-' + Date.now() + '-' + Math.floor(Math.random()*9000+1000)),
+    title,
+    document.getElementById('mat-f-cat').value.trim(),
+    document.getElementById('mat-f-desc').value.trim(),
+    document.getElementById('mat-f-link').value.trim(),
+    document.getElementById('mat-f-file').value.trim(),
+    new Date().toISOString(),
+  ];
+  const rowIndex = editingMatId ? allMaterials.find(m => m.id === editingMatId)?.rowIndex : undefined;
+  try {
+    const res  = await post({ action: 'adminSaveRow', password: ADMIN_PW, tab: 'StudyMaterials', rowIndex, values });
+    const data = await res.json();
+    if (data.status === 'ok') { toast(editingMatId ? 'Material updated ✓' : 'Material added ✓', true); closeModal(); loadMaterials(); }
+    else toast(data.message || 'Failed', false);
+  } catch(e) { toast('Error', false); }
+}
+
+async function deleteMaterial(id, rowIndex) {
+  if (!confirm('Delete this material? This cannot be undone.')) return;
+  try {
+    const res  = await post({ action: 'adminDeleteRow', password: ADMIN_PW, tab: 'StudyMaterials', rowIndex });
+    const data = await res.json();
+    if (data.status === 'ok') { toast('Deleted ✓', true); loadMaterials(); }
+    else toast(data.message || 'Failed', false);
+  } catch(e) { toast('Error', false); }
+}
+
+// Email send
+async function doSendEmail() {
+  const matId    = document.getElementById('email-mat-select').value;
+  const material = allMaterials.find(m => m.id === matId);
+  if (!material || selectedEmailBatches.size === 0) return;
+  const btn = document.getElementById('email-send-btn');
+  const statusEl = document.getElementById('email-status');
+  btn.disabled = true;
+  statusEl.className = 'email-status sending';
+  statusEl.textContent = `⏳ Sending to ${selectedEmailBatches.size} batch(es)…`;
+  try {
+    const res  = await post({
+      action: 'sendMaterialEmail', apiKey: 'SZC-INTERNAL-2025-XK9',
+      batches: [...selectedEmailBatches], material: {
+        id: material.id, title: material.title, description: material.description,
+        linkUrl: material.linkUrl, fileUrl: material.fileUrl, category: material.category,
+      },
+    });
+    const data = await res.json();
+    if (data.status === 'ok') {
+      statusEl.className = 'email-status ok';
+      statusEl.textContent = `✅ Sent to ${data.recipients || '?'} students in ${data.sent || selectedEmailBatches.size} batch(es). CC: hr@sapzcodes.com`;
+    } else {
+      statusEl.className = 'email-status err';
+      statusEl.textContent = '❌ Failed: ' + (data.message || 'Unknown error');
+    }
+  } catch(e) {
+    statusEl.className = 'email-status err';
+    statusEl.textContent = '❌ Connection error: ' + e.message;
+  } finally {
+    btn.disabled = false; updateEmailBtn();
+  }
+}
+
+// Close modals on overlay click
+document.getElementById('modal-add-mat').addEventListener('click', function(e) { if (e.target===this) closeModal(); });
+document.getElementById('modal-sessions').addEventListener('click', function(e) { if (e.target===this) closeSessionsModal(); });
 </script>
 </body>
 </html>
