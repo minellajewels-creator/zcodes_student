@@ -93,8 +93,8 @@ body { cursor: default; overflow-x: hidden; background: var(--bg); color: var(--
   <span class="topbar-sep">/</span>
   <span class="topbar-page">Study Materials</span>
   <div class="topbar-right">
-    <a class="topbar-btn" href="dashboard.html">← Dashboard</a>
-    <a class="topbar-btn" href="games.html">🎮 Games</a>
+    <a class="topbar-btn" href="dashboard">← Dashboard</a>
+    <a class="topbar-btn" href="games">🎮 Games</a>
   </div>
 </div>
 
@@ -132,7 +132,7 @@ const isAdmin = (sessionStorage.getItem('szc_token') && sessionStorage.getItem('
                 localStorage.getItem('szc_token');
 
 if (!sessionStorage.getItem('szc_token') && !localStorage.getItem('szc_token')) {
-  window.location.href = 'index.html';
+  window.location.href = 'index';
 }
 
 const GAS_URL    = 'https://script.google.com/macros/s/AKfycbx4H_6v2nNH_Xa0FajhKQKCZgHgwuupi2CD6NdC4YuatcE0f451IFgXbNES-7sYRF4Hog/exec';
