@@ -219,7 +219,7 @@ body { cursor: default; overflow-x: hidden; }
 <script type="text/babel">
 const { useState, useEffect, useCallback } = React;
 
-if (!sessionStorage.getItem('szc_token')) { window.location.href = 'index.html'; }
+if (!sessionStorage.getItem('szc_token')) { window.location.href = 'index'; }
 const STUDENT_NAME  = sessionStorage.getItem('szc_name')  || 'Student';
 const STUDENT_EMAIL = sessionStorage.getItem('szc_email') || '';
 
@@ -488,7 +488,7 @@ function Hub({onSelect, gameData, scores}) {
             <div className="runner-meta">
               <span className="runner-badge">❤️ 5 Lives</span>
               <span className="runner-badge">🎓 Certificate</span>
-              <button className="runner-play-btn" onClick={e=>{e.stopPropagation();window.open('abap-runner.html','_blank');}}>▶ Play</button>
+              <button className="runner-play-btn" onClick={e=>{e.stopPropagation();window.open('abap-runner','_blank');}}>▶ Play</button>
             </div>
             <RunnerLB scores={scores} gameId="abap-runner" title="ABAP Runner Top Scores"/>
           </div>
@@ -505,7 +505,7 @@ function Hub({onSelect, gameData, scores}) {
             <div className="runner-meta">
               <span className="runner-badge">❤️ 3 Lives</span>
               <span className="runner-badge">🎮 3D World</span>
-              <button className="runner-play-btn" onClick={e=>{e.stopPropagation();window.open('subway-abaper.html','_blank');}}>▶ Play</button>
+              <button className="runner-play-btn" onClick={e=>{e.stopPropagation();window.open('subway-abaper','_blank');}}>▶ Play</button>
             </div>
             <RunnerLB scores={scores} gameId="subway" title="Subway Runner Top Scores"/>
           </div>
@@ -538,7 +538,7 @@ function App() {
 
   const topbar = (
     <div className="topbar">
-      <a className="topbar-logo" href="games.html">
+      <a className="topbar-logo" href="games">
         <img src="logo.png" alt="SAPZCODES"/>
       </a>
       <span className="topbar-sep">/</span>
@@ -546,7 +546,7 @@ function App() {
       <div className="topbar-right">
         <span className="topbar-user">👤 {STUDENT_NAME}</span>
         <button className="topbar-btn" onClick={()=>{sessionStorage.removeItem('szc_gamedata');window.location.reload();}}>↺ Refresh</button>
-        <a className="topbar-btn danger" href="index.html" onClick={()=>sessionStorage.clear()}>Sign Out</a>
+        <a className="topbar-btn danger" href="index" onClick={()=>sessionStorage.clear()}>Sign Out</a>
       </div>
     </div>
   );
