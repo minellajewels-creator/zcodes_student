@@ -77,7 +77,7 @@ body { cursor: default; min-height: 100vh; }
 <div id="cur"></div>
 
 <div class="topbar">
-  <a class="topbar-logo" href="dashboard.html">
+  <a class="topbar-logo" href="dashboard">
     <img src="logo.png" alt="SAPZCODES" onerror="this.style.display='none'"/>
     <span class="topbar-logo-text">SAPZ<span>CODES</span></span>
   </a>
@@ -94,13 +94,13 @@ body { cursor: default; min-height: 100vh; }
 </div>
 
 <div class="tiles-wrap">
-  <a class="tile" href="games.html" style="--tile-color:#22a032">
+  <a class="tile" href="games" style="--tile-color:#22a032">
     <span class="tile-icon">🎮</span>
     <span class="tile-title">Learning Games</span>
     <span class="tile-desc">ABAP Quiz, ABAP Runner and Subway Runner — all driven by your training sheet, with live leaderboards.</span>
     <span class="tile-cta">Open Games →</span>
   </a>
-  <a class="tile" href="study-materials.html" style="--tile-color:#2563eb">
+  <a class="tile" href="study-materials" style="--tile-color:#2563eb">
     <span class="tile-icon">📚</span>
     <span class="tile-title">Study Materials</span>
     <span class="tile-desc">Notes, PDFs and links posted by your trainer. New material appears here as soon as it's published.</span>
@@ -112,7 +112,7 @@ body { cursor: default; min-height: 100vh; }
 
 <script>
 if (!sessionStorage.getItem('szc_token') && !localStorage.getItem('szc_token')) {
-  window.location.href = 'index.html';
+  window.location.href = 'index';
 }
 const name = sessionStorage.getItem('szc_name') || localStorage.getItem('szc_name') || 'Student';
 document.getElementById('topbar-user').textContent = '👤 ' + name;
@@ -120,7 +120,7 @@ document.getElementById('topbar-user').textContent = '👤 ' + name;
 function signOut() {
   sessionStorage.clear();
   ['szc_token','szc_email','szc_name'].forEach(k => localStorage.removeItem(k));
-  window.location.href = 'index.html';
+  window.location.href = 'index';
 }
 </script>
 </body>
