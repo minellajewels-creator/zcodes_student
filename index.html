@@ -325,7 +325,7 @@ const API_SECRET = 'SZC-INTERNAL-2025-XK9';
 let _pendingName='', _pendingEmail='', _pendingToken='', _pendingBatch='';
 
 if (sessionStorage.getItem('szc_token')||localStorage.getItem('szc_token')) {
-  window.location.href='dashboard.html';
+  window.location.href='dashboard';
 }
 
 // ── Panel switcher ──────────────────────────────────────────────
@@ -415,7 +415,7 @@ function proceedToDashboard(name) {
   const n = name||sessionStorage.getItem('szc_name')||'Student';
   setBody('login-ok-body','Welcome, '+n+'! Redirecting…');
   showAlert('login-ok');
-  setTimeout(()=>{ window.location.href='dashboard.html'; }, 900);
+  setTimeout(()=>{ window.location.href='dashboard'; }, 900);
 }
 
 // ── FORCE SET PASSWORD (after first token login) ────────────────
