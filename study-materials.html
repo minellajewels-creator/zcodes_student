@@ -31,7 +31,7 @@ body { cursor: default; overflow-x: hidden; background: var(--bg); color: var(--
 }
 .topbar-btn:hover { border-color: var(--g); color: var(--g); background: rgba(34,160,50,.06); }
 
-.wrap { max-width: 920px; margin: 0 auto; padding: 34px 20px 60px; }
+.wrap { max-width: 960px; margin: 0 auto; padding: 34px 20px 60px; }
 .hdr { margin-bottom: 26px; }
 .hdr h1 { font-family: var(--fh); font-size: 1.7rem; font-weight: 700; margin-bottom: 6px; color: var(--text); }
 .hdr h1 span { color: var(--g); }
@@ -42,47 +42,80 @@ body { cursor: default; overflow-x: hidden; background: var(--bg); color: var(--
 .chip:hover { border-color: var(--g); color: var(--g); }
 .chip.active { border-color: var(--g); background: rgba(34,160,50,.1); color: var(--g); }
 
-.mat-list { display:flex; flex-direction:column; gap:14px; }
-.mat-card { background: var(--s1); border:1px solid var(--bd); border-radius: var(--r); padding: 20px 22px; transition: all .2s; }
-.mat-card:hover { border-color: rgba(34,160,50,.35); box-shadow: 0 8px 24px rgba(0,0,0,.1); }
+.mat-list { display:flex; flex-direction:column; gap:18px; }
+
+/* ── Card base ── */
+.mat-card {
+  background: var(--s1); border:1px solid var(--bd); border-radius: var(--r);
+  overflow: hidden; transition: border-color .2s, box-shadow .2s;
+}
+.mat-card:hover { border-color: rgba(34,160,50,.35); box-shadow: 0 8px 28px rgba(0,0,0,.1); }
+
+.mat-body { padding: 20px 22px; }
 .mat-top { display:flex; align-items:flex-start; justify-content:space-between; gap:10px; margin-bottom:8px; flex-wrap:wrap; }
 .mat-title { font-family: var(--fh); font-size: 1.08rem; font-weight: 700; color: var(--text); }
-.mat-cat { font-family: var(--fm); font-size: .58rem; font-weight:700; letter-spacing:.1em; text-transform:uppercase; padding:3px 9px; border-radius:20px; background: rgba(37,99,235,.08); color:#2563eb; border:1px solid rgba(37,99,235,.2); white-space:nowrap; }
+.mat-badges { display:flex; gap:6px; align-items:center; flex-wrap:wrap; }
+.mat-cat {
+  font-family: var(--fm); font-size: .58rem; font-weight:700; letter-spacing:.1em;
+  text-transform:uppercase; padding:3px 9px; border-radius:20px;
+  background: rgba(37,99,235,.08); color:#2563eb; border:1px solid rgba(37,99,235,.2); white-space:nowrap;
+}
+.mat-badge-rec {
+  font-family: var(--fm); font-size: .58rem; font-weight:700; letter-spacing:.1em;
+  text-transform:uppercase; padding:3px 9px; border-radius:20px;
+  background: rgba(220,38,38,.07); color:#dc2626; border:1px solid rgba(220,38,38,.18); white-space:nowrap;
+  display:inline-flex; align-items:center; gap:4px;
+}
+.mat-badge-rec::before { content:''; width:6px; height:6px; border-radius:50%; background:#dc2626; display:inline-block; animation: pulse 1.4s ease-in-out infinite; }
+@keyframes pulse { 0%,100%{opacity:1;} 50%{opacity:.4;} }
+
 .mat-desc { font-size: .84rem; color: var(--gr); line-height: 1.65; margin-bottom: 12px; white-space: pre-wrap; }
-.mat-links { display:flex; gap:10px; flex-wrap:wrap; }
-.mat-link { font-size:.78rem; font-weight:700; padding:7px 14px; border-radius:7px; text-decoration:none; display:inline-flex; align-items:center; gap:6px; }
+.mat-links { display:flex; gap:10px; flex-wrap:wrap; margin-bottom: 4px; }
+.mat-link {
+  font-size:.78rem; font-weight:700; padding:7px 14px; border-radius:7px;
+  text-decoration:none; display:inline-flex; align-items:center; gap:6px; cursor:pointer; border:none; font-family:var(--fb);
+}
 .mat-link.primary { background: var(--g); color:#fff; }
 .mat-link.primary:hover { background: #1a8028; }
 .mat-link.secondary { background: var(--bg); border:1px solid var(--bd2); color: var(--mu); }
 .mat-link.secondary:hover { border-color: var(--g); color: var(--g); }
+.mat-link.watch { background: rgba(220,38,38,.1); border:1px solid rgba(220,38,38,.22); color:#dc2626; }
+.mat-link.watch:hover { background: rgba(220,38,38,.18); }
 .mat-date { font-family: var(--fm); font-size:.62rem; color: var(--mu); margin-top: 10px; }
+
+/* ── Video Player Panel ── */
+.video-panel {
+  background: #000; border-top: 1px solid var(--bd);
+  position: relative; overflow: hidden;
+  display: none;
+}
+.video-panel.open { display: block; }
+.video-panel iframe {
+  display: block; width: 100%; aspect-ratio: 16/9; border: none;
+  pointer-events: auto;
+}
+.video-panel-bar {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 8px 14px; background: var(--s2); border-top: 1px solid var(--bd);
+}
+.video-panel-title { font-family: var(--fm); font-size: .72rem; color: var(--mu); }
+.video-close-btn {
+  font-size: .7rem; font-weight:700; font-family:var(--fb); padding:4px 10px;
+  border-radius:5px; border:1px solid var(--bd2); background:var(--bg);
+  color:var(--mu); cursor:pointer; transition:all .15s;
+}
+.video-close-btn:hover { border-color: var(--g); color:var(--g); }
+
+/* ── No-download overlay trick ── */
+.video-wrap { position:relative; }
+.video-wrap::after {
+  content:''; position:absolute; inset:0;
+  background:transparent; z-index:1; pointer-events:none;
+}
 
 .empty, .loading-state { text-align:center; padding: 60px 20px; color: var(--mu); font-family: var(--fm); font-size:.82rem; }
 .spinner { width:30px; height:30px; border:2.5px solid var(--bd); border-top-color: var(--g); border-radius:50%; animation: spin .7s linear infinite; margin: 0 auto 14px; }
 @keyframes spin { to { transform: rotate(360deg); } }
-
-/* ── EMAIL PANEL ── */
-.email-panel {
-  background: var(--s1); border: 1px solid var(--bd); border-radius: var(--r);
-  padding: 22px 24px; margin-bottom: 28px;
-}
-.email-panel-title { font-family: var(--fh); font-size: 1rem; font-weight: 700; color: var(--text); margin-bottom: 6px; }
-.email-panel-sub { font-size: .78rem; color: var(--mu); margin-bottom: 16px; }
-.batch-chips { display:flex; flex-wrap:wrap; gap:8px; margin-bottom:14px; }
-.batch-chip { padding:6px 14px; border-radius:20px; font-size:.76rem; font-weight:600; border:1.5px solid var(--bd2); background:var(--bg); color:var(--mu); cursor:pointer; transition:all .15s; user-select:none; }
-.batch-chip:hover { border-color: var(--g); color: var(--g); }
-.batch-chip.selected { border-color: var(--g); background: rgba(34,160,50,.1); color: var(--g); }
-
-.email-material-select { width:100%; padding:9px 12px; background:var(--bg); border:1.5px solid var(--bd2); border-radius:8px; color:var(--text); font-family:var(--fb); font-size:.85rem; outline:none; margin-bottom:14px; }
-.email-material-select:focus { border-color: var(--g); }
-
-.email-btn { padding:10px 22px; background:var(--g); border:none; border-radius:8px; color:#fff; font-family:var(--fh); font-size:.92rem; font-weight:700; cursor:pointer; transition:all .18s; }
-.email-btn:hover:not(:disabled) { background:#1a8028; transform:translateY(-1px); }
-.email-btn:disabled { opacity:.5; cursor:not-allowed; transform:none; }
-.email-status { margin-top:10px; font-size:.78rem; padding:8px 12px; border-radius:7px; display:none; }
-.email-status.ok { background:rgba(34,160,50,.08); border:1px solid rgba(34,160,50,.2); color:var(--g); display:block; }
-.email-status.err { background:rgba(200,50,50,.06); border:1px solid rgba(200,50,50,.2); color:#c0392b; display:block; }
-.email-status.sending { background:rgba(217,119,6,.07); border:1px solid rgba(217,119,6,.18); color:#d97706; display:block; }
 </style>
 </head>
 <body>
@@ -101,26 +134,7 @@ body { cursor: default; overflow-x: hidden; background: var(--bg); color: var(--
 <div class="wrap">
   <div class="hdr">
     <h1>Study <span>Materials</span></h1>
-    <p>Notes, references and links from your trainer.</p>
-  </div>
-
-  <!-- Email batch panel (visible to admin / trainer) -->
-  <div class="email-panel" id="email-panel" style="display:none">
-    <div class="email-panel-title">📧 Send Material to Batches</div>
-    <div class="email-panel-sub">Select one or more batches, choose the material, and send. CC is automatically sent to hr@sapzcodes.com.</div>
-
-    <div style="font-family:var(--fm);font-size:.6rem;letter-spacing:.1em;text-transform:uppercase;color:var(--mu);margin-bottom:8px;">Select Batches (multi-select)</div>
-    <div class="batch-chips" id="batch-chips">
-      <div style="font-size:.78rem;color:var(--mu);">Loading batches…</div>
-    </div>
-
-    <div style="font-family:var(--fm);font-size:.6rem;letter-spacing:.1em;text-transform:uppercase;color:var(--mu);margin-bottom:6px;">Select Material</div>
-    <select class="email-material-select" id="email-material-select">
-      <option value="">— Select a material to send —</option>
-    </select>
-
-    <button class="email-btn" id="email-send-btn" onclick="sendBatchEmail()" disabled>Send Email →</button>
-    <div class="email-status" id="email-status"></div>
+    <p>Notes, references and recordings from your trainer.</p>
   </div>
 
   <div class="chips" id="chips"></div>
@@ -128,9 +142,6 @@ body { cursor: default; overflow-x: hidden; background: var(--bg); color: var(--
 </div>
 
 <script>
-const isAdmin = (sessionStorage.getItem('szc_token') && sessionStorage.getItem('szc_email') === 'hr@sapzcodes.com') ||
-                localStorage.getItem('szc_token');
-
 if (!sessionStorage.getItem('szc_token') && !localStorage.getItem('szc_token')) {
   window.location.href = 'index';
 }
@@ -140,157 +151,140 @@ const API_SECRET = 'SZC-INTERNAL-2025-XK9';
 
 let ALL = [];
 let activeCat = 'All';
-let selectedBatches = new Set();
+
+// ── SharePoint link → embed URL ──────────────────────────────────
+function toEmbedUrl(url) {
+  if (!url) return null;
+
+  // Already an embed URL
+  if (url.includes('embed=true') || url.includes('action=embedview')) return url;
+
+  // SharePoint share link (/:v:/ pattern — video file)
+  // Convert to Stream embed: replace /personal/ path with embed param
+  if (url.includes('sharepoint.com') || url.includes('1drv.ms') || url.includes('onedrive.live.com')) {
+    // Use the share URL with ?embed=true appended
+    const base = url.split('?')[0];
+    const params = new URLSearchParams(url.split('?')[1] || '');
+    params.set('action', 'embedview');
+    params.delete('e'); // remove expiry token — embed ignores it
+    return base + '?' + params.toString();
+  }
+
+  return null;
+}
+
+function isVideoLink(url) {
+  if (!url) return false;
+  return url.includes('sharepoint.com') || url.includes('1drv.ms') ||
+         url.includes('onedrive.live.com') || url.includes('stream.microsoft.com') ||
+         /\.(mp4|webm|mov)$/i.test(url.split('?')[0]);
+}
 
 function fmtDate(iso) {
   try { return new Date(iso).toLocaleDateString('en-IN',{day:'numeric',month:'short',year:'numeric'}); }
   catch(e){ return ''; }
 }
 function esc(s) { return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
-window.setCat = function(c) { activeCat=c; render(); };
+
+window.setCat = function(c) { activeCat = c; render(); };
+
+// Track open video panels
+const openVideos = new Set();
+
+window.toggleVideo = function(id) {
+  const panel = document.getElementById('vp-' + id);
+  if (!panel) return;
+  if (panel.classList.contains('open')) {
+    panel.classList.remove('open');
+    panel.querySelector('iframe').src = '';
+    openVideos.delete(id);
+  } else {
+    panel.classList.add('open');
+    const embedSrc = panel.dataset.src;
+    panel.querySelector('iframe').src = embedSrc;
+    openVideos.add(id);
+    // Scroll into view smoothly
+    setTimeout(() => panel.scrollIntoView({ behavior: 'smooth', block: 'nearest' }), 100);
+  }
+};
 
 function render() {
   const chipsEl = document.getElementById('chips');
-  const cats = ['All', ...new Set(ALL.map(m=>m.category).filter(Boolean))];
+  const cats = ['All', ...new Set(ALL.map(m => m.category).filter(Boolean))];
   chipsEl.innerHTML = cats.map(c =>
-    `<button class="chip${c===activeCat?' active':''}" onclick="setCat('${c.replace(/'/g,"\\'")}')">${c}</button>`
+    `<button class="chip${c === activeCat ? ' active' : ''}" onclick="setCat('${c.replace(/'/g,"\\'")}')">
+      ${esc(c)}${c !== 'All' ? ` <span style="font-size:.65em;opacity:.6;">${ALL.filter(m=>m.category===c).length}</span>` : ''}
+    </button>`
   ).join('');
 
-  const list = activeCat==='All' ? ALL : ALL.filter(m=>m.category===activeCat);
+  const list = activeCat === 'All' ? ALL : ALL.filter(m => m.category === activeCat);
   const el = document.getElementById('content');
 
-  if (list.length===0) { el.className='empty'; el.innerHTML='📭 No materials posted yet. Check back soon!'; return; }
-
-  el.className='mat-list';
-  el.innerHTML = list.map(m=>`
-    <div class="mat-card">
-      <div class="mat-top">
-        <span class="mat-title">${esc(m.title)}</span>
-        ${m.category?`<span class="mat-cat">${esc(m.category)}</span>`:''}
-      </div>
-      ${m.description?`<div class="mat-desc">${esc(m.description)}</div>`:''}
-      <div class="mat-links">
-        ${m.linkUrl?`<a class="mat-link primary" href="${esc(m.linkUrl)}" target="_blank" rel="noopener">🔗 Open Link</a>`:''}
-        ${m.fileUrl?`<a class="mat-link secondary" href="${esc(m.fileUrl)}" target="_blank" rel="noopener">📄 Open File</a>`:''}
-      </div>
-      ${m.postedOn?`<div class="mat-date">Posted ${fmtDate(m.postedOn)}</div>`:''}
-    </div>
-  `).join('');
-
-  // Update material dropdown in email panel
-  const sel = document.getElementById('email-material-select');
-  if (sel) {
-    sel.innerHTML = '<option value="">— Select a material to send —</option>' +
-      ALL.map(m => `<option value="${esc(m.id)}">${esc(m.title)}</option>`).join('');
-    sel.onchange = () => updateSendBtn();
-  }
-}
-
-// ── BATCH EMAIL ──────────────────────────────────────────────────
-async function loadBatches() {
-  try {
-    const url=`${GAS_URL}?action=getBatches&key=${encodeURIComponent(API_SECRET)}`;
-    const res=await fetch(url);
-    const data=await res.json();
-    if (data.status==='ok' && data.batches) {
-      renderBatchChips(data.batches);
-    } else {
-      // Fallback: get batches from students list via admin
-      document.getElementById('batch-chips').innerHTML='<div style="font-size:.78rem;color:var(--mu);">Could not load batches — check sheet.</div>';
-    }
-  } catch(e) {
-    document.getElementById('batch-chips').innerHTML='<div style="font-size:.78rem;color:#c0392b;">Error loading batches.</div>';
-  }
-}
-
-function renderBatchChips(batches) {
-  const el = document.getElementById('batch-chips');
-  if (!batches || batches.length===0) {
-    el.innerHTML='<div style="font-size:.78rem;color:var(--mu);">No batches found in student sheet.</div>';
+  if (list.length === 0) {
+    el.className = 'empty';
+    el.innerHTML = '📭 No materials posted yet. Check back soon!';
     return;
   }
-  el.innerHTML = batches.map(b =>
-    `<div class="batch-chip" data-batch="${esc(b)}" onclick="toggleBatch(this,'${b.replace(/'/g,"\\'")}')">
-      ${esc(b)}
-    </div>`
-  ).join('');
-}
 
-window.toggleBatch = function(el, batch) {
-  if (selectedBatches.has(batch)) { selectedBatches.delete(batch); el.classList.remove('selected'); }
-  else { selectedBatches.add(batch); el.classList.add('selected'); }
-  updateSendBtn();
-};
+  el.className = 'mat-list';
+  el.innerHTML = list.map(m => {
+    const hasVideo  = isVideoLink(m.linkUrl) || isVideoLink(m.fileUrl);
+    const videoUrl  = isVideoLink(m.linkUrl) ? m.linkUrl : (isVideoLink(m.fileUrl) ? m.fileUrl : null);
+    const embedSrc  = videoUrl ? toEmbedUrl(videoUrl) : null;
+    const hasNonVideoLink = m.linkUrl && !isVideoLink(m.linkUrl);
+    const hasFile   = m.fileUrl && !isVideoLink(m.fileUrl);
+    const safeId    = CSS.escape ? m.id.replace(/[^a-zA-Z0-9-_]/g,'') : m.id.replace(/[^a-zA-Z0-9-_]/g,'');
 
-function updateSendBtn() {
-  const matId = document.getElementById('email-material-select')?.value;
-  const btn = document.getElementById('email-send-btn');
-  if (btn) btn.disabled = (selectedBatches.size===0 || !matId);
-}
-
-async function sendBatchEmail() {
-  const matId = document.getElementById('email-material-select').value;
-  const material = ALL.find(m=>m.id===matId);
-  if (!material || selectedBatches.size===0) return;
-
-  const btn = document.getElementById('email-send-btn');
-  const statusEl = document.getElementById('email-status');
-  btn.disabled = true;
-  statusEl.className='email-status sending';
-  statusEl.textContent=`⏳ Sending to ${selectedBatches.size} batch(es)…`;
-
-  try {
-    const res = await fetch(GAS_URL, {
-      method:'POST', headers:{'Content-Type':'text/plain'},
-      body: JSON.stringify({
-        action: 'sendMaterialEmail',
-        apiKey: API_SECRET,
-        batches: [...selectedBatches],
-        material: {
-          id: material.id,
-          title: material.title,
-          description: material.description,
-          linkUrl: material.linkUrl,
-          fileUrl: material.fileUrl,
-          category: material.category,
-        }
-      }),
-      redirect:'follow',
-    });
-    const data = await res.json();
-    if (data.status==='ok') {
-      statusEl.className='email-status ok';
-      statusEl.textContent=`✅ Email sent to ${data.sent||selectedBatches.size} batch(es) (${data.recipients||'?'} students). CC: hr@sapzcodes.com`;
-    } else {
-      statusEl.className='email-status err';
-      statusEl.textContent='❌ Failed: '+(data.message||'Unknown error');
-    }
-  } catch(e) {
-    statusEl.className='email-status err';
-    statusEl.textContent='❌ Connection error: '+e.message;
-  } finally {
-    btn.disabled = false;
-    updateSendBtn();
-  }
+    return `
+    <div class="mat-card" id="card-${safeId}">
+      <div class="mat-body">
+        <div class="mat-top">
+          <span class="mat-title">${esc(m.title)}</span>
+          <div class="mat-badges">
+            ${m.category ? `<span class="mat-cat">${esc(m.category)}</span>` : ''}
+            ${hasVideo ? `<span class="mat-badge-rec">Recording</span>` : ''}
+          </div>
+        </div>
+        ${m.description ? `<div class="mat-desc">${esc(m.description)}</div>` : ''}
+        <div class="mat-links">
+          ${hasVideo && embedSrc ? `<button class="mat-link watch" onclick="toggleVideo('${safeId}')">▶ Watch Recording</button>` : ''}
+          ${hasNonVideoLink ? `<a class="mat-link primary" href="${esc(m.linkUrl)}" target="_blank" rel="noopener">🔗 Open Link</a>` : ''}
+          ${hasFile ? `<a class="mat-link secondary" href="${esc(m.fileUrl)}" target="_blank" rel="noopener">📄 Open File</a>` : ''}
+        </div>
+        ${m.postedOn ? `<div class="mat-date">Posted ${fmtDate(m.postedOn)}</div>` : ''}
+      </div>
+      ${hasVideo && embedSrc ? `
+      <div class="video-panel" id="vp-${safeId}" data-src="${esc(embedSrc)}">
+        <div class="video-wrap">
+          <iframe
+            src=""
+            allowfullscreen
+            allow="autoplay; encrypted-media; fullscreen; picture-in-picture"
+            sandbox="allow-scripts allow-same-origin allow-presentation allow-popups"
+            referrerpolicy="strict-origin-when-cross-origin"
+            title="${esc(m.title)}"
+          ></iframe>
+        </div>
+        <div class="video-panel-bar">
+          <span class="video-panel-title">🎬 ${esc(m.title)} — view only</span>
+          <button class="video-close-btn" onclick="toggleVideo('${safeId}')">✕ Close</button>
+        </div>
+      </div>` : ''}
+    </div>`;
+  }).join('');
 }
 
 async function load() {
   try {
-    const res=await fetch(`${GAS_URL}?action=getStudyMaterials&key=${encodeURIComponent(API_SECRET)}`);
-    const data=await res.json();
-    if (data.status==='ok') {
-      ALL = data.data||[];
+    const res  = await fetch(`${GAS_URL}?action=getStudyMaterials&key=${encodeURIComponent(API_SECRET)}`);
+    const data = await res.json();
+    if (data.status === 'ok') {
+      ALL = data.data || [];
       render();
-      // Show email panel for admin (HR email or anyone with admin token in localStorage)
-      const emailPanel = document.getElementById('email-panel');
-      if (emailPanel && (sessionStorage.getItem('szc_email')||localStorage.getItem('szc_email'))) {
-        emailPanel.style.display='block';
-        loadBatches();
-      }
-    } else throw new Error(data.message||'Failed to load');
+    } else throw new Error(data.message || 'Failed to load');
   } catch(err) {
-    document.getElementById('content').className='empty';
-    document.getElementById('content').textContent='⚠️ Could not load study materials: '+err.message;
+    document.getElementById('content').className = 'empty';
+    document.getElementById('content').textContent = '⚠️ Could not load study materials: ' + err.message;
   }
 }
 load();
