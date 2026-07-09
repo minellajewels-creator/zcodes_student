@@ -113,7 +113,7 @@
     <div class="auth-icon">🔒</div>
     <div class="auth-title">Access Required</div>
     <div class="auth-sub">You need to be logged in to play. Please enter the platform first.</div>
-    <button class="auth-btn" onclick="window.location.href='index.html'">→ Login / Get Access</button>
+    <button class="auth-btn" onclick="window.location.href='index'">→ Login / Get Access</button>
   </div>
 
   <div id="loading-screen">
@@ -185,7 +185,7 @@
     <div id="go-detail">0 correct answers</div>
     <div class="go-btns">
       <button class="btn btn-p" id="go-restart">↩ Play Again</button>
-      <button class="btn btn-s" onclick="window.location.href='games.html'">← Games Hub</button>
+      <button class="btn btn-s" onclick="window.location.href='games'">← Games Hub</button>
     </div>
   </div>
 
@@ -359,7 +359,7 @@ function setPaused(val){
 document.getElementById('btn-playpause').addEventListener('click',()=>{if(state.gameOver||!state.running)return;setPaused(!state.paused);});
 document.getElementById('btn-resume-overlay').addEventListener('click',()=>setPaused(false));
 document.getElementById('btn-restart-pause').addEventListener('click',()=>{setPaused(false);startGame();});
-document.getElementById('btn-mainmenu-pause').addEventListener('click',()=>{window.location.href='games.html';});
+document.getElementById('btn-mainmenu-pause').addEventListener('click',()=>{window.location.href='games';});
 document.getElementById('go-restart').addEventListener('click',()=>startGame());
 
 window.addEventListener('keydown',e=>{
