@@ -153,13 +153,16 @@ let ALL = [];
 let activeCat = 'All';
 
 // ── SharePoint link → embed URL ──────────────────────────────────
+// ── SharePoint link → embed URL ──────────────────────────────────
 function toEmbedUrl(url) {
   if (!url) return null;
 
-  // If it's already an embed URL, leave it alone
-  if (url.includes('embed=true') || url.includes('action=embedview') || url.includes('embed.aspx')) return url;
+  // If it's already an embed.aspx URL, it's perfect, return it directly
+  if (url.includes('embed.aspx')) return url;
 
-  // Fallback for old /:v:/g/ links (just in case)
+  // Keep your existing custom checks for fallback cases
+  if (url.includes('embed=true') || url.includes('action=embedview')) return url;
+
   if (url.includes('sharepoint.com') || url.includes('1drv.ms') || url.includes('onedrive.live.com')) {
     const base = url.split('?')[0];
     const params = new URLSearchParams(url.split('?')[1] || '');
@@ -172,11 +175,16 @@ function toEmbedUrl(url) {
   
 function isVideoLink(url) {
   if (!url) return false;
-  return url.includes('sharepoint.com') || url.includes('1drv.ms') ||
-         url.includes('onedrive.live.com') || url.includes('stream.microsoft.com') ||
+  // Expressly confirm embed.aspx matches as a valid video element
+  return url.includes('embed.aspx') || 
+         url.includes('sharepoint.com') || 
+         url.includes('1drv.ms') ||
+         url.includes('onedrive.live.com') || 
+         url.includes('stream.microsoft.com') ||
          /\.(mp4|webm|mov)$/i.test(url.split('?')[0]);
 }
 
+  
 function fmtDate(iso) {
   try { return new Date(iso).toLocaleDateString('en-IN',{day:'numeric',month:'short',year:'numeric'}); }
   catch(e){ return ''; }
